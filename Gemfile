@@ -57,9 +57,9 @@ group :development, :test do
   gem 'factory_girl_rails'
   gem 'faker'
   gem 'timecop'
-  gem 'rubocop'
-#  gem 'bullet'
-#  gem 'simplecov', :require => false
+  gem 'rubocop', '~> 0.49.1', require: false
+  gem 'bullet'
+  gem 'simplecov', :require => false
 end
 
 group :development do
@@ -70,7 +70,7 @@ group :development do
   gem 'spring'
   gem 'spring-watcher-listen', '~> 2.0.0'
   gem 'hirb'
-  gem 'hirb-unicode'
+#  gem 'hirb-unicode'
   gem 'pry-rails'
   gem 'pry-doc'
   gem 'pry-byebug'
