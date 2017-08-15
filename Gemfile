@@ -33,6 +33,18 @@ gem 'jbuilder', '~> 2.5'
 # Use Capistrano for deployment
 # gem 'capistrano-rails', group: :development
 
+# Windows does not include zoneinfo files, so bundle the tzinfo-data gem
+gem 'tzinfo-data', platforms: [:mingw, :mswin, :x64_mingw, :jruby]
+
+gem 'bootstrap-sass', '~> 3.3.6'
+gem 'font-awesome-rails'
+gem 'kaminari'
+gem 'simple_form'
+gem 'carrierwave', '~> 1.0'
+gem 'device'
+gem 'devise-i18n'
+gem 'haml-rails'
+
 group :development, :test do
   # Call 'byebug' anywhere in the code to stop execution and get a debugger console
   gem 'byebug', platforms: [:mri, :mingw, :x64_mingw]
@@ -42,6 +54,11 @@ group :development, :test do
   gem 'rspec-rails', '~> 3.5'
   gem 'rails-controller-testing'
   gem 'factory_girl_rails'
+  gem 'faker'
+  gem 'timecop'
+  gem 'rubocop'
+#  gem 'bullet'
+#  gem 'simplecov', :require => false
 end
 
 group :development do
@@ -65,14 +82,7 @@ group :development do
   gem 'spring-commands-rspec'
 end
 
-# Windows does not include zoneinfo files, so bundle the tzinfo-data gem
-gem 'tzinfo-data', platforms: [:mingw, :mswin, :x64_mingw, :jruby]
-
-# Haml
-gem 'haml-rails'
-
 group :production do
-  # rails_12factor
   gem 'rails_12factor'
   gem 'sendgrid-ruby'
 end
