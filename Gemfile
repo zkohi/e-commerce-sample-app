@@ -42,7 +42,7 @@ gem 'autoprefixer-rails'
 gem 'kaminari'
 gem 'simple_form'
 gem 'carrierwave', '~> 1.0'
-gem 'device'
+gem 'devise'
 gem 'devise-i18n'
 gem 'haml-rails'
 
@@ -81,6 +81,7 @@ group :development do
   gem 'guard-rspec', require: false
   gem 'guard-livereload', '~> 2.5', require: false
   gem 'spring-commands-rspec'
+  gem 'html2haml'
 end
 
 group :production do
