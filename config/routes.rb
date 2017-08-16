@@ -1,4 +1,5 @@
 Rails.application.routes.draw do
+  resources :products
   namespace :admin {
     devise_for :admins, controllers: {
       sessions: 'admins/sessions'

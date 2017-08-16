@@ -1,0 +1,13 @@
+= simple_form_for(@product) do |f|
+  = f.error_notification
+
+  .form-inputs
+    = f.input :string
+    = f.input :string
+    = f.input :integer
+    = f.input :text
+    = f.input :boolean
+    = f.input :integer
+
+  .form-actions
+    = f.button :submit

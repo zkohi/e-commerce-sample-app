@@ -1,0 +1,31 @@
+%h1 Listing products
+
+%table
+  %thead
+    %tr
+      %th String
+      %th String
+      %th Integer
+      %th Text
+      %th Boolean
+      %th Integer
+      %th
+      %th
+      %th
+
+  %tbody
+    - @products.each do |product|
+      %tr
+        %td= product.string
+        %td= product.string
+        %td= product.integer
+        %td= product.text
+        %td= product.boolean
+        %td= product.integer
+        %td= link_to 'Show', product
+        %td= link_to 'Edit', edit_product_path(product)
+        %td= link_to 'Destroy', product, method: :delete, data: { confirm: 'Are you sure?' }
+
+%br
+
+= link_to 'New Product', new_product_path
