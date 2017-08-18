@@ -1,13 +1,16 @@
 Rails.application.routes.draw do
-  resources :products
-  namespace :admin {
-    devise_for :admins, controllers: {
-      sessions: 'admins/sessions'
-    }
-  }
+  resources :products, only: [:index, :show]
 
-  devise_for :users, controllers: {
-    sessions: 'users/sessions'
-  }
-  # For details on the DSL available within this file, see http://guides.rubyonrails.org/routing.html
+  #scope '/admin' do
+  #  devise_for :admins
+  #end
+  scope :admin do
+    devise_for :admins
+  end
+
+  namespace :admin, path: '/admin' do
+    resources :products
+  end
+
+  devise_for :users
 end
