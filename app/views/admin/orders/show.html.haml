@@ -1,0 +1,36 @@
+%p#notice= notice
+
+%p
+  %b User:
+  = @order.user_id
+%p
+  %b State:
+  = @order.state
+%p
+  %b Shipment state:
+  = @order.shipment_state
+%p
+  %b Payment state:
+  = @order.payment_state
+%p
+  %b Item count:
+  = @order.item_count
+%p
+  %b Item total:
+  = @order.item_total
+%p
+  %b Shipment total:
+  = @order.shipment_total
+%p
+  %b Payment total:
+  = @order.payment_total
+%p
+  %b Tax total:
+  = @order.tax_total
+%p
+  %b Total:
+  = @order.total
+
+= link_to 'Edit', edit_order_path(@order)
+\|
+= link_to 'Back', orders_path
