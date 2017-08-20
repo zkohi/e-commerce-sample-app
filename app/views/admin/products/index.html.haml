@@ -22,10 +22,10 @@
         %td= product.description
         %td= product.flg_non_display
         %td= product.sort_order
-        %td= link_to 'Show', product
-        %td= link_to 'Edit', edit_product_path(product)
-        %td= link_to 'Destroy', product, method: :delete, data: { confirm: 'Are you sure?' }
+        %td= link_to 'Show', [:admin, product]
+        %td= link_to 'Edit', edit_admin_product_path(product)
+        %td= link_to 'Destroy', [:admin, product], method: :delete, data: { confirm: 'Are you sure?' }
 
 %br
 
-= link_to 'New Product', new_product_path
+= link_to 'New Product', new_admin_product_path
