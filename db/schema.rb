@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20170816171217) do
+ActiveRecord::Schema.define(version: 20170820170331) do
 
   create_table "admins", force: :cascade, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8" do |t|
     t.string "email", default: "", null: false
@@ -29,13 +29,29 @@ ActiveRecord::Schema.define(version: 20170816171217) do
     t.index ["reset_password_token"], name: "index_admins_on_reset_password_token", unique: true
   end
 
+  create_table "orders", force: :cascade, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8" do |t|
+    t.bigint "user_id"
+    t.integer "state", null: false
+    t.integer "shipment_state", default: 0, null: false
+    t.integer "payment_state", default: 0, null: false
+    t.integer "item_count", default: 0, null: false
+    t.integer "item_total", default: 0, null: false
+    t.integer "shipment_total", default: 0, null: false
+    t.integer "payment_total", default: 0, null: false
+    t.integer "tax_total", default: 0, null: false
+    t.integer "total", default: 0, null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["user_id"], name: "index_orders_on_user_id"
+  end
+
   create_table "products", force: :cascade, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8" do |t|
-    t.string "name"
-    t.string "filename"
-    t.integer "price"
-    t.text "description"
-    t.boolean "flg_non_display"
-    t.integer "sort_order"
+    t.string "name", null: false
+    t.string "filename", null: false
+    t.integer "price", null: false
+    t.text "description", null: false
+    t.boolean "flg_non_display", null: false
+    t.integer "sort_order", null: false
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
   end
@@ -57,4 +73,5 @@ ActiveRecord::Schema.define(version: 20170816171217) do
     t.index ["reset_password_token"], name: "index_users_on_reset_password_token", unique: true
   end
 
+  add_foreign_key "orders", "users"
 end
