@@ -1,9 +1,8 @@
 Rails.application.routes.draw do
-  resources :products, only: [:index, :show]
+  root 'products#index'
 
-  #scope '/admin' do
-  #  devise_for :admins
-  #end
+  resources :products, only: [:show]
+
   scope :admin do
     devise_for :admins
   end

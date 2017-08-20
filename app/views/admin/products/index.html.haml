@@ -23,3 +23,9 @@
         %td= product.flg_non_display
         %td= product.sort_order
         %td= link_to 'Show', product
+        %td= link_to 'Edit', edit_product_path(product)
+        %td= link_to 'Destroy', product, method: :delete, data: { confirm: 'Are you sure?' }
+
+%br
+
+= link_to 'New Product', new_product_path
