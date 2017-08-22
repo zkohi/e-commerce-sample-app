@@ -1,0 +1,25 @@
+!!!
+%html
+  %head
+    %meta{:content => "text/html; charset=UTF-8", "http-equiv" => "Content-Type"}/
+    %title ECommerceSampleApp
+    = csrf_meta_tags
+    = stylesheet_link_tag    'application', media: 'all', 'data-turbolinks-track': 'reload'
+    = javascript_include_tag 'application', 'data-turbolinks-track': 'reload'
+  %body
+    .navbar.navbar-default.navbar-fixed-top
+      .container
+        .navbar-header
+          =link_to 'さくらマーケット', root_path, class: 'navbar-brand'
+        .navbar-collapse.collapse
+          %ul.nav.navbar-nav.navbar-right
+            %li
+              =link_to 'ショッピングカート', orders_path
+            %li
+              -if user_signed_in?
+                =link_to 'ログアウト', destroy_user_session_path
+              -else
+                =link_to 'ログイン', new_user_session_path
+
+    .container
+      = yield

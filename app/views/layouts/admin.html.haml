@@ -1,0 +1,26 @@
+!!!
+%html
+  %head
+    %meta{:content => "text/html; charset=UTF-8", "http-equiv" => "Content-Type"}/
+    %title ECommerceSampleAppAdmin
+    = csrf_meta_tags
+    = stylesheet_link_tag    'application', media: 'all', 'data-turbolinks-track': 'reload'
+    = javascript_include_tag 'application', 'data-turbolinks-track': 'reload'
+  %body
+    .navbar.navbar-default.navbar-fixed-top
+      .container
+        .navbar-header
+          =link_to 'さくらマーケット 管理画面', admin_products_path, class: 'navbar-brand'
+        .navbar-collapse.collapse
+          %ul.nav.navbar-nav.navbar-right
+            %li
+              =link_to '商品マスタ管理', admin_products_path
+            %li
+              =link_to '注文管理', admin_orders_path
+            %li
+              =link_to 'ユーザー管理', admin_users_path
+            %li
+              =link_to 'ログアウト', destroy_admin_session_path
+
+    .container
+      = yield
