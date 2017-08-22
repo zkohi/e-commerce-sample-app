@@ -37,15 +37,17 @@ gem 'jbuilder', '~> 2.5'
 gem 'tzinfo-data', platforms: [:mingw, :mswin, :x64_mingw, :jruby]
 
 gem 'bootstrap-sass', '~> 3.3.6'
-gem 'font-awesome-rails'
+gem 'bootswatch-rails'
 gem 'autoprefixer-rails'
 gem 'kaminari'
 gem 'ransack'
 gem 'simple_form'
 gem 'carrierwave', '~> 1.0'
+gem "mini_magick"
 gem 'devise'
 gem 'devise-i18n'
 gem 'haml-rails'
+gem 'validates_timeliness', '~> 4.0'
 
 group :development, :test do
   # Call 'byebug' anywhere in the code to stop execution and get a debugger console
