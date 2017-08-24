@@ -1,39 +1,35 @@
-%h1 Listing orders
+.panel.panel-warning
+  .panel-heading
+    %h2.panel-title 注文一覧
+  .panel-body
+    %table.table.table-striped.table-hover
+      %thead
+        %tr
+          %th 注文状況
+          %th 配送状況
+          %th 支払状況
+          %th 商品個数
+          %th 商品料金
+          %th 配送料金
+          %th 支払い手数料金
+          %th 税金
+          %th 総計
+          %th
+          %th
+          %th
 
-%table
-  %thead
-    %tr
-      %th User
-      %th State
-      %th Shipment state
-      %th Payment state
-      %th Item count
-      %th Item total
-      %th Shipment total
-      %th Payment total
-      %th Tax total
-      %th Total
-      %th
-      %th
-      %th
-
-  %tbody
-    - @orders.each do |order|
-      %tr
-        %td= order.user_id
-        %td= order.state
-        %td= order.shipment_state
-        %td= order.payment_state
-        %td= order.item_count
-        %td= order.item_total
-        %td= order.shipment_total
-        %td= order.payment_total
-        %td= order.tax_total
-        %td= order.total
-        %td= link_to 'Show', order
-        %td= link_to 'Edit', edit_order_path(order)
-        %td= link_to 'Destroy', order, method: :delete, data: { confirm: 'Are you sure?' }
-
-%br
-
-= link_to 'New Order', new_order_path
+      %tbody
+        - @orders.each do |order|
+          %tr
+            %td= order.state
+            %td= order.shipment_state
+            %td= order.payment_state
+            %td= order.item_count
+            %td= order.item_total
+            %td= order.shipment_total
+            %td= order.payment_total
+            %td= order.tax_total
+            %td= order.total
+            %td= link_to 'Show', [:admin, order]
+            %td= link_to 'Edit', edit_admin_order_path(order)
+            %td= link_to 'Destroy', [:admin, order], method: :delete, data: { confirm: '削除してよろしいですか?' }

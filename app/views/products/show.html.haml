@@ -1,22 +1,22 @@
-%p#notice= notice
+.row
+  .content.col-md-12
+    .col-md-4.col-sm-5
+      .panel.panel-default
+        .panel-body.text-center
+          - if @product.img_filename.present?
+            = image_tag(@product.img_filename, class: 'img-thumbnail')
+          - else
+            %img{src: 'https://dummyimage.com/250x250'}
+    .col-md-8.col-sm-7
+      %h1= @product.name
+      .well= @product.description
+      %span.lead.price.selling= "価格 #{number_to_currency(@product.price, locale: :ja, precision: 0)}"
+      = simple_form_for(@order, html: {class: 'form-horizontal'}, defaults: { label_html: { class: 'col-lg-2' }, wrapper_html: { class: 'col-lg-8' } }) do |f|
+        = f.fields_for :line_items do |line_item|
+          = line_item.hidden_field :product_id, value: @product.id
 
-%p
-  %b Name:
-  = @product.name
-%p
-  %b Filename:
-  = @product.filename
-%p
-  %b Price:
-  = @product.price
-%p
-  %b Description:
-  = @product.description
-%p
-  %b Flg non display:
-  = @product.flg_non_display
-%p
-  %b Sort order:
-  = @product.sort_order
+          .form-inputs
+            = line_item.input :quantity, label: '個数', input_html: {min: 1, max: 99}
 
-= link_to 'Back', root_path
+        .form-actions
+          = f.button :submit, 'カートに入れる'

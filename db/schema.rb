@@ -42,15 +42,17 @@ ActiveRecord::Schema.define(version: 20170822153620) do
 
   create_table "orders", force: :cascade, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8" do |t|
     t.bigint "user_id"
-    t.integer "state", null: false
+    t.integer "state", default: 0, null: false
     t.integer "shipment_state", default: 0, null: false
     t.integer "payment_state", default: 0, null: false
     t.integer "item_count", default: 0, null: false
     t.integer "item_total", default: 0, null: false
     t.integer "shipment_total", default: 0, null: false
     t.integer "payment_total", default: 0, null: false
+    t.integer "adjustment_total", default: 0, null: false
     t.integer "tax_total", default: 0, null: false
     t.integer "total", default: 0, null: false
+    t.string "shipping_at"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.index ["user_id"], name: "index_orders_on_user_id"
@@ -58,7 +60,7 @@ ActiveRecord::Schema.define(version: 20170822153620) do
 
   create_table "products", force: :cascade, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8" do |t|
     t.string "name", null: false
-    t.string "filename", null: false
+    t.string "img_filename"
     t.integer "price", null: false
     t.text "description", null: false
     t.boolean "flg_non_display", null: false
@@ -78,6 +80,9 @@ ActiveRecord::Schema.define(version: 20170822153620) do
     t.datetime "last_sign_in_at"
     t.string "current_sign_in_ip"
     t.string "last_sign_in_ip"
+    t.string "name"
+    t.integer "zipcode"
+    t.string "address"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.index ["email"], name: "index_users_on_email", unique: true

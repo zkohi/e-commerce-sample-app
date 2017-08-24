@@ -65,11 +65,11 @@ Rails.application.configure do
 #                    :receiver => 'your_account@jabber.org',
 #                    :show_online_status => true }
     Bullet.rails_logger = true
-    Bullet.honeybadger = true
-    Bullet.bugsnag = true
-    Bullet.airbrake = true
-    Bullet.rollbar = true
-    Bullet.add_footer = true
+#    Bullet.honeybadger = true
+#    Bullet.bugsnag = true
+#    Bullet.airbrake = true
+#    Bullet.rollbar = true
+#    Bullet.add_footer = true
 #    Bullet.stacktrace_includes = [ 'your_gem', 'your_middleware' ]
 #    Bullet.stacktrace_excludes = [ 'their_gem', 'their_middleware' ]
 #    Bullet.slack = { webhook_url: 'http://some.slack.url', channel: '#default', username: 'notifier' }

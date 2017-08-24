@@ -2,7 +2,9 @@ Rails.application.routes.draw do
   root 'products#index'
 
   resources :products, only: [:show]
+  resources :line_items, only: [:destroy]
   resources :orders, only: [:index, :show, :create]
+  resource :cart, only: [:show, :edit, :update]
 
   scope :admin do
     devise_for :admins

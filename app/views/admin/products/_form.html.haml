@@ -1,13 +1,16 @@
-= simple_form_for([:admin, @product]) do |f|
-  = f.error_notification
+.row
+  .col-lg-6
+    .well.bs-component
+      = simple_form_for([:admin, @product], html: {class: 'form-horizontal'}, defaults: { label_html: { class: 'col-lg-2' }, wrapper_html: { class: 'col-lg-10' } }) do |f|
+        = f.error_notification
 
-  .form-inputs
-    = f.input :name
-    = f.input :filename
-    = f.input :price
-    = f.input :description
-    = f.input :flg_non_display
-    = f.input :sort_order
+        .form-inputs
+          = f.input :name, label: '商品名'
+          = f.input :img_filename, label: '画像'
+          = f.input :price, label: '価格', input_html: {min: 1, max: 10000000}
+          = f.input :description, label: '説明'
+          = f.input :flg_non_display, label: '非表示フラグ'
+          = f.input :sort_order, label: '表示順', input_html: {min: 1, max: 10000}
 
-  .form-actions
-    = f.button :submit
+        .form-actions
+          = f.button :submit, '登録する'

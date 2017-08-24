@@ -1,0 +1,51 @@
+.panel.panel-info
+  .panel-heading
+    %h2.panel-title カート
+  .panel-body
+    %table.table.table-striped.table-hover
+      %thead
+        %tr
+          %th 
+          %th 画像
+          %th 価格
+          %th 数量
+          %th
+          %th
+          %th
+
+      %tbody
+        - @order.line_items.includes(:product).each do |line_item|
+          %tr
+            %td= line_item.product.name
+            %td
+              %img.img-rounded{:src => "https://dummyimage.com/100x100", :alt => "#{line_item.product.name}"}
+            %td= line_item.product.price
+            %td= line_item.quantity
+
+    .panel.panel-danger
+      .panel-heading
+        %h2.panel-title 料金明細
+      .panel-body
+        %table.table.table-striped.table-hover
+          %thead
+            %tr
+              %th 商品料金
+              %th 数量
+              %th 配送料
+              %th 代引き手数料
+              %th 小計
+              %th 税金
+              %th 合計
+              %th
+
+          %tbody
+            %tr
+              %td= @order.item_total
+              %td= @order.item_count
+              %td= @order.shipment_total
+              %td= @order.payment_total
+              %td= @order.adjustment_total
+              %td= @order.tax_total
+              %td= @order.total
+
+    = link_to '注文画面に進む', edit_cart_path, {class: "btn bs-component"}

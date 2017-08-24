@@ -1,24 +1,34 @@
-%p#notice= notice
+-if notice
+  %p.alert.alert-dismissible.alert-success#notice= notice
 
-%p
-  %b Name:
-  = @product.name
-%p
-  %b Filename:
-  = @product.filename
-%p
-  %b Price:
-  = @product.price
-%p
-  %b Description:
-  = @product.description
-%p
-  %b Flg non display:
-  = @product.flg_non_display
-%p
-  %b Sort order:
-  = @product.sort_order
+.panel.panel-info
+  .panel-heading
+    %h2.panel-title 商品詳細
+  .panel-body
+    %table.table.table-striped.table-hover
+      %tbody
+        %tr
+          %td 商品名
+          %td= @product.name
+        %tr
+          %td 画像
+          %td
+            %img.img-rounded{:src => "https://dummyimage.com/100x100", :alt => "#{@product.name}"}
+        %tr
+          %td 価格
+          %td= @product.price
+        %tr
+          %td 説明
+          %td= @product.description
+        %tr
+          %td 非表示フラグ
+          %td= @product.flg_non_display
+        %tr
+          %td 表示順
+          %td= @product.sort_order
 
-= link_to 'Edit', edit_admin_product_path(@product)
+%br
+
+= link_to '編集', edit_admin_product_path(@product)
 \|
-= link_to 'Back', admin_products_path
+= link_to '商品一覧', admin_products_path

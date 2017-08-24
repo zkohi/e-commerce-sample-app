@@ -1,25 +1,13 @@
-%h1 Listing products
-
-%table
-  %thead
-    %tr
-      %th Name
-      %th Filename
-      %th Price
-      %th Description
-      %th Flg non display
-      %th Sort order
-      %th
-      %th
-      %th
-
-  %tbody
-    - @products.each do |product|
-      %tr
-        %td= product.name
-        %td= product.filename
-        %td= product.price
-        %td= product.description
-        %td= product.flg_non_display
-        %td= product.sort_order
-        %td= link_to 'Show', product
+.content
+  .row
+    - @products.each do |product| 
+      .col-md-4.col-sm-4.col-xs-6.product-list-item
+        .panel.panel-default
+          = link_to product_path(product) do
+            .panel-body.text-center.product-body
+              - if product.img_filename.present?
+                = image_tag(product.img_filename, class: 'img-thumbnail')
+              - else
+                %img{src: 'https://dummyimage.com/250x250'}
+              %p.bg-info
+                = product.name

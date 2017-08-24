@@ -1,0 +1,21 @@
+-if notice
+  %p.alert.alert-dismissible.alert-success#notice= notice
+
+.panel.panel-danger
+  .panel-heading
+    %h2.panel-title ユーザー詳細
+  .panel-body
+    %table.table.table-striped.table-hover
+      %tbody
+        %tr
+          %td ID
+          %td= @user.id
+        %tr
+          %td メールアドレス
+          %td= @user.email
+
+%br
+
+= link_to '編集', edit_admin_user_path(@user)
+\|
+= link_to 'ユーザー覧', admin_users_path

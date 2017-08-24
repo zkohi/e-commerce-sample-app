@@ -1,7 +1,11 @@
-%h1 Editing product
+.panel.panel-info
+  .panel-heading
+    %h2.panel-title 商品編集
+  .panel-body
+    = render 'form'
 
-= render 'form'
+%br
 
-= link_to 'Show', [:admin, @product]
+= link_to '商品詳細', [:admin, @product]
 \|
-= link_to 'Back', admin_products_path
+= link_to '商品一覧', admin_products_path

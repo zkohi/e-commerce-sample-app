@@ -1,0 +1,19 @@
+.panel.panel-danger
+  .panel-heading
+    %h2.panel-title ユーザー編集
+  .panel-body
+    = simple_form_for([:admin, @user], html: {class: 'form-horizontal'}, defaults: { label_html: { class: 'col-lg-2' }, wrapper_html: { class: 'col-lg-10' } }) do |f|
+      = f.error_notification
+
+      .form-inputs
+        = f.input :id, label: 'ID'
+        = f.input :email, label: 'メールアドレス'
+
+      .form-actions
+        = f.button :submit, '登録する'
+
+%br
+
+= link_to 'ユーザー詳細', [:admin, @user]
+\|
+= link_to 'ユーザー一覧', admin_users_path
