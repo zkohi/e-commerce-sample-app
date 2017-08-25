@@ -12,7 +12,8 @@ class CreateOrders < ActiveRecord::Migration[5.1]
       t.integer :adjustment_total, null: false, default: 0
       t.integer :tax_total, null: false, default: 0
       t.integer :total, null: false, default: 0
-      t.string :shipping_at
+      t.date :shipping_date
+      t.string :shipping_time_range
 
       t.timestamps
     end

@@ -5,6 +5,10 @@ class ProductUploader < CarrierWave::Uploader::Base
 
   storage :file
 
+  def default_url
+    "https://dummyimage.com/250x250"
+  end
+
   def store_dir
     "uploads/#{model.class.to_s.underscore}/#{mounted_as}/#{model.id}"
   end

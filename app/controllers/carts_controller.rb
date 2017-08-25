@@ -2,14 +2,21 @@ class CartsController < ApplicationController
   before_action :authenticate_user!
 
   def show
-    @order = current_user.orders.find_by!(state: 0)
+    @order = current_user.orders.find_or_initialize_by(state: :cart)
   end
 
   def edit
+    @order = current_user.orders.find_or_initialize_by(state: :cart)
+    if @order.line_items.blank?
+      redirect_to cart_path
+    end
   end
 
   def update
-    @order = current_user.orders.find_or_initialize_by(state: 0)
+    @order = current_user.orders.find_or_initialize_by(state: :cart)
+    if @order.line_items.blank?
+      redirect_to cart_path
+    end
     @order.line_items.build(order_params[:line_items_attributes]["0"])
 
     @order.save!

@@ -12,8 +12,7 @@
           %td= @product.name
         %tr
           %td 画像
-          %td
-            %img.img-rounded{:src => "https://dummyimage.com/100x100", :alt => "#{@product.name}"}
+          %td= image_tag(@product.img_filename, class: 'img-thumbnail', alt: "#{@product.name}", size: "250x250")
         %tr
           %td 価格
           %td= @product.price

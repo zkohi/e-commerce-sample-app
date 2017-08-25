@@ -1,0 +1,57 @@
+.panel.panel-info
+  .panel-heading
+    %h2.panel-title 注文画面
+  .panel-body
+    %table.table.table-striped.table-hover
+      %thead
+        %tr
+          %th 
+          %th 画像
+          %th 価格
+          %th 数量
+          %th
+          %th
+          %th
+
+      %tbody
+        - @order.line_items.includes(:product).each do |line_item|
+          %tr
+            %td= line_item.product.name
+            %td= image_tag(line_item.product.img_filename, class: 'img-thumbnail', alt: "#{line_item.product.name}", size: "100x100")
+            %td= line_item.product.price
+            %td= line_item.quantity
+
+    .panel.panel-warning
+      .panel-heading
+        %h2.panel-title 料金明細
+      .panel-body
+        %table.table.table-striped.table-hover
+          %thead
+            %tr
+              %th 商品料金
+              %th 数量
+              %th 配送料
+              %th 代引き手数料
+              %th 小計
+              %th 税金
+              %th 合計
+              %th
+
+          %tbody
+            %tr
+              %td= @order.item_total
+              %td= @order.item_count
+              %td= @order.shipment_total
+              %td= @order.payment_total
+              %td= @order.adjustment_total
+              %td= @order.tax_total
+              %td= @order.total
+
+    .panel.panel-danger
+      .panel-heading
+        %h2.panel-title 配送日時を指定してください
+      .panel-body
+        = simple_form_for(@order, html: {class: 'form-horizontal'}, defaults: { label_html: { class: 'col-lg-2' }, wrapper_html: { class: 'col-lg-8' } }) do |f|
+          = f.input :shipping_date
+          = f.select :shipping_time_range, Order.shipping_time_ranges.map { |k, v| [ApplicationController.helpers.t("orders.shipping_time_range.#{k}"), v] }
+          = f.button :submit, '注文する'

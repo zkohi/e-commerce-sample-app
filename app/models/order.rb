@@ -6,6 +6,20 @@ class Order < ApplicationRecord
 
   accepts_nested_attributes_for :line_items
 
+  enum state: {
+    cart: 0,
+    ordered: 1
+  }
+
+  enum shipping_time_range: {
+    eight_to_twelve: 0,
+    twelve_to_fourteen: 1,
+    fourteen_to_sixteen: 2,
+    sixteen_to_eighteen: 3,
+    eighteen_to_twenty: 4,
+    twenty_to_twenty_one: 5
+  }
+
   def set_line_item_price
     #self.line_items(&:set_price)
     self.line_items.include(:product).each { |i| i.set_price }
@@ -33,7 +47,7 @@ class Order < ApplicationRecord
   end
 
   def set_item_total(line_item)
-    self.item_total += line_item.price * line_item.quantity
+    self.item_total += (line_item.product.price * line_item.quantity)
   end
 
   def set_payment_total

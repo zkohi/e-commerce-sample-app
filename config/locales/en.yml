@@ -31,3 +31,17 @@
 
 en:
   hello: "Hello world"
+  orders:
+    shipping_state:
+      unshipped: 未出荷
+      shipped: 出荷済
+    payment_state:
+      unpayed: 未払い
+      payed: 支払済
+    shipping_time_range:
+      eight_to_twelve: 8-12
+      twelve_to_fourteen: 12-14
+      fourteen_to_sixteen: 14-16
+      sixteen_to_eighteen: 16-18
+      eighteen_to_twenty: 18-20
+      twenty_to_twenty_one: 20-21

@@ -10,7 +10,7 @@ class OrdersController < ApplicationController
   end
 
   def create
-    @order = current_user.orders.find_or_initialize_by(state: 0)
+    @order = current_user.orders.find_or_initialize_by(state: :cart)
     @order.line_items.build(order_params[:line_items_attributes]["0"])
 
     @order.save!

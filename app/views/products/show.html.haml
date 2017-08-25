@@ -3,10 +3,7 @@
     .col-md-4.col-sm-5
       .panel.panel-default
         .panel-body.text-center
-          - if @product.img_filename.present?
-            = image_tag(@product.img_filename, class: 'img-thumbnail')
-          - else
-            %img{src: 'https://dummyimage.com/250x250'}
+          = image_tag(@product.img_filename, class: 'img-thumbnail')
     .col-md-8.col-sm-7
       %h1= @product.name
       .well= @product.description

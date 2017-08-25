@@ -5,9 +5,5 @@
         .panel.panel-default
           = link_to product_path(product) do
             .panel-body.text-center.product-body
-              - if product.img_filename.present?
-                = image_tag(product.img_filename, class: 'img-thumbnail')
-              - else
-                %img{src: 'https://dummyimage.com/250x250'}
-              %p.bg-info
-                = product.name
+              = image_tag(product.img_filename, class: 'img-thumbnail', alt: "#{product.name}", size: "250x250")
+              %p= product.name
