@@ -39,6 +39,8 @@ gem 'tzinfo-data', platforms: [:mingw, :mswin, :x64_mingw, :jruby]
 gem 'bootstrap-sass', '~> 3.3.6'
 gem 'bootswatch-rails'
 gem 'autoprefixer-rails'
+gem 'jquery-rails'
+gem 'jquery-ui-rails'
 gem 'kaminari'
 gem 'ransack'
 gem 'simple_form'

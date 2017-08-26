@@ -20,9 +20,31 @@ class Order < ApplicationRecord
     twenty_to_twenty_one: 5
   }
 
-  def set_line_item_price
-    #self.line_items(&:set_price)
-    self.line_items.include(:product).each { |i| i.set_price }
+  def available_shipping_date
+    # 3営業日（営業日: 月-金）から14営業日まで
+    # [当日含む]でよいかは要確認
+    today = Date.today
+    if today.sunday?
+      {
+        minDate: 3,
+        maxDate: 18
+      }
+    elsif today.thursday? || today.friday? || today.saturday?
+      {
+        minDate: 4,
+        maxDate: 19
+      }
+    elsif today.wednesday?
+      {
+        minDate: 2,
+        maxDate: 19
+      }
+    else
+      {
+        minDate: 2,
+        maxDate: 17
+      }
+    end
   end
 
   def calculate_total

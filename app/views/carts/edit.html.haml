@@ -52,6 +52,9 @@
         %h2.panel-title 配送日時を指定してください
       .panel-body
         = simple_form_for(@order, html: {class: 'form-horizontal'}, defaults: { label_html: { class: 'col-lg-2' }, wrapper_html: { class: 'col-lg-8' } }) do |f|
-          = f.input :shipping_date
-          = f.select :shipping_time_range, Order.shipping_time_ranges.map { |k, v| [ApplicationController.helpers.t("orders.shipping_time_range.#{k}"), v] }
-          = f.button :submit, '注文する'
+          .col-md-4
+            = f.input :shipping_date, as: "string", label: false, input_html: {"data-datepicker-options" => @order.available_shipping_date.to_json }
+          .col-md-4
+            = f.select :shipping_time_range, Order.shipping_time_ranges.map { |k, v| [ApplicationController.helpers.t("orders.shipping_time_range.#{k}"), v] }, label: "test"
+          .col-md-4
+            = f.button :submit, '注文する'
