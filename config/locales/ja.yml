@@ -7,6 +7,12 @@ ja:
         separator: '.'
         precision: 0
         format: '%u%n円'
+  simple_form:
+    labels:
+      user:
+        name: 名前
+        zipcode: 郵便番号
+        address: 住所
   enums:
     order:
       shipment_state:

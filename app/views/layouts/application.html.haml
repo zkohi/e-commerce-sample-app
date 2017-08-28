@@ -16,6 +16,8 @@
             %li
               =link_to 'ショッピングカート', cart_path
             %li
+              =link_to 'マイページ', mypage_path
+            %li
               -if user_signed_in?
                 =link_to 'ログアウト', destroy_user_session_path
               -else

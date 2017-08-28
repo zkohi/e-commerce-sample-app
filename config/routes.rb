@@ -1,6 +1,8 @@
 Rails.application.routes.draw do
   root 'products#index'
 
+  get 'mypage', to: 'users#show'
+
   resources :products, only: [:show]
   resources :line_items, only: [:destroy]
   resources :orders, only: [:index, :show, :create]

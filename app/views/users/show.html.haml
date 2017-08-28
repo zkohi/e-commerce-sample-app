@@ -1,0 +1,15 @@
+.panel.panel-info
+  .panel-heading
+    %h2.panel-title ユーザー情報
+  .panel-body
+    %div
+      %label 名前
+      %p= current_user.name
+    %div
+      %label 郵便番号
+      %p= current_user.zipcode
+    %div
+      %label 住所
+      %p= current_user.address
+
+= link_to "登録情報を変更する", edit_user_registration_path

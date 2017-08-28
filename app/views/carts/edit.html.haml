@@ -8,7 +8,7 @@
     %table.table.table-striped.table-hover
       %thead
         %tr
-          %th 
+          %th 商品名
           %th 画像
           %th 価格
           %th 数量
@@ -66,8 +66,8 @@
           = f.hidden_field :tax_total
           = f.hidden_field :total
           .col-md-12
-            = f.input :user_name, value: current_user.name
-            = f.input :user_address, value: current_user.address
+            = f.input :user_name, input_html: { value: current_user.name }
+            = f.input :user_address, input_html: { value: current_user.address }
           .col-md-4
             = f.input :shipping_date, as: "string", label: false, input_html: {"data-datepicker-options" => @order.available_shipping_date.to_json }
           .col-md-4

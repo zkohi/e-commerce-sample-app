@@ -14,7 +14,7 @@ class OrdersController < ApplicationController
     @order.line_items.build(order_params[:line_items_attributes]["0"])
 
     @order.save_for_add_line_item!(order_params)
-    redirect_to cart_path, notice: 'Order was successfully created.'
+    redirect_to cart_path
   end
 
   private
