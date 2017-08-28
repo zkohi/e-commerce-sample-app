@@ -49,6 +49,7 @@ gem "mini_magick"
 gem 'devise'
 gem 'devise-i18n'
 gem 'haml-rails'
+gem 'enum_help'
 gem 'validates_timeliness', '~> 4.0'
 
 group :development, :test do

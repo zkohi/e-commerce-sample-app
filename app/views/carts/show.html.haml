@@ -9,13 +9,10 @@
       %table.table.table-striped.table-hover
         %thead
           %tr
-            %th 
+            %th 商品名
             %th 画像
             %th 価格
             %th 数量
-            %th
-            %th
-            %th
 
         %tbody
           - @order.line_items.includes(:product).each do |line_item|
@@ -43,12 +40,12 @@
 
             %tbody
               %tr
-                %td= @order.item_total
+                %td= number_to_currency(@order.item_total, locale: :ja)
                 %td= @order.item_count
-                %td= @order.shipment_total
-                %td= @order.payment_total
-                %td= @order.adjustment_total
-                %td= @order.tax_total
-                %td= @order.total
+                %td= number_to_currency(@order.shipment_total, locale: :ja)
+                %td= number_to_currency(@order.payment_total, locale: :ja)
+                %td= number_to_currency(@order.adjustment_total, locale: :ja)
+                %td= number_to_currency(@order.tax_total, locale: :ja)
+                %td= number_to_currency(@order.total, locale: :ja)
 
       = link_to '注文画面に進む', edit_cart_path, {class: "btn bs-component"}

@@ -1,14 +1,26 @@
 class Order < ApplicationRecord
-  has_many :line_items
+  attr_accessor :shipping_time_range
+
+  has_many :line_items, dependent: :destroy
   belongs_to :user
 
-  before_save :calculate_total
+  before_save :calculate_total, if: :cart?
 
   accepts_nested_attributes_for :line_items
 
   enum state: {
     cart: 0,
     ordered: 1
+  }
+
+  enum shipment_state: {
+    unshipped: 0,
+    shipped: 1
+  }
+
+  enum payment_state: {
+    unpayed: 0,
+    payed: 1
   }
 
   enum shipping_time_range: {
@@ -19,6 +31,12 @@ class Order < ApplicationRecord
     eighteen_to_twenty: 4,
     twenty_to_twenty_one: 5
   }
+
+  def execute(params)
+    self.state = "ordered"
+    self.shipping_time_range_string = Order.shipping_time_ranges_i18n[params["shipping_time_range"]]
+    self.update(params)
+  end
 
   def available_shipping_date
     # 3営業日（営業日: 月-金）から14営業日まで
@@ -65,7 +83,7 @@ class Order < ApplicationRecord
   end
 
   def set_shipment_total
-    self.shipment_total = (self.item_count / 5).ceil * 600
+    self.shipment_total = (self.item_count / 5.0).ceil * 600
   end
 
   def set_item_total(line_item)

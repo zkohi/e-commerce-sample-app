@@ -31,17 +31,3 @@
 
 en:
   hello: "Hello world"
-  orders:
-    shipping_state:
-      unshipped: 未出荷
-      shipped: 出荷済
-    payment_state:
-      unpayed: 未払い
-      payed: 支払済
-    shipping_time_range:
-      eight_to_twelve: 8時〜12時
-      twelve_to_fourteen: 12時〜14時
-      fourteen_to_sixteen: 14時〜16時
-      sixteen_to_eighteen: 16時〜18時
-      eighteen_to_twenty: 18時〜20時
-      twenty_to_twenty_one: 20時〜21時

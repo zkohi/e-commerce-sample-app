@@ -1,3 +1,6 @@
+-if notice
+  %p.alert.alert-dismissible.alert-success#notice= notice
+
 .panel.panel-info
   .panel-heading
     %h2.panel-title 注文画面
@@ -39,22 +42,40 @@
 
           %tbody
             %tr
-              %td= @order.item_total
+              %td= number_to_currency(@order.item_total, locale: :ja)
               %td= @order.item_count
-              %td= @order.shipment_total
-              %td= @order.payment_total
-              %td= @order.adjustment_total
-              %td= @order.tax_total
-              %td= @order.total
+              %td= number_to_currency(@order.shipment_total, locale: :ja)
+              %td= number_to_currency(@order.payment_total, locale: :ja)
+              %td= number_to_currency(@order.adjustment_total, locale: :ja)
+              %td= number_to_currency(@order.tax_total, locale: :ja)
+              %td= number_to_currency(@order.total, locale: :ja)
 
     .panel.panel-danger
       .panel-heading
-        %h2.panel-title 配送日時を指定してください
+        %h2.panel-title 配送先と配送日時を指定して注文ボタンをクリックしてください
       .panel-body
-        = simple_form_for(@order, html: {class: 'form-horizontal'}, defaults: { label_html: { class: 'col-lg-2' }, wrapper_html: { class: 'col-lg-8' } }) do |f|
+        = simple_form_for(@order, url: cart_path, html: {class: 'form-horizontal'}, defaults: { label_html: { class: 'col-lg-2' }, wrapper_html: { class: 'col-lg-8' } }) do |f|
+          = f.error_notification
+
+          = f.hidden_field :id
+          = f.hidden_field :item_count
+          = f.hidden_field :item_total
+          = f.hidden_field :shipment_total
+          = f.hidden_field :payment_total
+          = f.hidden_field :adjustment_total
+          = f.hidden_field :tax_total
+          = f.hidden_field :total
+          .col-md-12
+            = f.input :user_name, value: current_user.name
+            = f.input :user_address, value: current_user.address
           .col-md-4
             = f.input :shipping_date, as: "string", label: false, input_html: {"data-datepicker-options" => @order.available_shipping_date.to_json }
           .col-md-4
-            = f.select :shipping_time_range, Order.shipping_time_ranges.map { |k, v| [ApplicationController.helpers.t("orders.shipping_time_range.#{k}"), v] }, label: "test"
+            = f.select :shipping_time_range, Order.shipping_time_ranges.map { |k, v| [ApplicationController.helpers.t("enums.order.shipping_time_range.#{k}"), k] }
           .col-md-4
             = f.button :submit, '注文する'
+          = f.fields_for :line_items do |line_item|
+            = line_item.hidden_field :id
+            = line_item.hidden_field :product_id
+            = line_item.hidden_field :quantity
+            = line_item.hidden_field :price, value: @order.line_items.includes(:product)[line_item.index].product.price

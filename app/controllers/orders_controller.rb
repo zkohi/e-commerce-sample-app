@@ -1,9 +1,9 @@
 class OrdersController < ApplicationController
   before_action :authenticate_user!
-  before_action :set_order, only: [:show, :update]
+  before_action :set_order, only: [:show]
 
   def index
-    @orders = current_user.orders.all
+    @orders = current_user.orders.ordered
   end
 
   def show
@@ -19,7 +19,7 @@ class OrdersController < ApplicationController
 
   private
     def set_order
-      @order = current_user.orders.find(params[:id])
+      @order = current_user.orders.ordered.find(params[:id])
     end
 
     def order_params

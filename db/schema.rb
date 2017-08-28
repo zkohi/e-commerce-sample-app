@@ -53,7 +53,9 @@ ActiveRecord::Schema.define(version: 20170822153620) do
     t.integer "tax_total", default: 0, null: false
     t.integer "total", default: 0, null: false
     t.date "shipping_date"
-    t.string "shipping_time_range"
+    t.string "shipping_time_range_string"
+    t.string "user_name"
+    t.string "user_address"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.index ["user_id"], name: "index_orders_on_user_id"
