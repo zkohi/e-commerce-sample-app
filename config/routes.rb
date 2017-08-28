@@ -13,7 +13,7 @@ Rails.application.routes.draw do
   end
 
   namespace :admin, path: '/admin' do
-#    resources :users, except: [:new, :create]
+    resources :users, except: [:new, :create]
     resources :products
     resources :orders, except: [:new, :create, :destroy]
     resources :users, except: [:new, :create, :destroy]
