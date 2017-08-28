@@ -8,11 +8,17 @@
     %table.table.table-striped.table-hover
       %tbody
         %tr
-          %td ID
-          %td= @user.id
+          %th ID
+          %th メールアドレス
+          %th 名前
+          %th 郵便番号
+          %th 住所
         %tr
-          %td メールアドレス
+          %td= @user.id
           %td= @user.email
+          %td= @user.name
+          %td= @user.zipcode
+          %td= @user.address
 
 %br
 

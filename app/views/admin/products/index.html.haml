@@ -8,9 +8,6 @@
           %th 商品名
           %th 画像
           %th 価格
-          %th 説明
-          %th 非表示フラグ
-          %th 表示順
           %th
           %th
           %th
@@ -19,16 +16,12 @@
         - @products.each do |product|
           %tr
             %td= product.name
-            %td
-              %img.img-rounded{:src => "https://dummyimage.com/100x100", :alt => "#{product.name}"}
+            %td= image_tag(product.img_filename, class: 'img-thumbnail', alt: "#{product.name}", size: "100x100")
             %td= product.price
-            %td= product.description
-            %td= product.flg_non_display
-            %td= product.sort_order
-            %td= link_to 'Show', [:admin, product]
-            %td= link_to 'Edit', edit_admin_product_path(product)
-            %td= link_to 'Destroy', [:admin, product], method: :delete, data: { confirm: '削除してよろしいですか?' }
+            %td= link_to '詳細', [:admin, product]
+            %td= link_to '編集', edit_admin_product_path(product)
+            %td= link_to '削除', [:admin, product], method: :delete, data: { confirm: '削除してよろしいですか?' }
 
 %br
 
-= link_to 'New Product', new_admin_product_path
+= link_to '新規作成', new_admin_product_path

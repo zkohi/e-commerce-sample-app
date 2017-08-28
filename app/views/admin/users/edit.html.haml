@@ -6,14 +6,16 @@
       = f.error_notification
 
       .form-inputs
-        = f.input :id, label: 'ID'
-        = f.input :email, label: 'メールアドレス'
+        = f.input :email
+        = f.input :name
+        = f.input :zipcode
+        = f.input :address
 
       .form-actions
-        = f.button :submit, '登録する'
+        = f.button :submit
 
 %br
 
-= link_to 'ユーザー詳細', [:admin, @user]
+= link_to '詳細情報', [:admin, @user]
 \|
 = link_to 'ユーザー一覧', admin_users_path

@@ -20,8 +20,11 @@
           %td 説明
           %td= @product.description
         %tr
-          %td 非表示フラグ
-          %td= @product.flg_non_display
+          %td 表示/非表示
+          - if @product.flg_non_display
+            %td 非表示
+          - else
+            %td 表示
         %tr
           %td 表示順
           %td= @product.sort_order

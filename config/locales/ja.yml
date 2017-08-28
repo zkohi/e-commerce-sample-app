@@ -13,6 +13,11 @@ ja:
         name: 名前
         zipcode: 郵便番号
         address: 住所
+  helpers:
+    submit:
+      user:
+        create: "新規登録"
+        update: "変更する"
   enums:
     order:
       shipment_state:

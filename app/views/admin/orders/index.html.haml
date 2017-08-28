@@ -5,15 +5,15 @@
     %table.table.table-striped.table-hover
       %thead
         %tr
-          %th 注文状況
-          %th 配送状況
-          %th 支払状況
+          %th 注文番号
           %th 商品個数
           %th 商品料金
           %th 配送料金
           %th 支払い手数料金
           %th 税金
           %th 総計
+          %th 支払状況
+          %th 配送状況
           %th
           %th
           %th
@@ -21,15 +21,13 @@
       %tbody
         - @orders.each do |order|
           %tr
-            %td= order.state
-            %td= order.shipment_state
-            %td= order.payment_state
+            %td= order.id
             %td= order.item_count
-            %td= order.item_total
-            %td= order.shipment_total
-            %td= order.payment_total
-            %td= order.tax_total
-            %td= order.total
-            %td= link_to 'Show', [:admin, order]
-            %td= link_to 'Edit', edit_admin_order_path(order)
-            %td= link_to 'Destroy', [:admin, order], method: :delete, data: { confirm: '削除してよろしいですか?' }
+            %td= number_to_currency(order.item_total, locale: :ja)
+            %td= number_to_currency(order.shipment_total, locale: :ja)
+            %td= number_to_currency(order.payment_total, locale: :ja)
+            %td= number_to_currency(order.tax_total, locale: :ja)
+            %td= number_to_currency(order.total, locale: :ja)
+            %td= order.payment_state_i18n
+            %td= order.shipment_state_i18n
+            %td= link_to '詳細', [:admin, order]

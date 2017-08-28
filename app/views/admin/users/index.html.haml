@@ -7,6 +7,9 @@
         %tr
           %th ID
           %th メールアドレス
+          %th 名前
+          %th 郵便番号
+          %th 住所
           %th
           %th
           %th
@@ -16,6 +19,9 @@
           %tr
             %td= user.id
             %td= user.email
-            %td= link_to 'Show', [:admin, user]
-            %td= link_to 'Edit', edit_admin_user_path(user)
-            %td= link_to 'Destroy', [:admin, user], method: :delete, data: { confirm: '削除してよろしいですか?' }
+            %td= user.name
+            %td= user.zipcode
+            %td= user.address
+            %td= link_to '詳細', [:admin, user]
+            %td= link_to '編集', edit_admin_user_path(user)
+            %td= link_to '削除', [:admin, user], method: :delete, data: { confirm: '削除してよろしいですか?' }

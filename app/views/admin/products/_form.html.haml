@@ -7,6 +7,7 @@
         .form-inputs
           = f.input :name, label: '商品名'
           = f.input :img_filename, label: '画像'
+          = image_tag(@product.img_filename, class: 'img-thumbnail', alt: "#{@product.name}", size: "250x250")
           = f.input :price, label: '価格', input_html: {min: 1, max: 10000000}
           = f.input :description, label: '説明'
           = f.input :flg_non_display, label: '非表示フラグ'
