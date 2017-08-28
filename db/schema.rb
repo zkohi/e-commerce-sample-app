@@ -55,6 +55,7 @@ ActiveRecord::Schema.define(version: 20170822153620) do
     t.date "shipping_date"
     t.string "shipping_time_range_string"
     t.string "user_name"
+    t.integer "user_zipcode"
     t.string "user_address"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false

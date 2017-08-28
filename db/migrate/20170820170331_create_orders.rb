@@ -15,6 +15,7 @@ class CreateOrders < ActiveRecord::Migration[5.1]
       t.date :shipping_date
       t.string :shipping_time_range_string
       t.string :user_name
+      t.integer :user_zipcode
       t.string :user_address
 
       t.timestamps

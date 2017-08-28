@@ -8,7 +8,7 @@ class ApplicationController < ActionController::Base
   protected
 
   def configure_permitted_parameters
-    if devise_controller? && resource_name == :admin
+    if devise_controller? && resource_name != :admin
       devise_parameter_sanitizer.permit(:account_update, keys: [:name, :zipcode, :address])
     end
   end
