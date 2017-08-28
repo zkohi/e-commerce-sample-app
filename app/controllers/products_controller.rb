@@ -2,7 +2,7 @@ class ProductsController < ApplicationController
   before_action :authenticate_user!
 
   def index
-    @products = Product.all
+    @products = Product.order("sort_order DESC").where(flg_non_display: false)
   end
 
   def show

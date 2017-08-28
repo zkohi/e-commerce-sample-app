@@ -4,7 +4,7 @@
     img_filename: '',
     price: i * 1000,
     description: "A product ##{i}.",
-    flg_non_display: "Product ##{i}",
+    flg_non_display: false,
     sort_order: i
   )
 end
