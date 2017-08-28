@@ -4,8 +4,6 @@ class Order < ApplicationRecord
   has_many :line_items, dependent: :destroy
   belongs_to :user
 
-  before_save :calculate_total, if: :cart?
-
   accepts_nested_attributes_for :line_items
 
   enum state: {
@@ -65,29 +63,49 @@ class Order < ApplicationRecord
     end
   end
 
-  def calculate_total
-    line_item = self.line_items.first
-    set_item_count(line_item)
+  def save_for_add_line_item!(params)
+    line_items_attributes = params["line_items_attributes"]["0"]
+    set_item_count(line_items_attributes)
+    set_item_total(line_items_attributes)
     set_shipment_total
-    set_item_total(line_item)
     set_payment_total
     set_adjustment_total
     set_tax_total
     self.total = self.adjustment_total + self.tax_total
+    save!(params)
+  end
+
+  def update_for_delete_line_item!
+    sum_item_count
+    sum_item_total
+    set_shipment_total
+    set_payment_total
+    set_adjustment_total
+    set_tax_total
+    self.total = self.adjustment_total + self.tax_total
+    update!({})
   end
 
   private
 
-  def set_item_count(line_item)
-    self.item_count += line_item.quantity
+  def set_item_count(line_items_attributes)
+    self.item_count += line_items_attributes["quantity"].to_i
+  end
+
+  def sum_item_count
+    self.item_count = self.line_items.sum(:quantity)
+  end
+
+  def set_item_total(line_items_attributes)
+    self.item_total += Product.find(line_items_attributes["product_id"]).price * line_items_attributes["quantity"].to_i
+  end
+
+  def sum_item_total
+    self.item_total = self.line_items.includes(:product).sum('products.price * quantity')
   end
 
   def set_shipment_total
     self.shipment_total = (self.item_count / 5.0).ceil * 600
-  end
-
-  def set_item_total(line_item)
-    self.item_total += (line_item.product.price * line_item.quantity)
   end
 
   def set_payment_total

@@ -6,26 +6,26 @@
       %thead
         %tr
           %th 注文番号
-          %th 配送状況
-          %th 支払状況
           %th 商品個数
           %th 商品料金
           %th 配送料金
           %th 支払い手数料金
           %th 税金
           %th 総計
+          %th 支払状況
+          %th 配送状況
           %th
 
       %tbody
         - @orders.each do |order|
           %tr
             %td= order.id
-            %td= order.shipment_state_i18n
-            %td= order.payment_state_i18n
             %td= order.item_count
             %td= number_to_currency(order.item_total, locale: :ja)
             %td= number_to_currency(order.shipment_total, locale: :ja)
             %td= number_to_currency(order.payment_total, locale: :ja)
             %td= number_to_currency(order.tax_total, locale: :ja)
             %td= number_to_currency(order.total, locale: :ja)
+            %td= order.payment_state_i18n
+            %td= order.shipment_state_i18n
             %td= link_to '注文情報を確認する', order

@@ -13,7 +13,7 @@ class OrdersController < ApplicationController
     @order = current_user.orders.find_or_initialize_by(state: :cart)
     @order.line_items.build(order_params[:line_items_attributes]["0"])
 
-    @order.save!
+    @order.save_for_add_line_item!(order_params)
     redirect_to cart_path, notice: 'Order was successfully created.'
   end
 

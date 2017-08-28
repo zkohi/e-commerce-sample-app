@@ -7,7 +7,7 @@ class CartsController < ApplicationController
 
   def edit
     @order = current_user.orders.find_or_initialize_by(state: :cart)
-    if @order.line_items.blank?
+    if @order.line_items.empty?
       redirect_to cart_path
     end
   end

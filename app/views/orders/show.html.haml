@@ -52,11 +52,21 @@
       .panel-heading
         %h2.panel-title 配送情報
       .panel-body
-        .col-md-12
-          = @order.user_name
-          = @order.user_address
-          = @order.shipment_state_i18n
-          = @order.shipping_date
-          = @order.shipping_time_range_string
+        %table.table.table-striped.table-hover
+          %thead
+            %tr
+              %th 名前
+              %th 住所
+              %th 配送日
+              %th 配送時間帯
+              %th 配送状況
+
+          %tbody
+            %tr
+              %td= @order.user_name
+              %td= @order.user_address
+              %td= @order.shipping_date
+              %td= @order.shipping_time_range_string
+              %td= @order.shipment_state_i18n
 
 = link_to '注文履歴一覧画面を見る', orders_path
