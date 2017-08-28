@@ -42,6 +42,7 @@ class CartsController < ApplicationController
         :shipping_date,
         :shipping_time_range,
         :user_name,
+        :user_zipcode,
         :user_address,
         line_items_attributes: [
           :id,
