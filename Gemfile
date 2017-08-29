@@ -48,6 +48,7 @@ gem 'carrierwave', '~> 1.0'
 gem "mini_magick"
 gem 'devise'
 gem 'devise-i18n'
+gem 'rails-i18n', '~> 5.0.0'
 gem 'haml-rails'
 gem 'enum_help'
 gem 'validates_timeliness', '~> 4.0'
