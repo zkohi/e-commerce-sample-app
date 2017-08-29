@@ -2,25 +2,28 @@
   .panel-heading
     %h2.panel-title 商品一覧
   .panel-body
-    %table.table.table-striped.table-hover
-      %thead
-        %tr
-          %th 商品名
-          %th 画像
-          %th 価格
-          %th
-          %th
-          %th
-
-      %tbody
-        - @products.each do |product|
+    %div
+      %table.table.table-striped.table-hover
+        %thead
           %tr
-            %td= product.name
-            %td= image_tag(product.img_filename, class: 'img-thumbnail', alt: "#{product.name}", size: "100x100")
-            %td= product.price
-            %td= link_to '詳細', [:admin, product]
-            %td= link_to '編集', edit_admin_product_path(product)
-            %td= link_to '削除', [:admin, product], method: :delete, data: { confirm: '削除してよろしいですか?' }
+            %th 商品名
+            %th 画像
+            %th 価格
+            %th
+            %th
+            %th
+
+        %tbody
+          - @products.each do |product|
+            %tr
+              %td= product.name
+              %td= image_tag(product.img_filename, class: 'img-thumbnail', alt: "#{product.name}", size: "100x100")
+              %td= product.price
+              %td= link_to '詳細', [:admin, product]
+              %td= link_to '編集', edit_admin_product_path(product)
+              %td= link_to '削除', [:admin, product], method: :delete, data: { confirm: '削除してよろしいですか?' }
+
+      = paginate @products
 
 %br
 

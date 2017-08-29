@@ -1,5 +1,5 @@
 class ApplicationController < ActionController::Base
-  before_action :configure_permitted_parameters, if: :devise_controller?
+  before_action :configure_permitted_parameters
 
   protect_from_forgery with: :exception
 
@@ -16,7 +16,7 @@ class ApplicationController < ActionController::Base
   private
 
   def layout_by_resource
-    if resource_name == :admin
+    if devise_controller? && resource_name == :admin
       "admin"
     else
       "application"

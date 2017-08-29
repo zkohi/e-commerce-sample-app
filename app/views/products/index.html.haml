@@ -7,3 +7,7 @@
             .panel-body.text-center.product-body
               = image_tag(product.img_filename, class: 'img-thumbnail', alt: "#{product.name}", size: "250x250")
               %p= product.name
+
+%br
+
+= paginate @products
