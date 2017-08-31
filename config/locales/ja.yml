@@ -18,18 +18,18 @@ ja:
     models:
       order: 注文
     attributes:
-      user:
+      user: &activerecord_attributes_user
         name: 名前
         zipcode: 郵便番号
         address: 住所
-      product:
+      product: &activerecord_attributes_product
         name: 商品名
         img_filename: 画像
         price: 価格
         description: 説明
         flg_non_display: 非表示フラグ
         sort_order: 表示順
-      order: &order_attributes
+      order: &activerecord_attributes_order
         user_name: 名前
         user_zipcode: 郵便番号
         user_address: 住所
@@ -39,24 +39,14 @@ ja:
     errors:
       models:
         order:
-          attributes:
-            shipping_date:
-              invalid_date: 配送日を正しく入力してください
+          invalid_date: の日時を正しく入力してください
   simple_form:
     error_notification:
       default_message: エラーの内容をご確認ください
     labels:
-      user:
-        name: 名前
-        zipcode: 郵便番号
-        address: 住所
-      product:
-        name: 商品名
-        img_filename: 画像
-        price: 価格
-        description: 説明
-        flg_non_display: 非表示フラグ
-        sort_order: 表示順
+      user: *activerecord_attributes_user
+      product: *activerecord_attributes_product
+      order: *activerecord_attributes_order
   users:
     registrations:
       edit:
