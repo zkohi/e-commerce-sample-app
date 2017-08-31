@@ -8,14 +8,15 @@ class Order < ApplicationRecord
   accepts_nested_attributes_for :line_items
 
   validates :user_id, presence: true
-  with_options if: :ordered? do |order|
-    validates :item_count, presence: true, numericality: { only_integer: true, greater_than_or_equal_to: 1 }
-    validates :item_total, presence: true, numericality: { only_integer: true, greater_than_or_equal_to: 1 }
-    validates :shipment_total, presence: true, numericality: { only_integer: true, greater_than_or_equal_to: 1 }
-    validates :payment_total, presence: true, numericality: { only_integer: true, greater_than_or_equal_to: 1 }
-    validates :adjustment_total, presence: true, numericality: { only_integer: true, greater_than_or_equal_to: 1 }
-    validates :tax_total, presence: true, numericality: { only_integer: true, greater_than_or_equal_to: 1 }
-    validates :total, presence: true, numericality: { only_integer: true, greater_than_or_equal_to: 1 }
+  validates :item_count, presence: true, numericality: { only_integer: true, greater_than_or_equal_to: 0 }
+  validates :item_total, presence: true, numericality: { only_integer: true, greater_than_or_equal_to: 0 }
+  validates :shipment_total, presence: true, numericality: { only_integer: true, greater_than_or_equal_to: 0 }
+  validates :payment_total, presence: true, numericality: { only_integer: true, greater_than_or_equal_to: 0 }
+  validates :adjustment_total, presence: true, numericality: { only_integer: true, greater_than_or_equal_to: 0 }
+  validates :tax_total, presence: true, numericality: { only_integer: true, greater_than_or_equal_to: 0 }
+  validates :total, presence: true, numericality: { only_integer: true, greater_than_or_equal_to: 0 }
+
+  with_options if: :ordered? do
     validates_date :shipping_date, presence: true, on_or_before: lambda { available_shipping_date['max'].days.after }, on_or_after: lambda { available_shipping_date['minDate'].days.after }
     validates :shipping_time_range_string, presence: true, inclusion: { in: ['8時〜12時', '12時〜14時', '14時〜16時', '16時〜18時', '18時〜20時', '20時〜21時'] }
     validates :user_name, presence: true, length: { maximum: 30 }

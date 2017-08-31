@@ -50,4 +50,5 @@
                 %td= number_to_currency(@order.tax_total, locale: :ja)
                 %td= number_to_currency(@order.total, locale: :ja)
 
-      = link_to '注文画面に進む', edit_cart_path, {class: "btn bs-component"}
+      %p= link_to '注文画面に進む', edit_cart_path, {class: "btn bs-component"}
+      %p= link_to '商品一覧を見る', root_path, {class: "btn bs-component"}
