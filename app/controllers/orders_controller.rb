@@ -10,11 +10,16 @@ class OrdersController < ApplicationController
   end
 
   def create
-    @order = current_user.orders.find_or_initialize_by(state: :cart)
-    @order.line_items.build(order_params[:line_items_attributes]["0"])
+    line_item = order_params[:line_items_attributes]["0"]
+    if line_item["quantity"].present?
+      @order = current_user.orders.find_or_initialize_by(state: :cart)
+      @order.line_items.build(line_item)
 
-    @order.save_for_add_line_item!(order_params)
-    redirect_to cart_path
+      @order.save_for_add_line_item!(order_params)
+      redirect_to cart_path
+    else
+      redirect_to product_path(line_item["product_id"]), notice: '個数を入力してください'
+    end
   end
 
   private

@@ -5,13 +5,13 @@
         = f.error_notification
 
         .form-inputs
-          = f.input :name, label: '商品名'
-          = f.input :img_filename, label: '画像'
+          = f.input :name
+          = f.input :img_filename
           = image_tag(@product.img_filename, class: 'img-thumbnail', alt: "#{@product.name}", size: "250x250")
-          = f.input :price, label: '価格', input_html: {min: 1, max: 10000000}
-          = f.input :description, label: '説明'
-          = f.input :flg_non_display, label: '非表示フラグ'
-          = f.input :sort_order, label: '表示順', input_html: {min: 1, max: 10000}
+          = f.input :price, input_html: {min: 1, max: 10000000}
+          = f.input :description
+          = f.input :flg_non_display, include_blank: false
+          = f.input :sort_order, input_html: {min: 1, max: 10000}
 
         .form-actions
-          = f.button :submit, '登録する'
+          = f.button :submit

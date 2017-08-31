@@ -14,12 +14,49 @@ ja:
       previous: "&lsaquo; 前"
       next: "次 &rsaquo;"
       truncate: "..."
+  activerecord:
+    models:
+      order: 注文
+    attributes:
+      user:
+        name: 名前
+        zipcode: 郵便番号
+        address: 住所
+      product:
+        name: 商品名
+        img_filename: 画像
+        price: 価格
+        description: 説明
+        flg_non_display: 非表示フラグ
+        sort_order: 表示順
+      order: &order_attributes
+        user_name: 名前
+        user_zipcode: 郵便番号
+        user_address: 住所
+        shipping_date: 配送日
+        shipping_time_range: 配送時間帯
+        shipping_time_range_string: 配送時間帯
+    errors:
+      models:
+        order:
+          attributes:
+            shipping_date:
+              invalid_date: 配送日を正しく入力してください
   simple_form:
+    error_notification:
+      default_message: エラーの内容をご確認ください
     labels:
       user:
         name: 名前
         zipcode: 郵便番号
         address: 住所
+      product:
+        name: 商品名
+        img_filename: 画像
+        price: 価格
+        description: 説明
+        flg_non_display: 非表示フラグ
+        sort_order: 表示順
   users:
     registrations:
       edit:

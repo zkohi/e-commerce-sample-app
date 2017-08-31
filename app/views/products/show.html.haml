@@ -1,19 +1,21 @@
-.row
-  .content.col-md-12
-    .col-md-4.col-sm-5
-      .panel.panel-default
-        .panel-body.text-center
-          = image_tag(@product.img_filename, class: 'img-thumbnail')
-    .col-md-8.col-sm-7
-      %h1= @product.name
-      .well= @product.description
-      %span.lead.price.selling= "価格 #{number_to_currency(@product.price, locale: :ja)}"
-      = simple_form_for(@order, html: {class: 'form-horizontal'}, defaults: { label_html: { class: 'col-lg-2' }, wrapper_html: { class: 'col-lg-8' } }) do |f|
-        = f.fields_for :line_items do |line_item|
-          = line_item.hidden_field :product_id, value: @product.id
+.content.col-md-12
+  -if notice
+    %p.alert.alert-dismissible.alert-warning#notice= notice
 
-          .form-inputs
-            = line_item.input :quantity, label: '個数', input_html: {min: 1, max: 99}
+  .col-md-4.col-sm-5
+    .panel.panel-default
+      .panel-body.text-center
+        = image_tag(@product.img_filename, class: 'img-thumbnail')
+  .col-md-8.col-sm-7
+    %h1= @product.name
+    .well= @product.description
+    %span.lead.price.selling= "価格 #{number_to_currency(@product.price, locale: :ja)}"
+    = simple_form_for(@order, html: {class: 'form-horizontal'}, defaults: { label_html: { class: 'col-lg-2' }, wrapper_html: { class: 'col-lg-8' } }) do |f|
+      = f.fields_for :line_items do |line_item|
+        = line_item.hidden_field :product_id, value: @product.id
 
-        .form-actions
-          = f.button :submit, 'カートに入れる'
+        .form-inputs
+          = line_item.input :quantity, label: '個数', input_html: {min: 1, max: 99}
+
+      .form-actions
+        = f.button :submit, 'カートに入れる'
