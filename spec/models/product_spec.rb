@@ -1,5 +1,14 @@
 require 'rails_helper'
 
 RSpec.describe Product, type: :model do
-  pending "add some examples to (or delete) #{__FILE__}"
+
+  it "has a valid factory" do
+    expect(build(:product)).to be_valid
+  end
+
+  it "is invalid without a name" do
+    product = build(:product, name: nil)
+    product.valid?
+    expect(product.errors[:name]).to include("を入力してください")
+  end
 end
