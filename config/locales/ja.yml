@@ -66,3 +66,11 @@ ja:
         sixteen_to_eighteen: 16時〜18時
         eighteen_to_twenty: 18時〜20時
         twenty_to_twenty_one: 20時〜21時
+
+  errors:
+    messages:
+      carrierwave_processing_error: "画像のリサイズに失敗しました"
+      carrierwave_integrity_error: "画像ファイルではありません"
+      carrierwave_download_error: "画像をダウンロードできません"
+      extension_whitelist_error: "指定された拡張子[%{extension}]のファイルは許可されていません。許可されている拡張子は[%{allowed_types}]です。"
+      extension_blacklist_error: "指定された拡張子%{extension}のファイルは許可されていません。禁止されている拡張子は%{prohibited_types}です。"
