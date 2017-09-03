@@ -22,7 +22,7 @@ RSpec.describe Product, type: :model do
     end
 
     context "name length is too long" do
-      let(:product) { build(:product, name: "1234567890123456789021345678901") }
+      let(:product) { build(:product, name: "a" * 31) }
       it { expect(product.errors[:name]).to include("は30文字以内で入力してください") }
     end
 
