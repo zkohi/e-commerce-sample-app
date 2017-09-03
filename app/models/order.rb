@@ -17,7 +17,8 @@ class Order < ApplicationRecord
   validates :total, presence: true, numericality: { only_integer: true, greater_than_or_equal_to: 0 }
 
   with_options if: :ordered? do
-    validates_date :shipping_date, presence: true, on_or_before: lambda { available_shipping_date['max'].days.after }, on_or_after: lambda { available_shipping_date['minDate'].days.after }
+    validates_date :shipping_date, presence: true
+    validate :valid_shipping_date?
     validates :shipping_time_range_string, presence: true, inclusion: { in: ['8時〜12時', '12時〜14時', '14時〜16時', '16時〜18時', '18時〜20時', '20時〜21時'] }
     validates :user_name, presence: true, length: { maximum: 30 }
     validates :user_zipcode, presence: true, numericality: { only_integer: true}, length: { is: 7 }
@@ -55,7 +56,7 @@ class Order < ApplicationRecord
     self.update(params)
   end
 
-  def available_shipping_date
+  def available_shipping_date_range
     # 3営業日（営業日: 月-金）から14営業日まで
     # [当日含む]でよいかは要確認
     today = Date.today
@@ -148,4 +149,11 @@ class Order < ApplicationRecord
     self.tax_total = (self.adjustment_total * 0.08).floor
   end
 
+  def valid_shipping_date?
+    date_range = available_shipping_date_range
+    today = Date.today
+    if shipping_date.present? && (shipping_date < (today + date_range[:minDate].days) || shipping_date > (today + date_range[:maxDate].days))
+      errors.add(:shipping_date, "は3営業日（営業日: 月-金）から14営業日までを指定してください")
+    end
+  end
 end

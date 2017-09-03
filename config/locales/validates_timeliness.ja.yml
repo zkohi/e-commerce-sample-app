@@ -1,0 +1,16 @@
+ja:
+  errors:
+    messages:
+      invalid_date: "は、日付のフォーマットが間違っています"
+      invalid_time: "は、時間のフォーマットが間違っています"
+      invalid_datetime: "は、日時のフォーマットが間違っています"
+      is_at: "は、%{restriction} を指定してください"
+      before: "は、%{restriction} より小さい日時を指定してください"
+      on_or_before: "は、%{restriction} 以前の日時を指定してください"
+      after: "は、%{restriction} より大きい日時を指定してください"
+      on_or_after: "は、%{restriction} 以降の日時を指定してください"
+  validates_timeliness:
+    error_value_formats:
+      date: '%Y-%m-%d'
+      time: '%H:%M:%S'
+      datetime: '%Y-%m-%d %H:%M:%S'

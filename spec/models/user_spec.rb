@@ -1,7 +1,8 @@
 require 'rails_helper'
 
 RSpec.describe User, type: :model do
-  context "has a invalid factory" do
+
+  context "has a valid factory" do
     it { expect(build(:user)).to be_valid }
 
     context "with a profile" do

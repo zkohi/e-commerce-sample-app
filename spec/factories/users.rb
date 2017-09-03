@@ -1,6 +1,6 @@
 FactoryGirl.define do
   factory :user do
-    email Faker::Internet.unique.email
+    sequence(:email) { |n| "#{n}" << Faker::Internet.unique.email }
     password "userpassword"
     password_confirmation "userpassword"
     trait :with_profile do

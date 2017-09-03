@@ -2,7 +2,7 @@ require 'rails_helper'
 
 RSpec.describe Product, type: :model do
 
-  context "has a invalid factory" do
+  context "has a valid factory" do
     it { expect(build(:product)).to be_valid }
 
     context "with a img_filename" do
@@ -72,8 +72,8 @@ RSpec.describe Product, type: :model do
     end
 
     context "sort_order is 1000000" do
-      let(:product) { build(:product, price: 1000000) }
-      it { expect(product.errors[:price]).to include("は999999以下の値にしてください") }
+      let(:product) { build(:product, sort_order: 1000000) }
+      it { expect(product.errors[:sort_order]).to include("は999999以下の値にしてください") }
     end
 
   end

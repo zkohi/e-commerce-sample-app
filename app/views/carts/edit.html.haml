@@ -70,7 +70,7 @@
             = f.input :user_zipcode, input_html: { value: current_user.zipcode }
             = f.input :user_address, input_html: { value: current_user.address }
           .col-md-6
-            = f.input :shipping_date, as: :string, input_html: {"data-datepicker-options" => @order.available_shipping_date.to_json }
+            = f.input :shipping_date, as: :string, input_html: {"data-datepicker-options" => @order.available_shipping_date_range.to_json }
           .col-md-6
             = f.input :shipping_time_range, as: :select, collection: Order.shipping_time_ranges.map { |k, v| [ApplicationController.helpers.t("enums.order.shipping_time_range.#{k}"), k] }, include_blank: false
           .col-md-12

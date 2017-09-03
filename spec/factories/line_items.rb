@@ -1,8 +1,11 @@
 FactoryGirl.define do
   factory :line_item do
-    order_id 1
-    product_id 1
-    quantity 1
-    price 1
+    order
+    product
+    quantity Faker::Number.between(1, 99)
+    trait :with_price do
+      price Faker::Number.between(1, 999999)
+    end
+
   end
 end
