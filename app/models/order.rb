@@ -53,7 +53,7 @@ class Order < ApplicationRecord
   def execute(params)
     self.state = "ordered"
     self.shipping_time_range_string = Order.shipping_time_ranges_i18n[params["shipping_time_range"]]
-    self.update(params)
+    update(params)
   end
 
   def available_shipping_date_range
@@ -91,7 +91,7 @@ class Order < ApplicationRecord
     set_payment_total
     set_adjustment_total
     set_tax_total
-    self.total = self.adjustment_total + self.tax_total
+    set_total
     save!(params)
   end
 
@@ -102,7 +102,7 @@ class Order < ApplicationRecord
     set_payment_total
     set_adjustment_total
     set_tax_total
-    self.total = self.adjustment_total + self.tax_total
+    set_total
     update!({})
   end
 
@@ -147,6 +147,10 @@ class Order < ApplicationRecord
 
   def set_tax_total
     self.tax_total = (self.adjustment_total * 0.08).floor
+  end
+
+  def set_total
+    self.total = self.adjustment_total + self.tax_total
   end
 
   def valid_shipping_date?
