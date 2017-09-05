@@ -455,5 +455,249 @@ RSpec.describe Order, type: :model do
       should
       expect(order.item_count).to eq expected
     end
+
+    it do
+      should
+      expect(order.line_items).to have_received(:sum).with(:quantity)
+    end
   end
+
+  describe "set_item_total" do
+    before :each do
+      allow(Product).to receive(:find).with(product_id).and_return(product)
+    end
+
+    subject { order.send(:set_item_total, line_items_attributes) }
+
+    let(:order) { build(:order, item_total: item_total) }
+    let(:item_total) { 1000 }
+    let(:quantity) { 10 }
+    let(:price) { 123 }
+    let(:expected) { 2230 }
+    let(:product) { double("product", price: price) }
+    let(:product_id) { double("product_id") }
+    let(:line_items_attributes) {
+      {
+        "product_id" => product_id,
+        "quantity" => quantity
+      }
+    }
+
+    it do
+      should
+      expect(order.item_total).to eq expected
+    end
+  end
+
+  describe "sum_item_total" do
+    before :each do
+      allow(order.line_items).to receive(:includes).with(:product).and_return(products)
+      allow(products).to receive(:sum).with('products.price * quantity').and_return(expected)
+      allow(expected).to receive(:to_i).and_return(expected)
+    end
+
+    subject { order.send(:sum_item_total) }
+
+    let(:order) { build(:order) }
+    let(:products) { double("products") }
+    let(:expected) { double("expected") }
+
+    it do
+      should
+      expect(order.item_total).to eq expected
+    end
+
+    it do
+      should
+      expect(products).to have_received(:sum).with('products.price * quantity')
+    end
+  end
+
+  describe "set_shipment_total" do
+    subject { order.send(:set_shipment_total) }
+
+    let(:order) { build(:order, item_count: item_count) }
+
+    context "if item_count is zero" do
+      let(:item_count) { 0 }
+      let(:expected) { 0 }
+
+      it do
+        should
+        expect(order.shipment_total).to eq expected
+      end
+    end
+
+    context "if item_count is 1" do
+      let(:item_count) { 1 }
+      let(:expected) { 600 }
+
+      it do
+        should
+        expect(order.shipment_total).to eq expected
+      end
+    end
+
+    context "if item_count is 5" do
+      let(:item_count) { 5 }
+      let(:expected) { 600 }
+
+      it do
+        should
+        expect(order.shipment_total).to eq expected
+      end
+    end
+
+    context "if item_count is 6" do
+      let(:item_count) { 6 }
+      let(:expected) { 1200 }
+
+      it do
+        should
+        expect(order.shipment_total).to eq expected
+      end
+    end
+
+    context "if item_count is 10" do
+      let(:item_count) { 10 }
+      let(:expected) { 1200 }
+
+      it do
+        should
+        expect(order.shipment_total).to eq expected
+      end
+    end
+
+    context "if item_count is 11" do
+      let(:item_count) { 11 }
+      let(:expected) { 1800 }
+
+      it do
+        should
+        expect(order.shipment_total).to eq expected
+      end
+    end
+  end
+
+  describe "set_payment_total" do
+    subject { order.send(:set_payment_total) }
+
+    let(:order) { build(:order, item_total: item_total) }
+
+    context "if item_total is zero" do
+      let(:item_total) { 0 }
+      let(:expected) { 0 }
+
+      it do
+        should
+        expect(order.payment_total).to eq expected
+      end
+    end
+
+    context "if item_total is 9999" do
+      let(:item_total) { 9999 }
+      let(:expected) { 300 }
+
+      it do
+        should
+        expect(order.payment_total).to eq expected
+      end
+    end
+
+    context "if item_total is 10000" do
+      let(:item_total) { 10000 }
+      let(:expected) { 400 }
+
+      it do
+        should
+        expect(order.payment_total).to eq expected
+      end
+    end
+
+    context "if item_total is 29999" do
+      let(:item_total) { 29999 }
+      let(:expected) { 400 }
+
+      it do
+        should
+        expect(order.payment_total).to eq expected
+      end
+    end
+
+    context "if item_total is 99999" do
+      let(:item_total) { 99999 }
+      let(:expected) { 600 }
+
+      it do
+        should
+        expect(order.payment_total).to eq expected
+      end
+    end
+
+    context "if item_total is 100000" do
+      let(:item_total) { 100000 }
+      let(:expected) { 1000 }
+
+      it do
+        should
+        expect(order.payment_total).to eq expected
+      end
+    end
+  end
+
+  describe "set_adjustment_total" do
+    subject { order.send(:set_adjustment_total) }
+
+    let(:order) { build(:order, item_total: item_total, shipment_total: shipment_total, payment_total: payment_total) }
+    let(:shipment_total) { 10 }
+    let(:item_total) { 200 }
+    let(:payment_total) { 3000 }
+    let(:expected) { 3210 }
+
+    it do
+      should
+      expect(order.adjustment_total).to eq expected
+    end
+  end
+
+  describe "set_tax_total" do
+    subject { order.send(:set_tax_total) }
+
+    let(:order) { build(:order, adjustment_total: adjustment_total) }
+
+    context "小数点が発生する場合" do
+      let(:adjustment_total) { 30 }
+      let(:expected) { 2 }
+
+      it "小数点以下は切り捨てられること" do
+        should
+        expect(order.tax_total).to eq expected
+      end
+    end
+
+    context "小数点が発生しない場合" do
+      let(:adjustment_total) { 3000 }
+      let(:expected) { 240 }
+
+      it do
+        should
+        expect(order.tax_total).to eq expected
+      end
+    end
+  end
+
+  describe "set_total" do
+    subject { order.send(:set_total) }
+
+    let(:order) { build(:order, adjustment_total: adjustment_total, tax_total: tax_total) }
+    let(:adjustment_total) { 3000 }
+    let(:tax_total) { 240 }
+    let(:expected) { 3240 }
+
+    it do
+      should
+      expect(order.total).to eq expected
+    end
+  end
+
 end
