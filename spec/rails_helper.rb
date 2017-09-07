@@ -57,4 +57,6 @@ RSpec.configure do |config|
 
   # FactoryGirl
   config.include FactoryGirl::Syntax::Methods
+  # Device
+  config.include Warden::Test::Helpers
 end
