@@ -9,7 +9,9 @@ Rails.application.routes.draw do
   resource :cart, only: [:show, :edit, :update]
 
   scope :admin do
-    devise_for :admins
+    devise_for :admins, controllers: {
+      :sessions => "admins/sessions",
+    }
   end
 
   namespace :admin, path: '/admin' do
@@ -20,6 +22,7 @@ Rails.application.routes.draw do
   end
 
   devise_for :users, controllers: {
-    :registrations => "users/registrations",
+    sessions: "users/sessions",
+    registrations: "users/registrations",
   }
 end

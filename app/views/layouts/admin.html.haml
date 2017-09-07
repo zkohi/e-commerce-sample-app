@@ -20,7 +20,10 @@
             %li
               =link_to 'ユーザー管理', admin_users_path
             %li
-              =link_to 'ログアウト', destroy_admin_session_path
+              -if admin_signed_in?
+                =link_to 'ログアウト', destroy_admin_session_path
+              -else
+                =link_to 'ログイン', new_admin_session_path
 
     .container
       = yield
