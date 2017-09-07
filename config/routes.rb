@@ -19,5 +19,7 @@ Rails.application.routes.draw do
     resources :users, except: [:new, :create, :destroy]
   end
 
-  devise_for :users
+  devise_for :users, controllers: {
+    :registrations => "users/registrations",
+  }
 end

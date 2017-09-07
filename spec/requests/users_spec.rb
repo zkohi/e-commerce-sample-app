@@ -35,7 +35,6 @@ RSpec.describe "Users", type: :request do
       follow_redirect!
 
       expect(response).to render_template(:show)
-      expect(response.body).to include("登録情報が更新されました")
     end
   end
 
