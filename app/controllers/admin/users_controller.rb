@@ -13,7 +13,7 @@ class Admin::UsersController < Admin::ApplicationController
 
   def update
     if @user.update(user_params)
-      redirect_to [:admin, @user], notice: 'User was successfully updated.'
+      redirect_to [:admin, @user], notice: 'ユーザーが更新されました'
     else
       render :edit
     end
@@ -21,7 +21,7 @@ class Admin::UsersController < Admin::ApplicationController
 
   def destroy
     @user.destroy
-    redirect_to admin_users_url, notice: 'User was successfully destroyed.'
+    redirect_to admin_users_url, notice: 'ユーザーが削除されました'
   end
 
   private
