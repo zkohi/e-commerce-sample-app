@@ -13,12 +13,6 @@ class CartsController < ApplicationController
 
   def update
     @order = current_user.orders.cart.first
-    #if @order
-    #  @order.update
-    #  redirect_to @order, notice: 'ご注文完了しました'
-    #else
-    #  redirect_to cart_path
-    #end
 
     if @order && @order.execute(order_params)
       redirect_to @order, notice: 'ご注文完了しました'

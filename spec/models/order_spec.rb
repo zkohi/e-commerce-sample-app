@@ -394,6 +394,9 @@ RSpec.describe Order, type: :model do
 
   describe "update_for_delete_line_item!" do
     before :each do
+      allow(order).to receive(:line_items).and_return(line_items)
+      allow(line_items).to receive(:find).with(line_item_id).and_return(product)
+      allow(product).to receive(:destroy)
       allow(order).to receive(:sum_item_count)
       allow(order).to receive(:sum_item_total)
       allow(order).to receive(:set_shipment_total)
@@ -404,9 +407,12 @@ RSpec.describe Order, type: :model do
       allow(order).to receive(:update!)
     end
 
-    subject { order.update_for_delete_line_item! }
+    subject { order.update_for_delete_line_item!(line_item_id) }
 
     let(:order) { build(:order) }
+    let(:line_items) { double(:line_items) }
+    let(:line_item_id) { double(:line_item_id) }
+    let(:product) { double(:product) }
 
     it do
       should
