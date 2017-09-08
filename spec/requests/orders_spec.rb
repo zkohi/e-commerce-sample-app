@@ -10,6 +10,20 @@ RSpec.describe "Orders", type: :request do
     Timecop.return
   end
 
+  context "Cart is empty" do
+    describe "GET /carts/edit" do
+      it "redirects to a Cart" do
+        user = FactoryGirl.create(:user)
+        login_as(user, scope: :user)
+
+        order = FactoryGirl.create(:order, :ordered)
+
+        get edit_cart_path
+        expect(response).to redirect_to(cart_path)
+      end
+    end
+  end
+
   describe "POST /orders and POST /cart/edit" do
     it "creates a Order and redirects to the Cart page" do
       user = FactoryGirl.create(:user)
