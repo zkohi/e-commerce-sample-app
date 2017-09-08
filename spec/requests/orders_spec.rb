@@ -1,10 +1,113 @@
 require 'rails_helper'
 
 RSpec.describe "Orders", type: :request do
+
+  before :all do
+    Timecop.freeze(Time.local(2017, 9, 4, 10, 5, 0))
+  end
+
+  after :all do
+    Timecop.return
+  end
+
+  describe "POST /orders and POST /cart/edit" do
+    it "creates a Order and redirects to the Cart page" do
+      user = FactoryGirl.create(:user)
+      login_as(user, scope: :user)
+
+      product = FactoryGirl.create(:product)
+
+      get product_path product
+      expect(response).to render_template(:show)
+
+      post orders_path, params: {
+        order: {
+          line_items_attributes: {
+            "0": {
+              product_id: product.id,
+              quantity: 3
+            }
+          }
+        }
+      }
+
+      expect(response).to redirect_to(cart_path)
+      follow_redirect!
+
+      expect(response).to render_template(:show)
+
+      get edit_cart_path
+      expect(response).to render_template(:edit)
+
+      order = user.orders.find_or_initialize_by(state: :cart)
+      patch cart_path, params: {
+        order: {
+          id: order.id,
+          item_count: order.item_count,
+          item_total: order.item_total,
+          shipment_total: order.shipment_total,
+          payment_total: order.payment_total,
+          adjustment_total: order.adjustment_total,
+          tax_total: order.tax_total,
+          total: order.total,
+          user_name: "My Order User Name",
+          user_zipcode: 1234567,
+          user_address: "My Order User Address",
+          shipping_date: Date.today + 2,
+          shipping_time_range: "twelve_to_fourteen",
+          line_items_attributes: {
+            "0": {
+              id: order.line_items[0].id,
+              product_id: order.line_items[0].product_id,
+              quantity: order.line_items[0].quantity,
+              price: order.line_items[0].product.price,
+            }
+          }
+        }
+      }
+
+      expect(response).to redirect_to(order)
+      follow_redirect!
+
+      expect(response).to render_template(:show)
+      expect(response.body).to include("ご注文完了しました")
+    end
+  end
+
   describe "GET /orders" do
-    it "works! (now write some real specs)" do
-      get orders_path
-      expect(response).to have_http_status(200)
+    it "shows a Orders" do
+      user = FactoryGirl.create(:user)
+      login_as(user, scope: :user)
+
+      order = FactoryGirl.create(:order, :ordered)
+
+      get orders_path order
+      expect(response).to render_template(:index)
+    end
+  end
+
+  describe "GET /admin/orders" do
+    it "shows Orders" do
+      user = FactoryGirl.create(:admin)
+      login_as(user, scope: :admin)
+
+      FactoryGirl.create(:order, :ordered)
+
+      get admin_orders_path
+      expect(response).to render_template(:index)
+    end
+  end
+
+  describe "GET /admin/orders/:id" do
+    it "shows a Order" do
+      user = FactoryGirl.create(:admin)
+      login_as(user, scope: :admin)
+
+      order = FactoryGirl.create(:order, :ordered)
+
+      get admin_order_path order
+
+      expect(response).to render_template(:show)
     end
   end
 end
