@@ -1,12 +1,11 @@
 class CartsController < ApplicationController
   before_action :authenticate_user!
+  before_action :set_order, only: [:show, :edit]
 
   def show
-    @order = current_user.orders.find_or_initialize_by(state: :cart)
   end
 
   def edit
-    @order = current_user.orders.find_or_initialize_by(state: :cart)
     if @order.line_items.empty?
       redirect_to cart_path
     end
@@ -29,6 +28,10 @@ class CartsController < ApplicationController
   end
 
   private
+    def set_order
+      @order = current_user.orders.find_or_initialize_by(state: :cart)
+    end
+
     def order_params
       params.require(:order).permit(
         :id,

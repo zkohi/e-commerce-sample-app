@@ -1,12 +1,12 @@
 class OrdersController < ApplicationController
   before_action :authenticate_user!
-  before_action :set_order, only: [:show]
 
   def index
     @orders = current_user.orders.ordered.page(params[:page])
   end
 
   def show
+    @order = current_user.orders.ordered.find(params[:id])
   end
 
   def create
@@ -23,10 +23,6 @@ class OrdersController < ApplicationController
   end
 
   private
-    def set_order
-      @order = current_user.orders.ordered.find(params[:id])
-    end
-
     def order_params
       params.require(:order).permit(:id, line_items_attributes: [:product_id, :quantity])
     end
