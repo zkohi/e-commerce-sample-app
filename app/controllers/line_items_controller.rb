@@ -5,7 +5,7 @@ class LineItemsController < ApplicationController
   def destroy
     @line_item.destroy
     @order.update_for_delete_line_item!
-    redirect_to cart_path
+    redirect_to cart_path, notice: '商品が削除されました'
   end
 
   private
