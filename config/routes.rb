@@ -8,13 +8,13 @@ Rails.application.routes.draw do
   resources :orders, only: [:index, :show, :create]
   resource :cart, only: [:show, :edit, :update]
 
-  scope :admin do
+  scope :backoffice do
     devise_for :admins, controllers: {
       :sessions => "admins/sessions",
     }
   end
 
-  namespace :admin, path: '/admin' do
+  namespace :backoffice, path: '/backoffice' do
     resources :users, except: [:new, :create]
     resources :products
     resources :orders, except: [:new, :create, :destroy]

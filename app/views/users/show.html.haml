@@ -16,4 +16,10 @@
         %div
           %label 住所
           %p= current_user.address
-        = link_to "登録情報を変更する", edit_user_registration_path
+  .panel-body.col-md-4
+    .panel.panel-info
+      .panel-heading
+        %h2.panel-title メニュー
+      .panel-body
+        %p= link_to "登録情報を変更する", edit_user_registration_path
+        %p= link_to "注文履歴を見る", orders_path

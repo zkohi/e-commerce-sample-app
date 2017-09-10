@@ -24,25 +24,25 @@ RSpec.describe "Products", type: :request do
     end
   end
 
-  describe "GET /admin/products" do
+  describe "GET /backoffice/products" do
     it "shows Products" do
       user = FactoryGirl.create(:admin)
       login_as(user, scope: :admin)
 
-      get admin_products_path
+      get backoffice_products_path
       expect(response).to render_template(:index)
     end
   end
 
-  describe "GET /admin/products/new" do
+  describe "GET /backoffice/products/new" do
     it "creates a Product and redirects to the Product's page" do
       user = FactoryGirl.create(:admin)
       login_as(user, scope: :admin)
 
-      get new_admin_product_path
+      get new_backoffice_product_path
       expect(response).to render_template(:new)
 
-      post admin_products_path, params: {
+      post backoffice_products_path, params: {
         product: {
           name: "My Product",
           price: 12345,
@@ -52,7 +52,7 @@ RSpec.describe "Products", type: :request do
         }
       }
 
-      expect(response).to redirect_to([:admin, assigns(:product)])
+      expect(response).to redirect_to([:backoffice, assigns(:product)])
       follow_redirect!
 
       expect(response).to render_template(:show)
@@ -60,17 +60,17 @@ RSpec.describe "Products", type: :request do
     end
   end
 
-  describe "GET /admin/products/:id" do
+  describe "GET /backoffice/products/:id" do
     it "updates a Product and redirects to the Product's page" do
       user = FactoryGirl.create(:admin)
       login_as(user, scope: :admin)
 
       product = FactoryGirl.create(:product)
 
-      get edit_admin_product_path product
+      get edit_backoffice_product_path product
       expect(response).to render_template(:edit)
 
-      patch admin_product_path product, params: {
+      patch backoffice_product_path product, params: {
         product: {
           name: "My Product Edit",
           price: 123456,
@@ -80,7 +80,7 @@ RSpec.describe "Products", type: :request do
         }
       }
 
-      expect(response).to redirect_to([:admin, product])
+      expect(response).to redirect_to([:backoffice, product])
       follow_redirect!
 
       expect(response).to render_template(:show)
@@ -88,15 +88,15 @@ RSpec.describe "Products", type: :request do
     end
   end
 
-  describe "DELETE /admin/products/:id" do
+  describe "DELETE /backoffice/products/:id" do
     it "deletes a Product and redirects to the Product's page" do
       user = FactoryGirl.create(:admin)
       login_as(user, scope: :admin)
 
       product = FactoryGirl.create(:product)
 
-      delete admin_product_path product
-      expect(response).to redirect_to(admin_products_path)
+      delete backoffice_product_path product
+      expect(response).to redirect_to(backoffice_products_path)
       follow_redirect!
 
       expect(response).to render_template(:index)

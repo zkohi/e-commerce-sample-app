@@ -77,27 +77,27 @@ RSpec.describe "Users", type: :request do
     end
   end
 
-  describe "GET /admin/users" do
+  describe "GET /backoffice/users" do
     it "shows Users" do
       user = FactoryGirl.create(:admin)
       login_as(user, scope: :admin)
 
-      get admin_users_path
+      get backoffice_users_path
       expect(response).to render_template(:index)
     end
   end
 
-  describe "GET /admin/users/:id" do
+  describe "GET /backoffice/users/:id" do
     it "updates a User and redirects to the User's page" do
       user = FactoryGirl.create(:admin)
       login_as(user, scope: :admin)
 
       user = FactoryGirl.create(:user)
 
-      get edit_admin_user_path user
+      get edit_backoffice_user_path user
       expect(response).to render_template(:edit)
 
-      patch admin_user_path user, params: {
+      patch backoffice_user_path user, params: {
         user: {
           name: "My User Name Edit",
           zipcode: 7654321,
@@ -105,7 +105,7 @@ RSpec.describe "Users", type: :request do
         }
       }
 
-      expect(response).to redirect_to([:admin, user])
+      expect(response).to redirect_to([:backoffice, user])
       follow_redirect!
 
       expect(response).to render_template(:show)
@@ -113,15 +113,15 @@ RSpec.describe "Users", type: :request do
     end
   end
 
-  describe "DELETE /admin/users/:id" do
+  describe "DELETE /backoffice/users/:id" do
     it "deletes a User and redirects to the User's page" do
       user = FactoryGirl.create(:admin)
       login_as(user, scope: :admin)
 
       user = FactoryGirl.create(:user)
 
-      delete admin_user_path user
-      expect(response).to redirect_to(admin_users_path)
+      delete backoffice_user_path user
+      expect(response).to redirect_to(backoffice_users_path)
       follow_redirect!
 
       expect(response).to render_template(:index)

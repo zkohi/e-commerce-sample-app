@@ -22,12 +22,12 @@
               %td= product.name
               %td= image_tag(product.img_filename, class: 'img-thumbnail', alt: "#{product.name}", size: "100x100")
               %td= product.price
-              %td= link_to '詳細', [:admin, product]
-              %td= link_to '編集', edit_admin_product_path(product)
-              %td= link_to '削除', [:admin, product], method: :delete, data: { confirm: '削除してよろしいですか?' }
+              %td= link_to '詳細', [:backoffice, product]
+              %td= link_to '編集', edit_backoffice_product_path(product)
+              %td= link_to '削除', [:backoffice, product], method: :delete, data: { confirm: '削除してよろしいですか?' }
 
       = paginate @products
 
 %br
 
-= link_to '新規作成', new_admin_product_path
+= link_to '新規作成', new_backoffice_product_path

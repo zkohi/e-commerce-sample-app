@@ -1,7 +1,7 @@
 .row
   .col-lg-6
     .well.bs-component
-      = simple_form_for([:admin, @product], html: {class: 'form-horizontal'}, defaults: { label_html: { class: 'col-lg-2' }, wrapper_html: { class: 'col-lg-10' } }) do |f|
+      = simple_form_for([:backoffice, @product], html: {class: 'form-horizontal'}, defaults: { label_html: { class: 'col-lg-2' }, wrapper_html: { class: 'col-lg-10' } }) do |f|
         = f.error_notification
 
         .form-inputs

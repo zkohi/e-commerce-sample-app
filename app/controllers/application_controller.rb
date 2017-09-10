@@ -17,7 +17,7 @@ class ApplicationController < ActionController::Base
 
   def layout_by_resource
     if devise_controller? && resource_name == :admin
-      "admin"
+      "backoffice"
     else
       "application"
     end
@@ -25,7 +25,7 @@ class ApplicationController < ActionController::Base
 
   def after_sign_in_path_for(resource)
     if resource.class == Admin
-      admin_products_path
+      backoffice_products_path
     else
       root_path
     end

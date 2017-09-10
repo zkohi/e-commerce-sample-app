@@ -1,4 +1,4 @@
-class Admin::UsersController < Admin::ApplicationController
+class Backoffice::UsersController < Backoffice::ApplicationController
   before_action :set_user, only: [:show, :edit, :update, :destroy]
 
   def index
@@ -13,7 +13,7 @@ class Admin::UsersController < Admin::ApplicationController
 
   def update
     if @user.update(user_params)
-      redirect_to [:admin, @user], notice: 'ユーザーが更新されました'
+      redirect_to [:backoffice, @user], notice: 'ユーザーが更新されました'
     else
       render :edit
     end
@@ -21,7 +21,7 @@ class Admin::UsersController < Admin::ApplicationController
 
   def destroy
     @user.destroy
-    redirect_to admin_users_url, notice: 'ユーザーが削除されました'
+    redirect_to backoffice_users_url, notice: 'ユーザーが削除されました'
   end
 
   private

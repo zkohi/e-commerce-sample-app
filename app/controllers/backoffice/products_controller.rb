@@ -1,4 +1,4 @@
-class Admin::ProductsController < Admin::ApplicationController
+class Backoffice::ProductsController < Backoffice::ApplicationController
   before_action :set_product, only: [:show, :edit, :update, :destroy]
 
   def index
@@ -19,7 +19,7 @@ class Admin::ProductsController < Admin::ApplicationController
     @product = Product.new(product_params)
 
     if @product.save
-      redirect_to [:admin, @product], notice: '商品が作成されました'
+      redirect_to [:backoffice, @product], notice: '商品が作成されました'
     else
       render :new
     end
@@ -27,7 +27,7 @@ class Admin::ProductsController < Admin::ApplicationController
 
   def update
     if @product.update(product_params)
-      redirect_to [:admin, @product], notice: '商品が更新されました'
+      redirect_to [:backoffice, @product], notice: '商品が更新されました'
     else
       render :edit
     end
@@ -35,7 +35,7 @@ class Admin::ProductsController < Admin::ApplicationController
 
   def destroy
     @product.destroy
-    redirect_to admin_products_url, notice: '商品が削除されました'
+    redirect_to backoffice_products_url, notice: '商品が削除されました'
   end
 
   private

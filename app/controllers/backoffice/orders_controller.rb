@@ -1,4 +1,4 @@
-class Admin::OrdersController < Admin::ApplicationController
+class Backoffice::OrdersController < Backoffice::ApplicationController
   def index
     @orders = Order.all.page(params[:page])
   end

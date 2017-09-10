@@ -100,26 +100,26 @@ RSpec.describe "Orders", type: :request do
     end
   end
 
-  describe "GET /admin/orders" do
+  describe "GET /backoffice/orders" do
     it "shows Orders" do
       user = FactoryGirl.create(:admin)
       login_as(user, scope: :admin)
 
       FactoryGirl.create(:order, :ordered)
 
-      get admin_orders_path
+      get backoffice_orders_path
       expect(response).to render_template(:index)
     end
   end
 
-  describe "GET /admin/orders/:id" do
+  describe "GET /backoffice/orders/:id" do
     it "shows a Order" do
       user = FactoryGirl.create(:admin)
       login_as(user, scope: :admin)
 
       order = FactoryGirl.create(:order, :ordered)
 
-      get admin_order_path order
+      get backoffice_order_path order
 
       expect(response).to render_template(:show)
     end

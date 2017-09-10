@@ -31,5 +31,5 @@
               %td= number_to_currency(order.total, locale: :ja)
               %td= order.payment_state_i18n
               %td= order.shipment_state_i18n
-              %td= link_to '詳細', [:admin, order]
+              %td= link_to '詳細', [:backoffice, order]
       = paginate @orders
