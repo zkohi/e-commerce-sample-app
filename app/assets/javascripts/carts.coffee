@@ -6,6 +6,6 @@ ready = ->
     beforeShowDay: $.datepicker.noWeekends,
     minDate: datepickerOptions.minDate,
     maxDate: datepickerOptions.maxDate
-  );
+  ) if datepickerRoot.length
 $(document).ready(ready)
 $(document).on('turbolinks:load', ready)
