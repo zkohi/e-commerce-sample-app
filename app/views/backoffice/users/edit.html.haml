@@ -2,7 +2,7 @@
   .panel-heading
     %h2.panel-title ユーザー編集
   .panel-body
-    = simple_form_for([:backoffice, @user], html: {class: 'form-horizontal'}, defaults: { label_html: { class: 'col-lg-1' }, wrapper_html: { class: 'col-lg-12' } }) do |f|
+    = simple_form_for([:backoffice, @user], html: {class: 'form-horizontal'}, defaults: { wrapper_html: { class: 'col-lg-12' } }) do |f|
       = f.error_notification
 
       .form-inputs
