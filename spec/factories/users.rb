@@ -8,6 +8,6 @@ FactoryGirl.define do
       zipcode Faker::Number.number(7)
       address [Faker::Address.state, Faker::Address.unique.city, Faker::Address.unique.street_name, Faker::Address.unique.street_address].join(" ")
     end
-    
+
   end
 end

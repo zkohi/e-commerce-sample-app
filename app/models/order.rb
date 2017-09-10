@@ -132,18 +132,19 @@ class Order < ApplicationRecord
     end
 
     def set_payment_total
-      self.payment_total = case self.item_total
-                           when 0
-                             0
-                           when 1 ... 10000
-                             300
-                           when 10000 ... 30000
-                             400
-                           when 30000 ... 100000
-                             600
-                           else
-                             1000
-                           end
+      self.payment_total =
+        case self.item_total
+        when 0
+          0
+        when 1 ... 10000
+          300
+        when 10000 ... 30000
+          400
+        when 30000 ... 100000
+          600
+        else
+          1000
+        end
     end
 
     def set_adjustment_total
