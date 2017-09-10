@@ -7,35 +7,35 @@ class ApplicationController < ActionController::Base
 
   protected
 
-  def configure_permitted_parameters
-    if devise_controller? && resource_name != :admin
-      devise_parameter_sanitizer.permit(:account_update, keys: [:name, :zipcode, :address])
+    def configure_permitted_parameters
+      if devise_controller? && resource_name != :admin
+        devise_parameter_sanitizer.permit(:account_update, keys: [:name, :zipcode, :address])
+      end
     end
-  end
 
   private
 
-  def layout_by_resource
-    if devise_controller? && resource_name == :admin
-      "backoffice"
-    else
-      "application"
+    def layout_by_resource
+      if devise_controller? && resource_name == :admin
+        "backoffice"
+      else
+        "application"
+      end
     end
-  end
 
-  def after_sign_in_path_for(resource)
-    if resource.class == Admin
-      backoffice_products_path
-    else
-      root_path
+    def after_sign_in_path_for(resource)
+      if resource.class == Admin
+        backoffice_products_path
+      else
+        root_path
+      end
     end
-  end
 
-  def after_sign_out_path_for(resource_name)
-    if resource_name == :admin
-      new_admin_session_path
-    else
-      new_user_session_path
+    def after_sign_out_path_for(resource_name)
+      if resource_name == :admin
+        new_admin_session_path
+      else
+        new_user_session_path
+      end
     end
-  end
 end

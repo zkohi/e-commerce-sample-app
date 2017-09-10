@@ -21,7 +21,7 @@ class Order < ApplicationRecord
     validate :valid_shipping_date?
     validates :shipping_time_range_string, presence: true, inclusion: { in: ['8時〜12時', '12時〜14時', '14時〜16時', '16時〜18時', '18時〜20時', '20時〜21時'] }
     validates :user_name, presence: true, length: { maximum: 30 }
-    validates :user_zipcode, presence: true, numericality: { only_integer: true}, length: { is: 7 }
+    validates :user_zipcode, presence: true, numericality: { only_integer: true }, length: { is: 7 }
     validates :user_address, presence: true, length: { maximum: 100 }
   end
 
@@ -111,58 +111,58 @@ class Order < ApplicationRecord
 
   private
 
-  def set_item_count(line_items_attributes)
-    self.item_count += line_items_attributes["quantity"].to_i
-  end
-
-  def sum_item_count
-    self.item_count = self.line_items.sum(:quantity)
-  end
-
-  def set_item_total(line_items_attributes)
-    self.item_total += Product.find(line_items_attributes["product_id"]).price * line_items_attributes["quantity"].to_i
-  end
-
-  def sum_item_total
-    self.item_total = self.line_items.includes(:product).sum('products.price * quantity')
-  end
-
-  def set_shipment_total
-    self.shipment_total = (self.item_count / 5.0).ceil * 600
-  end
-
-  def set_payment_total
-    self.payment_total = case self.item_total
-                         when 0
-                           0
-                         when 1 ... 10000
-                           300
-                         when 10000 ... 30000
-                           400
-                         when 30000 ... 100000
-                           600
-                         else
-                           1000
-                         end
-  end
-
-  def set_adjustment_total
-    self.adjustment_total = self.shipment_total + self.item_total + self.payment_total
-  end
-
-  def set_tax_total
-    self.tax_total = (self.adjustment_total * 0.08).floor
-  end
-
-  def set_total
-    self.total = self.adjustment_total + self.tax_total
-  end
-
-  def valid_shipping_date?
-    date_range = available_shipping_date_range
-    today = Date.today
-    if shipping_date.present? && (shipping_date < (today + date_range[:minDate].days) || shipping_date > (today + date_range[:maxDate].days))
-      errors.add(:shipping_date, "は3営業日（営業日: 月-金）から14営業日までを指定してください")
+    def set_item_count(line_items_attributes)
+      self.item_count += line_items_attributes["quantity"].to_i
     end
-  end
+
+    def sum_item_count
+      self.item_count = self.line_items.sum(:quantity)
+    end
+
+    def set_item_total(line_items_attributes)
+      self.item_total += Product.find(line_items_attributes["product_id"]).price * line_items_attributes["quantity"].to_i
+    end
+
+    def sum_item_total
+      self.item_total = self.line_items.includes(:product).sum('products.price * quantity')
+    end
+
+    def set_shipment_total
+      self.shipment_total = (self.item_count / 5.0).ceil * 600
+    end
+
+    def set_payment_total
+      self.payment_total = case self.item_total
+                           when 0
+                             0
+                           when 1 ... 10000
+                             300
+                           when 10000 ... 30000
+                             400
+                           when 30000 ... 100000
+                             600
+                           else
+                             1000
+                           end
+    end
+
+    def set_adjustment_total
+      self.adjustment_total = self.shipment_total + self.item_total + self.payment_total
+    end
+
+    def set_tax_total
+      self.tax_total = (self.adjustment_total * 0.08).floor
+    end
+
+    def set_total
+      self.total = self.adjustment_total + self.tax_total
+    end
+
+    def valid_shipping_date?
+      date_range = available_shipping_date_range
+      today = Date.today
+      if shipping_date.present? && (shipping_date < (today + date_range[:minDate].days) || shipping_date > (today + date_range[:maxDate].days))
+        errors.add(:shipping_date, "は3営業日（営業日: 月-金）から14営業日までを指定してください")
+      end
+    end
 end
