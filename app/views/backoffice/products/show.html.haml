@@ -21,10 +21,7 @@
           %td= @product.description
         %tr
           %td 表示/非表示
-          - if @product.flg_non_display
-            %td 非表示
-          - else
-            %td 表示
+          %td= @product.flg_non_display_i18n
         %tr
           %td 表示順
           %td= @product.sort_order

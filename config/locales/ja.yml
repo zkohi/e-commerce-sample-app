@@ -79,6 +79,10 @@ ja:
       edit:
         update: 変更する
   enums:
+    product:
+      flg_non_display:
+        display: 表示
+        non_display: 非表示
     order:
       shipment_state:
         unshipped: 未出荷
