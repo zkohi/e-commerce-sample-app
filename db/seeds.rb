@@ -1,4 +1,4 @@
-(1...5).each do |i|
+(1...8).each do |i|
   Product.create(
     name: "Product ##{i}",
     img_filename: '',

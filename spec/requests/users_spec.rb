@@ -2,6 +2,45 @@ require 'rails_helper'
 
 RSpec.describe "Users", type: :request do
 
+  describe "GET /users/sign_up" do
+    it "creates a User and redirects to the Root page and sign_out and sign_in" do
+      get new_user_registration_path
+      expect(response).to render_template(:new)
+
+      post user_registration_path, params: {
+        user: {
+          email: "test@gmail.com",
+          password: "userpassword",
+          password_confirmation: "userpassword"
+        }
+      }
+
+      expect(response).to redirect_to(root_path)
+      follow_redirect!
+
+      expect(response).to render_template(:index)
+
+      get destroy_user_session_path
+
+      expect(response).to redirect_to(new_user_session_path)
+      follow_redirect!
+
+      expect(response).to render_template(:new)
+
+      post new_user_session_path, params: {
+        user: {
+          email: "test@gmail.com",
+          password: "userpassword",
+        }
+      }
+
+      expect(response).to redirect_to(root_path)
+      follow_redirect!
+
+      expect(response).to render_template(:index)
+    end
+  end
+
   describe "GET /mypage" do
     it "shows Mypage" do
       user = FactoryGirl.create(:user)

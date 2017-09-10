@@ -97,7 +97,7 @@ class Order < ApplicationRecord
 
   def update_for_delete_line_item!(line_item_id)
     self.transaction do
-      self.line_items.find(line_item_id).destroy
+      line_items.find(line_item_id).destroy
       sum_item_count
       sum_item_total
       set_shipment_total
