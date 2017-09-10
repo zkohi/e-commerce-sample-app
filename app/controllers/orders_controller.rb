@@ -13,7 +13,6 @@ class OrdersController < ApplicationController
     line_item = order_params[:line_items_attributes]["0"]
     if line_item["quantity"].present?
       @order = current_user.orders.find_or_initialize_by(state: :cart)
-      @order.line_items.build(line_item)
 
       @order.save_for_add_line_item!(order_params)
       redirect_to cart_path

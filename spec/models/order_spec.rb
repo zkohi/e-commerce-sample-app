@@ -357,6 +357,7 @@ RSpec.describe Order, type: :model do
 
   describe "save_for_add_line_item!" do
     before :each do
+      allow(order.line_items).to receive(:build)
       allow(order).to receive(:set_item_count)
       allow(order).to receive(:set_item_total)
       allow(order).to receive(:set_shipment_total)
@@ -381,6 +382,7 @@ RSpec.describe Order, type: :model do
 
     it do
       should
+      expect(order.line_items).to have_received(:build).with(line_items_attributes).ordered
       expect(order).to have_received(:set_item_count).with(line_items_attributes).ordered
       expect(order).to have_received(:set_item_total).with(line_items_attributes).ordered
       expect(order).to have_received(:set_shipment_total).ordered

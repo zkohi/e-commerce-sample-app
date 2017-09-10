@@ -85,6 +85,7 @@ class Order < ApplicationRecord
 
   def save_for_add_line_item!(params)
     line_items_attributes = params["line_items_attributes"]["0"]
+    line_items.build(line_items_attributes)
     set_item_count(line_items_attributes)
     set_item_total(line_items_attributes)
     set_shipment_total
