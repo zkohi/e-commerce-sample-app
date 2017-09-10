@@ -13,9 +13,14 @@
       %tbody
         - @order.line_items.includes(:product).each do |line_item|
           %tr
-            %td= line_item.product.name
-            %td= image_tag(line_item.product.img_filename, class: 'img-thumbnail', alt: "#{line_item.product.name}", size: "100x100")
-            %td= line_item.product.price
+            - if line_item.product
+              %td= line_item.product.name
+              %td= image_tag(line_item.product.img_filename, class: 'img-thumbnail', alt: "#{line_item.product.name}", size: "100x100")
+              %td= line_item.product.price
+            - else
+              %td 商品情報は削除されました
+              %td 商品情報は削除されました
+              %td 商品情報は削除されました
             %td= line_item.quantity
 
     .panel.panel-warning
