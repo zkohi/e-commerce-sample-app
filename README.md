@@ -33,7 +33,7 @@ bundle exec rails db:seed_fu
 * How to run the test suite
 
 ```
-RAILS_ENV=test bundle exec rspec -cfd spec
+RAILS_ENV=test bundle exec rspec -cfd
 ```
 
 * Services (job queues, cache servers, search engines, etc.)
