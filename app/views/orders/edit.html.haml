@@ -66,9 +66,9 @@
           = f.hidden_field :tax_total
           = f.hidden_field :total
           .col-lg-12
-            = f.input :user_name, input_html: { value: current_user.name }
-            = f.input :user_zipcode, input_html: { value: current_user.zipcode }
-            = f.input :user_address, input_html: { value: current_user.address }
+            = f.input :user_name, input_html: { value: f.object.user_name || current_user.name }
+            = f.input :user_zipcode, input_html: { value: f.object.user_zipcode || current_user.zipcode }
+            = f.input :user_address, input_html: { value: f.object.user_address || current_user.address }
           .col-lg-12
             = f.input :shipping_date, as: :string, input_html: {"data-datepicker-options" => @order.available_shipping_date_range.to_json }
           .col-lg-12
