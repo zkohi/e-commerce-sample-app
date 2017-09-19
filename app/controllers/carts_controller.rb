@@ -14,7 +14,7 @@ class CartsController < ApplicationController
   def update
     @order = current_user.orders.cart.first
 
-    if @order && @order.execute(order_params)
+    if @order && @order.order(order_params)
       redirect_to @order, notice: 'ご注文完了しました'
     else
       render :edit
