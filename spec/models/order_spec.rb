@@ -271,12 +271,12 @@ RSpec.describe Order, type: :model do
     end
   end
 
-  describe "execute" do
+  describe "order" do
     before :each do
       allow(order).to receive(:update)
     end
 
-    subject { order.execute(params) }
+    subject { order.order(params) }
 
     let(:order) { build(:order) }
     let(:params) {

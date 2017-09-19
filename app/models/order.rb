@@ -50,7 +50,7 @@ class Order < ApplicationRecord
     twenty_to_twenty_one: 5
   }
 
-  def execute(params)
+  def order(params)
     self.state = "ordered"
     self.shipping_time_range_string = Order.shipping_time_ranges_i18n[params["shipping_time_range"]]
     update(params)
