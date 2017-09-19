@@ -153,6 +153,10 @@ RSpec.describe Order, type: :model do
   end
 
   describe "shipping_date" do
+
+    let(:now) { Time.local(2017, 9, 4, 10, 5, 0) }
+    let(:order) { build(:order, :ordered, shipping_date: shipping_date) }
+
     before :each do
       Timecop.freeze(now)
       order.valid?
@@ -162,70 +166,108 @@ RSpec.describe Order, type: :model do
       Timecop.return
     end
 
-    shared_examples "validate shipping_date" do |minDate, maxDate|
-      let(:order) { build(:order, :ordered, shipping_date: shipping_date) }
-
-      context "shipping_date is on after" do
-        let(:shipping_date) { Date.today + minDate.days }
+    context "selected shipping_date" do
+      context "is monday" do
+        let(:shipping_date) { Time.local(2017, 9, 11, 10, 5, 0) }
         it { expect(build(:order, :ordered, shipping_date: shipping_date)).to be_valid }
       end
 
-      context "shipping_date is on before" do
-        let(:shipping_date) { Date.today + maxDate.days }
+      context "is tuesday" do
+        let(:shipping_date) { Time.local(2017, 9, 12, 10, 5, 0) }
         it { expect(build(:order, :ordered, shipping_date: shipping_date)).to be_valid }
       end
 
-      context "shipping_date is after" do
-        let(:shipping_date) { Date.today + minDate.days - 1.day }
+      context "is wednesday" do
+        let(:shipping_date) { Time.local(2017, 9, 13, 10, 5, 0) }
+        it { expect(build(:order, :ordered, shipping_date: shipping_date)).to be_valid }
+      end
+
+      context "is thursday" do
+        let(:shipping_date) { Time.local(2017, 9, 14, 10, 5, 0) }
+        it { expect(build(:order, :ordered, shipping_date: shipping_date)).to be_valid }
+      end
+
+      context "is friday" do
+        let(:shipping_date) { Time.local(2017, 9, 15, 10, 5, 0) }
+        it { expect(build(:order, :ordered, shipping_date: shipping_date)).to be_valid }
+      end
+
+      context "is saturday" do
+        let(:shipping_date) { Time.local(2017, 9, 16, 10, 5, 0) }
         it { expect(order.errors[:shipping_date]).to include("は3営業日（営業日: 月-金）から14営業日までを指定してください") }
       end
 
-      context "shipping_date is before" do
-        let(:shipping_date) { Date.today + maxDate.days + 1.day }
+      context "is sunday" do
+        let(:shipping_date) { Time.local(2017, 9, 17, 10, 5, 0) }
         it { expect(order.errors[:shipping_date]).to include("は3営業日（営業日: 月-金）から14営業日までを指定してください") }
       end
     end
 
-    context "today is monday" do
-      let(:now) { Time.local(2017, 9, 4, 10, 5, 0) }
+    context "order date(today)" do
+      shared_examples "validate shipping_date" do |minDate, maxDate|
 
-      it_should_behave_like "validate shipping_date", 2, 17
-    end
+        context "shipping_date is on after" do
+          let(:shipping_date) { Date.today + minDate.days }
+          it { expect(build(:order, :ordered, shipping_date: shipping_date)).to be_valid }
+        end
 
-    context "today is tuesday" do
-      let(:now) { Time.local(2017, 9, 5, 10, 5, 0) }
+        context "shipping_date is on before" do
+          let(:shipping_date) { Date.today + maxDate.days }
+          it { expect(build(:order, :ordered, shipping_date: shipping_date)).to be_valid }
+        end
 
-      it_should_behave_like "validate shipping_date", 2, 17
-    end
+        context "shipping_date is after" do
+          let(:shipping_date) { Date.today + minDate.days - 1.day }
+          it { expect(order.errors[:shipping_date]).to include("は3営業日（営業日: 月-金）から14営業日までを指定してください") }
+        end
 
-    context "today is wednesday" do
-      let(:now) { Time.local(2017, 9, 6, 10, 5, 0) }
+        context "shipping_date is before" do
+          let(:shipping_date) { Date.today + maxDate.days + 1.day }
+          it { expect(order.errors[:shipping_date]).to include("は3営業日（営業日: 月-金）から14営業日までを指定してください") }
+        end
+      end
 
-      it_should_behave_like "validate shipping_date", 2, 19
-    end
+      context "is monday" do
+        let(:now) { Time.local(2017, 9, 4, 10, 5, 0) }
 
-    context "today is thursday" do
-      let(:now) { Time.local(2017, 9, 7, 10, 5, 0) }
+        it_should_behave_like "validate shipping_date", 2, 17
+      end
 
-      it_should_behave_like "validate shipping_date", 4, 19
-    end
+      context "is tuesday" do
+        let(:now) { Time.local(2017, 9, 5, 10, 5, 0) }
 
-    context "today is friday" do
-      let(:now) { Time.local(2017, 9, 8, 10, 5, 0) }
+        it_should_behave_like "validate shipping_date", 2, 17
+      end
 
-      it_should_behave_like "validate shipping_date", 4, 19
-    end
+      context "is wednesday" do
+        let(:now) { Time.local(2017, 9, 6, 10, 5, 0) }
 
-    context "today is saturday" do
-      let(:now) { Time.local(2017, 9, 9, 10, 5, 0) }
+        it_should_behave_like "validate shipping_date", 2, 19
+      end
 
-      it_should_behave_like "validate shipping_date", 4, 19
-    end
+      context "is thursday" do
+        let(:now) { Time.local(2017, 9, 7, 10, 5, 0) }
 
-    context "today is sunday" do
-      let(:now) { Time.local(2017, 9, 10, 10, 5, 0) }
+        it_should_behave_like "validate shipping_date", 4, 19
+      end
 
-      it_should_behave_like "validate shipping_date", 3, 18
+      context "is friday" do
+        let(:now) { Time.local(2017, 9, 8, 10, 5, 0) }
+
+        it_should_behave_like "validate shipping_date", 4, 19
+      end
+
+      context "is saturday" do
+        let(:now) { Time.local(2017, 9, 9, 10, 5, 0) }
+
+        it_should_behave_like "validate shipping_date", 4, 19
+      end
+
+      context "is sunday" do
+        let(:now) { Time.local(2017, 9, 10, 10, 5, 0) }
+
+        it_should_behave_like "validate shipping_date", 3, 18
+      end
     end
   end
 
