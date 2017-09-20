@@ -8,7 +8,7 @@ Rails.application.routes.draw do
   patch 'cart', to: 'orders#update'
   put 'cart', to: 'orders#update'
   get 'cart/edit', to: 'orders#edit'
-  delete 'cart/line_item', to: 'orders#destroy_cart_line_item', as: 'destroy_cart_line_item'
+  delete 'cart/line_items', to: 'orders#destroy_cart_line_item', as: 'destroy_cart_line_item'
 
   resources :products, only: [:show]
   resources :orders, only: [:index, :show]

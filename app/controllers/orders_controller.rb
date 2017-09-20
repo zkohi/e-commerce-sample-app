@@ -42,7 +42,7 @@ class OrdersController < ApplicationController
   end
 
   def destroy_cart_line_item
-    current_user.orders.cart.first.update_for_delete_line_item!(params[:id])
+    current_user.orders.cart.first.update_for_delete_line_item!(params[:line_item_id])
     redirect_to cart_path, notice: '商品が削除されました'
   end
 
