@@ -18,14 +18,14 @@ RSpec.describe "Orders", type: :request do
 
         order = FactoryGirl.create(:order, :ordered)
 
-        get edit_cart_path
+        get cart_edit_path
         expect(response).to redirect_to(cart_path)
       end
     end
   end
 
-  describe "POST /orders and POST /cart/edit" do
-    it "creates a Order and redirects to the Cart page" do
+  describe "POST /cart and DELETE /cart/line_items" do
+    it "deletes a LineItem and redirects to the LineItem's page" do
       user = FactoryGirl.create(:user)
       login_as(user, scope: :user)
 
@@ -34,7 +34,7 @@ RSpec.describe "Orders", type: :request do
       get product_path product
       expect(response).to render_template(:show)
 
-      post orders_path, params: {
+      post cart_path, params: {
         order: {
           line_items_attributes: {
             "0": {
@@ -48,9 +48,46 @@ RSpec.describe "Orders", type: :request do
       expect(response).to redirect_to(cart_path)
       follow_redirect!
 
+      expect(response).to render_template(:cart)
+
+      order = user.orders.find_or_initialize_by(state: :cart)
+
+      delete destroy_cart_line_item_path line_item_id: order.line_items.first.id
+      expect(response).to redirect_to(cart_path)
+      follow_redirect!
+
+      expect(response).to render_template(:cart)
+      expect(response.body).to include("商品が削除されました")
+    end
+  end
+
+  describe "POST /cart and POST /cart/edit" do
+    it "creates a Order and redirects to the Cart page" do
+      user = FactoryGirl.create(:user)
+      login_as(user, scope: :user)
+
+      product = FactoryGirl.create(:product)
+
+      get product_path product
       expect(response).to render_template(:show)
 
-      get edit_cart_path
+      post cart_path, params: {
+        order: {
+          line_items_attributes: {
+            "0": {
+              product_id: product.id,
+              quantity: 3
+            }
+          }
+        }
+      }
+
+      expect(response).to redirect_to(cart_path)
+      follow_redirect!
+
+      expect(response).to render_template(:cart)
+
+      get cart_edit_path
       expect(response).to render_template(:edit)
 
       order = user.orders.find_or_initialize_by(state: :cart)
