@@ -15,7 +15,7 @@ FactoryGirl.define do
     end
     factory :order_with_line_items do
       after(:create) do |order, evaluator|
-         create_list :line_item, evaluator.line_items_count, order: order, product: create(:product, :with_price_1000), quantity: 10
+        create_list :line_item, evaluator.line_items_count, order: order, product: create(:product, :with_price_1000), quantity: 10
       end
     end
     trait :ordered do

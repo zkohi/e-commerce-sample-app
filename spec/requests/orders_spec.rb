@@ -24,8 +24,8 @@ RSpec.describe "Orders", type: :request do
     end
   end
 
-  describe "POST /cart and DELETE /cart/line_items" do
-    it "deletes a LineItem and redirects to the LineItem's page" do
+  describe "DELETE /cart/line_items" do
+    it "deletes a LineItem and redirects to the Cart page" do
       user = FactoryGirl.create(:user)
       login_as(user, scope: :user)
 
@@ -61,8 +61,8 @@ RSpec.describe "Orders", type: :request do
     end
   end
 
-  describe "POST /cart and PATCH /cart" do
-    it "creates a Order and redirects to the Cart page" do
+  describe "POST /cart and GET /cart and GET /cart/edit and PATCH /cart" do
+    it "creates a Order, ListItem and redirects to the Cart page and orders" do
       user = FactoryGirl.create(:user)
       login_as(user, scope: :user)
 

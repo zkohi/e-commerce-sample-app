@@ -418,8 +418,8 @@ RSpec.describe Order, type: :model do
       {
         "line_items_attributes" => {
           "0" => {
-            "product_id"=>@product.id,
-            "quantity"=>quantity
+            "product_id" => @product.id,
+            "quantity" => quantity
           }
         }
       }
