@@ -399,75 +399,81 @@ RSpec.describe Order, type: :model do
 
   describe "save_for_add_line_item!" do
     before :each do
-      allow(order.line_items).to receive(:build)
-      allow(order).to receive(:set_item_count)
-      allow(order).to receive(:set_item_total)
-      allow(order).to receive(:set_shipment_total)
-      allow(order).to receive(:set_payment_total)
-      allow(order).to receive(:set_adjustment_total)
-      allow(order).to receive(:set_tax_total)
-      allow(order).to receive(:set_total)
       allow(order).to receive(:save!)
+    end
+
+    before :all do
+      @product = create(:product, :with_price_1000)
+    end
+
+    after :all do
+      @product.destroy
     end
 
     subject { order.save_for_add_line_item!(params) }
 
     let(:order) { build(:order) }
+    let(:quantity) { 10 }
     let(:params) {
       {
         "line_items_attributes" => {
-          "0" => line_items_attributes
+          "0" => {
+            "product_id"=>@product.id,
+            "quantity"=>quantity
+          }
         }
       }
     }
-    let(:line_items_attributes) { double("line_items_attributes") }
+    let!(:expected_item_count) { order.item_count + quantity }
+    let!(:expected_item_total) { order.item_total + @product.price * quantity }
+    let!(:expected_shipment_total) { 1800 }
+    let!(:expected_payment_total) { 400 }
+    let!(:expected_adjustment_total) { expected_item_total + expected_shipment_total + expected_payment_total }
+    let!(:expected_tax_total) { (expected_adjustment_total * 0.08).floor }
+    let!(:expected_total) { expected_adjustment_total + expected_tax_total }
 
     it do
       should
-      expect(order.line_items).to have_received(:build).with(line_items_attributes).ordered
-      expect(order).to have_received(:set_item_count).with(line_items_attributes).ordered
-      expect(order).to have_received(:set_item_total).with(line_items_attributes).ordered
-      expect(order).to have_received(:set_shipment_total).ordered
-      expect(order).to have_received(:set_payment_total).ordered
-      expect(order).to have_received(:set_adjustment_total).ordered
-      expect(order).to have_received(:set_tax_total).ordered
-      expect(order).to have_received(:set_total).ordered
-      expect(order).to have_received(:save!).with(params).ordered
+      expect(order.item_count).to eq expected_item_count
+      expect(order.item_total).to eq expected_item_total
+      expect(order.shipment_total).to eq expected_shipment_total
+      expect(order.payment_total).to eq expected_payment_total
+      expect(order.adjustment_total).to eq expected_adjustment_total
+      expect(order.tax_total).to eq expected_tax_total
+      expect(order.total).to eq expected_total
+      expect(order).to have_received(:save!).with(params)
     end
   end
 
   describe "update_for_delete_line_item!" do
     before :each do
-      allow(order).to receive(:line_items).and_return(line_items)
-      allow(line_items).to receive(:find).with(line_item_id).and_return(product)
-      allow(product).to receive(:destroy)
-      allow(order).to receive(:sum_item_count)
-      allow(order).to receive(:sum_item_total)
-      allow(order).to receive(:set_shipment_total)
-      allow(order).to receive(:set_payment_total)
-      allow(order).to receive(:set_adjustment_total)
-      allow(order).to receive(:set_tax_total)
-      allow(order).to receive(:set_total)
       allow(order).to receive(:update!)
     end
 
-    subject { order.update_for_delete_line_item!(line_item_id) }
+    subject { order.update_for_delete_line_item!(delete_line_item.id) }
 
-    let(:order) { build(:order) }
-    let(:line_items) { double(:line_items) }
-    let(:line_item_id) { double(:line_item_id) }
-    let(:product) { double(:product) }
+    let!(:order) { create(:order_with_line_items, line_items_count: 2).reload }
+    let!(:delete_line_item) { order.line_items.first }
+    let!(:remine_line_item) { order.line_items.last }
+
+    let!(:expected_item_count) { remine_line_item.quantity }
+    let!(:expected_item_total) { remine_line_item.product.price * remine_line_item.quantity }
+    let!(:expected_shipment_total) { 1200 }
+    let!(:expected_payment_total) { 400 }
+    let!(:expected_adjustment_total) { expected_item_total + expected_shipment_total + expected_payment_total }
+    let!(:expected_tax_total) { (expected_adjustment_total * 0.08).floor }
+    let!(:expected_total) { expected_adjustment_total + expected_tax_total }
 
     it do
       should
-      expect(order).to have_received(:sum_item_count).ordered
-      expect(order).to have_received(:sum_item_total).ordered
-      expect(order).to have_received(:set_shipment_total).ordered
-      expect(order).to have_received(:set_payment_total).ordered
-      expect(order).to have_received(:set_adjustment_total).ordered
-      expect(order).to have_received(:set_tax_total).ordered
-      expect(order).to have_received(:set_total).ordered
-      expect(order).to have_received(:update!).with({}).ordered
+      expect(order.item_count).to eq expected_item_count
+      expect(order.item_total).to eq expected_item_total
+      expect(order.shipment_total).to eq expected_shipment_total
+      expect(order.payment_total).to eq expected_payment_total
+      expect(order.adjustment_total).to eq expected_adjustment_total
+      expect(order.tax_total).to eq expected_tax_total
+      expect(order.total).to eq expected_total
+      expect(order).to have_received(:update!).with({})
     end
   end
 

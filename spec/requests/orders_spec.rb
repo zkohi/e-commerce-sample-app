@@ -61,7 +61,7 @@ RSpec.describe "Orders", type: :request do
     end
   end
 
-  describe "POST /cart and POST /cart/edit" do
+  describe "POST /cart and PATCH /cart" do
     it "creates a Order and redirects to the Cart page" do
       user = FactoryGirl.create(:user)
       login_as(user, scope: :user)

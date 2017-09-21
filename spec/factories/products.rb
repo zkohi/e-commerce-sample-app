@@ -3,6 +3,9 @@ FactoryGirl.define do
     name Faker::Name.unique.name
     img_filename nil
     price Faker::Number.between(1, 999999)
+    trait :with_price_1000 do
+      price 1000
+    end
     description Faker::Book.unique.title
     flg_non_display "display"
     sort_order Faker::Number.between(1, 999)
