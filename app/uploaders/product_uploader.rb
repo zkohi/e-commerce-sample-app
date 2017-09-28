@@ -1,7 +1,7 @@
 class ProductUploader < CarrierWave::Uploader::Base
   include CarrierWave::MiniMagick
 
-  process resize_to_fit: [250, 250]
+  process resize_to_fill: [250, 250]
 
   storage :file
 
