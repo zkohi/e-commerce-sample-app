@@ -16,11 +16,11 @@
             - if line_item.product
               %td= line_item.product.name
               %td= image_tag(line_item.product.img_filename, class: 'img-thumbnail', alt: "#{line_item.product.name}", size: "100x100")
-              %td= line_item.product.price
+              %td= number_to_currency(line_item.price, locale: :ja)
             - else
               %td 商品情報は削除されました
               %td 商品情報は削除されました
-              %td 商品情報は削除されました
+              %td= number_to_currency(line_item.price, locale: :ja)
             %td= line_item.quantity
 
     .panel.panel-warning

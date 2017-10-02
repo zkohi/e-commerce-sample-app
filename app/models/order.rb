@@ -50,7 +50,7 @@ class Order < ApplicationRecord
     twenty_to_twenty_one: 5
   }
 
-  def execute(params)
+  def order(params)
     self.state = "ordered"
     self.shipping_time_range_string = Order.shipping_time_ranges_i18n[params["shipping_time_range"]]
     update(params)
@@ -163,7 +163,9 @@ class Order < ApplicationRecord
     def valid_shipping_date?
       date_range = available_shipping_date_range
       today = Date.today
-      if shipping_date.present? && (shipping_date < (today + date_range[:minDate].days) || shipping_date > (today + date_range[:maxDate].days))
+      if shipping_date.present? &&
+        (shipping_date < (today + date_range[:minDate].days) || shipping_date > (today + date_range[:maxDate].days) ||
+        (shipping_date.saturday? || shipping_date.sunday?))
         errors.add(:shipping_date, "は3営業日（営業日: 月-金）から14営業日までを指定してください")
       end
     end

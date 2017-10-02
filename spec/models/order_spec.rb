@@ -153,6 +153,10 @@ RSpec.describe Order, type: :model do
   end
 
   describe "shipping_date" do
+
+    let(:now) { Time.local(2017, 9, 4, 10, 5, 0) }
+    let(:order) { build(:order, :ordered, shipping_date: shipping_date) }
+
     before :each do
       Timecop.freeze(now)
       order.valid?
@@ -162,79 +166,117 @@ RSpec.describe Order, type: :model do
       Timecop.return
     end
 
-    shared_examples "validate shipping_date" do |minDate, maxDate|
-      let(:order) { build(:order, :ordered, shipping_date: shipping_date) }
-
-      context "shipping_date is on after" do
-        let(:shipping_date) { Date.today + minDate.days }
+    context "selected shipping_date" do
+      context "is monday" do
+        let(:shipping_date) { Time.local(2017, 9, 11, 10, 5, 0) }
         it { expect(build(:order, :ordered, shipping_date: shipping_date)).to be_valid }
       end
 
-      context "shipping_date is on before" do
-        let(:shipping_date) { Date.today + maxDate.days }
+      context "is tuesday" do
+        let(:shipping_date) { Time.local(2017, 9, 12, 10, 5, 0) }
         it { expect(build(:order, :ordered, shipping_date: shipping_date)).to be_valid }
       end
 
-      context "shipping_date is after" do
-        let(:shipping_date) { Date.today + minDate.days - 1.day }
+      context "is wednesday" do
+        let(:shipping_date) { Time.local(2017, 9, 13, 10, 5, 0) }
+        it { expect(build(:order, :ordered, shipping_date: shipping_date)).to be_valid }
+      end
+
+      context "is thursday" do
+        let(:shipping_date) { Time.local(2017, 9, 14, 10, 5, 0) }
+        it { expect(build(:order, :ordered, shipping_date: shipping_date)).to be_valid }
+      end
+
+      context "is friday" do
+        let(:shipping_date) { Time.local(2017, 9, 15, 10, 5, 0) }
+        it { expect(build(:order, :ordered, shipping_date: shipping_date)).to be_valid }
+      end
+
+      context "is saturday" do
+        let(:shipping_date) { Time.local(2017, 9, 16, 10, 5, 0) }
         it { expect(order.errors[:shipping_date]).to include("は3営業日（営業日: 月-金）から14営業日までを指定してください") }
       end
 
-      context "shipping_date is before" do
-        let(:shipping_date) { Date.today + maxDate.days + 1.day }
+      context "is sunday" do
+        let(:shipping_date) { Time.local(2017, 9, 17, 10, 5, 0) }
         it { expect(order.errors[:shipping_date]).to include("は3営業日（営業日: 月-金）から14営業日までを指定してください") }
       end
     end
 
-    context "today is monday" do
-      let(:now) { Time.local(2017, 9, 4, 10, 5, 0) }
+    context "order date(today)" do
+      shared_examples "validate shipping_date" do |minDate, maxDate|
 
-      it_should_behave_like "validate shipping_date", 2, 17
-    end
+        context "shipping_date is on after" do
+          let(:shipping_date) { Date.today + minDate.days }
+          it { expect(build(:order, :ordered, shipping_date: shipping_date)).to be_valid }
+        end
 
-    context "today is tuesday" do
-      let(:now) { Time.local(2017, 9, 5, 10, 5, 0) }
+        context "shipping_date is on before" do
+          let(:shipping_date) { Date.today + maxDate.days }
+          it { expect(build(:order, :ordered, shipping_date: shipping_date)).to be_valid }
+        end
 
-      it_should_behave_like "validate shipping_date", 2, 17
-    end
+        context "shipping_date is after" do
+          let(:shipping_date) { Date.today + minDate.days - 1.day }
+          it { expect(order.errors[:shipping_date]).to include("は3営業日（営業日: 月-金）から14営業日までを指定してください") }
+        end
 
-    context "today is wednesday" do
-      let(:now) { Time.local(2017, 9, 6, 10, 5, 0) }
+        context "shipping_date is before" do
+          let(:shipping_date) { Date.today + maxDate.days + 1.day }
+          it { expect(order.errors[:shipping_date]).to include("は3営業日（営業日: 月-金）から14営業日までを指定してください") }
+        end
+      end
 
-      it_should_behave_like "validate shipping_date", 2, 19
-    end
+      context "is monday" do
+        let(:now) { Time.local(2017, 9, 4, 10, 5, 0) }
 
-    context "today is thursday" do
-      let(:now) { Time.local(2017, 9, 7, 10, 5, 0) }
+        it_should_behave_like "validate shipping_date", 2, 17
+      end
 
-      it_should_behave_like "validate shipping_date", 4, 19
-    end
+      context "is tuesday" do
+        let(:now) { Time.local(2017, 9, 5, 10, 5, 0) }
 
-    context "today is friday" do
-      let(:now) { Time.local(2017, 9, 8, 10, 5, 0) }
+        it_should_behave_like "validate shipping_date", 2, 17
+      end
 
-      it_should_behave_like "validate shipping_date", 4, 19
-    end
+      context "is wednesday" do
+        let(:now) { Time.local(2017, 9, 6, 10, 5, 0) }
 
-    context "today is saturday" do
-      let(:now) { Time.local(2017, 9, 9, 10, 5, 0) }
+        it_should_behave_like "validate shipping_date", 2, 19
+      end
 
-      it_should_behave_like "validate shipping_date", 4, 19
-    end
+      context "is thursday" do
+        let(:now) { Time.local(2017, 9, 7, 10, 5, 0) }
 
-    context "today is sunday" do
-      let(:now) { Time.local(2017, 9, 10, 10, 5, 0) }
+        it_should_behave_like "validate shipping_date", 4, 19
+      end
 
-      it_should_behave_like "validate shipping_date", 3, 18
+      context "is friday" do
+        let(:now) { Time.local(2017, 9, 8, 10, 5, 0) }
+
+        it_should_behave_like "validate shipping_date", 4, 19
+      end
+
+      context "is saturday" do
+        let(:now) { Time.local(2017, 9, 9, 10, 5, 0) }
+
+        it_should_behave_like "validate shipping_date", 4, 19
+      end
+
+      context "is sunday" do
+        let(:now) { Time.local(2017, 9, 10, 10, 5, 0) }
+
+        it_should_behave_like "validate shipping_date", 3, 18
+      end
     end
   end
 
-  describe "execute" do
+  describe "order" do
     before :each do
       allow(order).to receive(:update)
     end
 
-    subject { order.execute(params) }
+    subject { order.order(params) }
 
     let(:order) { build(:order) }
     let(:params) {
@@ -357,75 +399,81 @@ RSpec.describe Order, type: :model do
 
   describe "save_for_add_line_item!" do
     before :each do
-      allow(order.line_items).to receive(:build)
-      allow(order).to receive(:set_item_count)
-      allow(order).to receive(:set_item_total)
-      allow(order).to receive(:set_shipment_total)
-      allow(order).to receive(:set_payment_total)
-      allow(order).to receive(:set_adjustment_total)
-      allow(order).to receive(:set_tax_total)
-      allow(order).to receive(:set_total)
       allow(order).to receive(:save!)
+    end
+
+    before :all do
+      @product = create(:product, :with_price_1000)
+    end
+
+    after :all do
+      @product.destroy
     end
 
     subject { order.save_for_add_line_item!(params) }
 
     let(:order) { build(:order) }
+    let(:quantity) { 10 }
     let(:params) {
       {
         "line_items_attributes" => {
-          "0" => line_items_attributes
+          "0" => {
+            "product_id" => @product.id,
+            "quantity" => quantity
+          }
         }
       }
     }
-    let(:line_items_attributes) { double("line_items_attributes") }
+    let!(:expected_item_count) { order.item_count + quantity }
+    let!(:expected_item_total) { order.item_total + @product.price * quantity }
+    let!(:expected_shipment_total) { 1800 }
+    let!(:expected_payment_total) { 400 }
+    let!(:expected_adjustment_total) { expected_item_total + expected_shipment_total + expected_payment_total }
+    let!(:expected_tax_total) { (expected_adjustment_total * 0.08).floor }
+    let!(:expected_total) { expected_adjustment_total + expected_tax_total }
 
     it do
       should
-      expect(order.line_items).to have_received(:build).with(line_items_attributes).ordered
-      expect(order).to have_received(:set_item_count).with(line_items_attributes).ordered
-      expect(order).to have_received(:set_item_total).with(line_items_attributes).ordered
-      expect(order).to have_received(:set_shipment_total).ordered
-      expect(order).to have_received(:set_payment_total).ordered
-      expect(order).to have_received(:set_adjustment_total).ordered
-      expect(order).to have_received(:set_tax_total).ordered
-      expect(order).to have_received(:set_total).ordered
-      expect(order).to have_received(:save!).with(params).ordered
+      expect(order.item_count).to eq expected_item_count
+      expect(order.item_total).to eq expected_item_total
+      expect(order.shipment_total).to eq expected_shipment_total
+      expect(order.payment_total).to eq expected_payment_total
+      expect(order.adjustment_total).to eq expected_adjustment_total
+      expect(order.tax_total).to eq expected_tax_total
+      expect(order.total).to eq expected_total
+      expect(order).to have_received(:save!).with(params)
     end
   end
 
   describe "update_for_delete_line_item!" do
     before :each do
-      allow(order).to receive(:line_items).and_return(line_items)
-      allow(line_items).to receive(:find).with(line_item_id).and_return(product)
-      allow(product).to receive(:destroy)
-      allow(order).to receive(:sum_item_count)
-      allow(order).to receive(:sum_item_total)
-      allow(order).to receive(:set_shipment_total)
-      allow(order).to receive(:set_payment_total)
-      allow(order).to receive(:set_adjustment_total)
-      allow(order).to receive(:set_tax_total)
-      allow(order).to receive(:set_total)
       allow(order).to receive(:update!)
     end
 
-    subject { order.update_for_delete_line_item!(line_item_id) }
+    subject { order.update_for_delete_line_item!(delete_line_item.id) }
 
-    let(:order) { build(:order) }
-    let(:line_items) { double(:line_items) }
-    let(:line_item_id) { double(:line_item_id) }
-    let(:product) { double(:product) }
+    let!(:order) { create(:order_with_line_items, line_items_count: 2).reload }
+    let!(:delete_line_item) { order.line_items.first }
+    let!(:remine_line_item) { order.line_items.last }
+
+    let!(:expected_item_count) { remine_line_item.quantity }
+    let!(:expected_item_total) { remine_line_item.product.price * remine_line_item.quantity }
+    let!(:expected_shipment_total) { 1200 }
+    let!(:expected_payment_total) { 400 }
+    let!(:expected_adjustment_total) { expected_item_total + expected_shipment_total + expected_payment_total }
+    let!(:expected_tax_total) { (expected_adjustment_total * 0.08).floor }
+    let!(:expected_total) { expected_adjustment_total + expected_tax_total }
 
     it do
       should
-      expect(order).to have_received(:sum_item_count).ordered
-      expect(order).to have_received(:sum_item_total).ordered
-      expect(order).to have_received(:set_shipment_total).ordered
-      expect(order).to have_received(:set_payment_total).ordered
-      expect(order).to have_received(:set_adjustment_total).ordered
-      expect(order).to have_received(:set_tax_total).ordered
-      expect(order).to have_received(:set_total).ordered
-      expect(order).to have_received(:update!).with({}).ordered
+      expect(order.item_count).to eq expected_item_count
+      expect(order.item_total).to eq expected_item_total
+      expect(order.shipment_total).to eq expected_shipment_total
+      expect(order.payment_total).to eq expected_payment_total
+      expect(order.adjustment_total).to eq expected_adjustment_total
+      expect(order.tax_total).to eq expected_tax_total
+      expect(order.total).to eq expected_total
+      expect(order).to have_received(:update!).with({})
     end
   end
 
