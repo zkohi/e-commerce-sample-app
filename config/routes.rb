@@ -3,11 +3,8 @@ Rails.application.routes.draw do
 
   get 'mypage', to: 'users#show'
 
+  resource :cart, controller: 'orders', only: [:create, :update, :edit]
   get 'cart', to: 'orders#cart'
-  post 'cart', to: 'orders#create'
-  patch 'cart', to: 'orders#update'
-  put 'cart', to: 'orders#update'
-  get 'cart/edit', to: 'orders#edit'
   delete 'cart/line_items', to: 'orders#destroy_cart_line_item', as: 'destroy_cart_line_item'
 
   resources :products, only: [:show]
