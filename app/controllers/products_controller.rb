@@ -7,7 +7,5 @@ class ProductsController < ApplicationController
 
   def show
     @product = Product.display.find(params[:id])
-    @order = Order.new
-    @order.line_items.build
   end
 end

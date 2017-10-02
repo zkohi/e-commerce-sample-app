@@ -15,10 +15,10 @@
           %td= image_tag(@product.img_filename, class: 'img-thumbnail', alt: "#{@product.name}", size: "250x250")
         %tr
           %td 価格
-          %td= @product.price
+          %td= number_to_currency(@product.price, locale: :ja)
         %tr
           %td 説明
-          %td= @product.description
+          %td= simple_format(@product.description)
         %tr
           %td 表示/非表示
           %td= @product.flg_non_display_i18n
