@@ -25,7 +25,8 @@ class Order < ApplicationRecord
     validates :user_address, presence: true, length: { maximum: 100 }
   end
 
-  after_find :calc_total if :cart?
+  after_find :set_item_count, :set_item_total, :set_shipment_total, :set_payment_total, :set_adjustment_total, :set_tax_total, :set_total, if: :cart?
+
   before_validation :set_shipping_time_range_string
 
   enum state: {
@@ -77,16 +78,6 @@ class Order < ApplicationRecord
         maxDate: 17
       }
     end
-  end
-
-  def calc_total
-    set_item_count
-    set_item_total
-    set_shipment_total
-    set_payment_total
-    set_adjustment_total
-    set_tax_total
-    set_total
   end
 
   private

@@ -369,175 +369,33 @@ RSpec.describe Order, type: :model do
     end
   end
 
-  describe "save_for_add_line_item!" do
-    before :each do
-      allow(order).to receive(:save!)
-    end
-
-    before :all do
-      @product = create(:product, :with_price_1000)
-    end
-
-    after :all do
-      @product.destroy
-    end
-
-    subject { order.save_for_add_line_item!(params) }
-
-    let(:order) { build(:order) }
-    let(:quantity) { 10 }
-    let(:params) {
-      {
-        "line_items_attributes" => {
-          "0" => {
-            "product_id" => @product.id,
-            "quantity" => quantity
-          }
-        }
-      }
-    }
-    let!(:expected_item_count) { order.item_count + quantity }
-    let!(:expected_item_total) { order.item_total + @product.price * quantity }
-    let!(:expected_shipment_total) { 1800 }
-    let!(:expected_payment_total) { 400 }
-    let!(:expected_adjustment_total) { expected_item_total + expected_shipment_total + expected_payment_total }
-    let!(:expected_tax_total) { (expected_adjustment_total * 0.08).floor }
-    let!(:expected_total) { expected_adjustment_total + expected_tax_total }
-
-    it do
-      should
-      expect(order.item_count).to eq expected_item_count
-      expect(order.item_total).to eq expected_item_total
-      expect(order.shipment_total).to eq expected_shipment_total
-      expect(order.payment_total).to eq expected_payment_total
-      expect(order.adjustment_total).to eq expected_adjustment_total
-      expect(order.tax_total).to eq expected_tax_total
-      expect(order.total).to eq expected_total
-      expect(order).to have_received(:save!).with(params)
-    end
-  end
-
-  describe "update_for_delete_line_item!" do
-    before :each do
-      allow(order).to receive(:update!)
-    end
-
-    subject { order.update_for_delete_line_item!(delete_line_item.id) }
-
-    let!(:order) { create(:order_with_line_items, line_items_count: 2).reload }
-    let!(:delete_line_item) { order.line_items.first }
-    let!(:remine_line_item) { order.line_items.last }
-
-    let!(:expected_item_count) { remine_line_item.quantity }
-    let!(:expected_item_total) { remine_line_item.product.price * remine_line_item.quantity }
-    let!(:expected_shipment_total) { 1200 }
-    let!(:expected_payment_total) { 400 }
-    let!(:expected_adjustment_total) { expected_item_total + expected_shipment_total + expected_payment_total }
-    let!(:expected_tax_total) { (expected_adjustment_total * 0.08).floor }
-    let!(:expected_total) { expected_adjustment_total + expected_tax_total }
-
-    it do
-      should
-      expect(order.item_count).to eq expected_item_count
-      expect(order.item_total).to eq expected_item_total
-      expect(order.shipment_total).to eq expected_shipment_total
-      expect(order.payment_total).to eq expected_payment_total
-      expect(order.adjustment_total).to eq expected_adjustment_total
-      expect(order.tax_total).to eq expected_tax_total
-      expect(order.total).to eq expected_total
-      expect(order).to have_received(:update!).with({})
-    end
-  end
-
   describe "set_item_count" do
-    subject { order.send(:set_item_count, line_items_attributes) }
+    subject { order.send(:set_item_count) }
 
-    let(:order) { build(:order, item_count: item_count) }
-    let(:item_count) { 2 }
-    let(:quantity) { 10 }
-    let(:expected) { 12 }
-    let(:line_items_attributes) {
-      {
-        "quantity" => quantity
-      }
-    }
+    let(:order) { create(:order_with_line_items).reload }
 
     it do
       should
-      expect(order.item_count).to eq expected
-    end
-  end
-
-  describe "sum_item_count" do
-    before :each do
-      allow(order.line_items).to receive(:sum).with(:quantity).and_return(expected)
-      allow(expected).to receive(:to_i).and_return(expected)
+      expect(order.item_count).to eq 20
     end
 
-    subject { order.send(:sum_item_count) }
-
-    let(:order) { build(:order) }
-    let(:expected) { double("expected") }
-
-    it do
-      should
-      expect(order.item_count).to eq expected
-    end
-
-    it do
-      should
-      expect(order.line_items).to have_received(:sum).with(:quantity)
+    after :each do
+      order.destroy
     end
   end
 
   describe "set_item_total" do
-    before :each do
-      allow(Product).to receive(:find).with(product_id).and_return(product)
-    end
+    subject { order.send(:set_item_total) }
 
-    subject { order.send(:set_item_total, line_items_attributes) }
-
-    let(:order) { build(:order, item_total: item_total) }
-    let(:item_total) { 1000 }
-    let(:quantity) { 10 }
-    let(:price) { 123 }
-    let(:expected) { 2230 }
-    let(:product) { double("product", price: price) }
-    let(:product_id) { double("product_id") }
-    let(:line_items_attributes) {
-      {
-        "product_id" => product_id,
-        "quantity" => quantity
-      }
-    }
+    let(:order) { create(:order_with_line_items).reload }
 
     it do
       should
-      expect(order.item_total).to eq expected
-    end
-  end
-
-  describe "sum_item_total" do
-    before :each do
-      allow(order.line_items).to receive(:includes).with(:product).and_return(products)
-      allow(products).to receive(:sum).with('products.price * quantity').and_return(expected)
-      allow(expected).to receive(:to_i).and_return(expected)
+      expect(order.item_total).to eq 20000
     end
 
-    subject { order.send(:sum_item_total) }
-
-    let(:order) { build(:order) }
-    let(:products) { double("products") }
-    let(:expected) { double("expected") }
-
-    it do
-      should
-      expect(order.item_total).to eq expected
-    end
-
-    it do
-      should
-      expect(products).to have_received(:sum).with('products.price * quantity')
+    after :each do
+      order.destroy
     end
   end
 

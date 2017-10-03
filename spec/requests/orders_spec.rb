@@ -35,13 +35,9 @@ RSpec.describe "Orders", type: :request do
       expect(response).to render_template(:show)
 
       post cart_path, params: {
-        order: {
-          line_items_attributes: {
-            "0": {
-              product_id: product.id,
-              quantity: 3
-            }
-          }
+        line_item: {
+          product_id: product.id,
+          quantity: 3
         }
       }
 
@@ -72,13 +68,9 @@ RSpec.describe "Orders", type: :request do
       expect(response).to render_template(:show)
 
       post cart_path, params: {
-        order: {
-          line_items_attributes: {
-            "0": {
-              product_id: product.id,
-              quantity: 3
-            }
-          }
+        line_item: {
+          product_id: product.id,
+          quantity: 3
         }
       }
 
