@@ -373,10 +373,11 @@ RSpec.describe Order, type: :model do
     subject { order.send(:set_item_count) }
 
     let(:order) { create(:order_with_line_items).reload }
+    let(:expected) { 20 }
 
     it do
       should
-      expect(order.item_count).to eq 20
+      expect(order.item_count).to eq expected
     end
 
     after :each do
@@ -388,10 +389,11 @@ RSpec.describe Order, type: :model do
     subject { order.send(:set_item_total) }
 
     let(:order) { create(:order_with_line_items).reload }
+    let(:expected) { 20000 }
 
     it do
       should
-      expect(order.item_total).to eq 20000
+      expect(order.item_total).to eq expected
     end
 
     after :each do
