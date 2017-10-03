@@ -1,0 +1,25 @@
+%h1 Listing diaries
+
+%table
+  %thead
+    %tr
+      %th User
+      %th Content
+      %th Img filename
+      %th
+      %th
+      %th
+
+  %tbody
+    - @diaries.each do |diary|
+      %tr
+        %td= diary.user
+        %td= diary.content
+        %td= diary.img_filename
+        %td= link_to 'Show', diary
+        %td= link_to 'Edit', edit_diary_path(diary)
+        %td= link_to 'Destroy', diary, method: :delete, data: { confirm: 'Are you sure?' }
+
+%br
+
+= link_to 'New Diary', new_diary_path

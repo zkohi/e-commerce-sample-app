@@ -1,4 +1,5 @@
 Rails.application.routes.draw do
+  resources :diaries
   root 'products#index'
 
   get 'mypage', to: 'users#show'

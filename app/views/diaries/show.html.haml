@@ -1,0 +1,15 @@
+%p#notice= notice
+
+%p
+  %b User:
+  = @diary.user
+%p
+  %b Content:
+  = @diary.content
+%p
+  %b Img filename:
+  = @diary.img_filename
+
+= link_to 'Edit', edit_diary_path(@diary)
+\|
+= link_to 'Back', diaries_path
