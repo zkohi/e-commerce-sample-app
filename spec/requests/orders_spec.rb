@@ -18,7 +18,7 @@ RSpec.describe "Orders", type: :request do
 
         order = FactoryGirl.create(:order, :ordered)
 
-        get cart_edit_path
+        get edit_cart_path
         expect(response).to redirect_to(cart_path)
       end
     end
@@ -87,7 +87,7 @@ RSpec.describe "Orders", type: :request do
 
       expect(response).to render_template(:cart)
 
-      get cart_edit_path
+      get edit_cart_path
       expect(response).to render_template(:edit)
 
       order = user.orders.find_or_initialize_by(state: :cart)

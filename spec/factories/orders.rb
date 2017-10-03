@@ -10,6 +10,7 @@ FactoryGirl.define do
     payment_total 300
     tax_total 232
     total 3132
+    shipping_time_range "eight_to_twelve"
     transient do
       line_items_count 2
     end
@@ -29,6 +30,7 @@ FactoryGirl.define do
       tax_total 232
       total 3132
       shipping_date { Date.today + 2.days }
+      shipping_time_range "eight_to_twelve"
       shipping_time_range_string "8時〜12時"
       user_name Faker::Name.unique.name
       user_zipcode Faker::Number.number(7)

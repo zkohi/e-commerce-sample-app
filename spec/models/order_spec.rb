@@ -110,14 +110,16 @@ RSpec.describe Order, type: :model do
         it { expect(order.errors[:shipping_date]).to include("の日時を正しく入力してください") }
       end
 
-      context "without a shipping_time_range_string" do
-        let(:order) { build(:order, :ordered, shipping_time_range_string: nil) }
-        it { expect(order.errors[:shipping_time_range_string]).to include("を入力してください") }
-      end
+      context "without a shipping_time_range" do
+        context "without a shipping_time_range_string" do
+          let(:order) { build(:order, :ordered, shipping_time_range: nil, shipping_time_range_string: nil) }
+          it { expect(order.errors[:shipping_time_range_string]).to include("を入力してください") }
+        end
 
-      context "with a invalid shipping_time_range_string" do
-        let(:order) { build(:order, :ordered, shipping_time_range_string: "foo") }
-        it { expect(order.errors[:shipping_time_range_string]).to include("は一覧にありません") }
+        context "with a invalid shipping_time_range_string" do
+          let(:order) { build(:order, :ordered, shipping_time_range: nil, shipping_time_range_string: "foo") }
+          it { expect(order.errors[:shipping_time_range_string]).to include("は一覧にありません") }
+        end
       end
 
       context "without a user_name" do
@@ -268,36 +270,6 @@ RSpec.describe Order, type: :model do
 
         it_should_behave_like "validate shipping_date", 3, 18
       end
-    end
-  end
-
-  describe "order" do
-    before :each do
-      allow(order).to receive(:update)
-    end
-
-    subject { order.order(params) }
-
-    let(:order) { build(:order) }
-    let(:params) {
-      {
-        "shipping_time_range" => "twelve_to_fourteen",
-      }
-    }
-
-    it do
-      should
-      expect(order.state).to eq "ordered"
-    end
-
-    it do
-      should
-      expect(order.shipping_time_range_string).to eq Order.shipping_time_ranges_i18n[params["shipping_time_range"]]
-    end
-
-    it do
-      should
-      expect(order).to have_received(:update).with(params)
     end
   end
 
@@ -753,6 +725,28 @@ RSpec.describe Order, type: :model do
     it do
       should
       expect(order.total).to eq expected
+    end
+  end
+
+  describe "set_shipping_time_range_string" do
+    subject { order.send(:set_shipping_time_range_string) }
+
+    context "if shipping_time_range is present?" do
+      let(:order) { build(:order) }
+
+      it do
+        should
+        expect(order.shipping_time_range_string).to eq "8時〜12時"
+      end
+    end
+
+    context "if shipping_time_range is not present?" do
+      let(:order) { build(:order, shipping_time_range: nil) }
+
+      it do
+        should
+        expect(order.shipping_time_range_string).to be_nil
+      end
     end
   end
 
