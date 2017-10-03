@@ -1,6 +1,6 @@
 Rails.application.routes.draw do
   resources :diaries
-  root 'products#index'
+  root 'diaries#index'
 
   get 'mypage', to: 'users#show'
 
@@ -8,7 +8,7 @@ Rails.application.routes.draw do
   get 'cart', to: 'orders#cart'
   delete 'cart/line_items', to: 'orders#destroy_cart_line_item', as: 'destroy_cart_line_item'
 
-  resources :products, only: [:show]
+  resources :products, only: [:index, :show]
   resources :orders, only: [:index, :show]
 
   scope :backoffice do

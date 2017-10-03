@@ -2,12 +2,12 @@ require 'rails_helper'
 
 RSpec.describe "Products", type: :request do
 
-  describe "GET /" do
+  describe "GET /products" do
     it "shows Products" do
       user = FactoryGirl.create(:user)
       login_as(user, scope: :user)
 
-      get root_path
+      get products_path
       expect(response).to render_template(:index)
     end
   end
