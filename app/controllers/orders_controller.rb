@@ -1,6 +1,6 @@
 class OrdersController < ApplicationController
   before_action :authenticate_user!
-  before_action :set_order, only: [:cart, :edit]
+  before_action :set_order, only: [:cart, :edit, :update]
 
   def index
     @orders = current_user.orders.ordered.page(params[:page])
@@ -32,9 +32,8 @@ class OrdersController < ApplicationController
   end
 
   def update
-    @order = current_user.orders.cart.first
-
-    if @order && @order.order(order_params)
+    @order.state = "ordered"
+    if @order.update(order_params)
       redirect_to @order, notice: 'ご注文完了しました'
     else
       render :edit

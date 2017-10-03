@@ -25,6 +25,7 @@ class Order < ApplicationRecord
     validates :user_address, presence: true, length: { maximum: 100 }
   end
 
+  before_validation :set_shipping_time_range_string
 
   enum state: {
     cart: 0,
@@ -49,12 +50,6 @@ class Order < ApplicationRecord
     eighteen_to_twenty: 4,
     twenty_to_twenty_one: 5
   }
-
-  def order(params)
-    self.state = "ordered"
-    self.shipping_time_range_string = Order.shipping_time_ranges_i18n[params["shipping_time_range"]]
-    update(params)
-  end
 
   def available_shipping_date_range
     # 3営業日（営業日: 月-金）から14営業日まで
@@ -167,6 +162,12 @@ class Order < ApplicationRecord
         (shipping_date < (today + date_range[:minDate].days) || shipping_date > (today + date_range[:maxDate].days) ||
         (shipping_date.saturday? || shipping_date.sunday?))
         errors.add(:shipping_date, "は3営業日（営業日: 月-金）から14営業日までを指定してください")
+      end
+    end
+
+    def set_shipping_time_range_string
+      if self.shipping_time_range.present?
+        self.shipping_time_range_string = Order.shipping_time_ranges_i18n[self.shipping_time_range]
       end
     end
 end
