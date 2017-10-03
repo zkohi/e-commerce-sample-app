@@ -1,5 +1,7 @@
 class LineItem < ApplicationRecord
-  belongs_to :order
+  belongs_to :order, inverse_of: :line_items
+  validates_presence_of :order
+
   belongs_to :product
 
   default_scope -> { includes(:product) }

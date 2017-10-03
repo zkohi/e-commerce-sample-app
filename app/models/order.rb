@@ -25,6 +25,7 @@ class Order < ApplicationRecord
     validates :user_address, presence: true, length: { maximum: 100 }
   end
 
+  after_find :calc_total if :cart?
   before_validation :set_shipping_time_range_string
 
   enum state: {
@@ -78,49 +79,24 @@ class Order < ApplicationRecord
     end
   end
 
-  def save_for_add_line_item!(params)
-    line_items_attributes = params["line_items_attributes"]["0"]
-    line_items.build(line_items_attributes)
-    set_item_count(line_items_attributes)
-    set_item_total(line_items_attributes)
+  def calc_total
+    set_item_count
+    set_item_total
     set_shipment_total
     set_payment_total
     set_adjustment_total
     set_tax_total
     set_total
-    save!(params)
-  end
-
-  def update_for_delete_line_item!(line_item_id)
-    self.transaction do
-      line_items.find(line_item_id).destroy
-      sum_item_count
-      sum_item_total
-      set_shipment_total
-      set_payment_total
-      set_adjustment_total
-      set_tax_total
-      set_total
-      update!({})
-    end
   end
 
   private
 
-    def set_item_count(line_items_attributes)
-      self.item_count += line_items_attributes["quantity"].to_i
+    def set_item_count
+      self.item_count = self.line_items.inject(0) { |sum, i| sum + i.quantity }
     end
 
-    def sum_item_count
-      self.item_count = self.line_items.sum(:quantity)
-    end
-
-    def set_item_total(line_items_attributes)
-      self.item_total += Product.find(line_items_attributes["product_id"]).price * line_items_attributes["quantity"].to_i
-    end
-
-    def sum_item_total
-      self.item_total = self.line_items.includes(:product).sum('products.price * quantity')
+    def set_item_total
+      self.item_total = self.line_items.inject(0) { |sum, i| sum + (i.product.price * i.quantity) }
     end
 
     def set_shipment_total

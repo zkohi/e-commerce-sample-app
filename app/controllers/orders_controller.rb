@@ -1,6 +1,6 @@
 class OrdersController < ApplicationController
   before_action :authenticate_user!
-  before_action :set_order, only: [:cart, :edit, :update]
+  before_action :set_order, only: [:cart, :create, :edit, :update, :destroy_cart_line_item]
 
   def index
     @orders = current_user.orders.ordered.page(params[:page])
@@ -11,11 +11,8 @@ class OrdersController < ApplicationController
   end
 
   def create
-    line_item = order_lineitem_params[:line_items_attributes]["0"]
-    if line_item["quantity"].present?
-      @order = current_user.orders.find_or_initialize_by(state: :cart)
-
-      @order.save_for_add_line_item!(order_lineitem_params)
+    @order.line_items_attributes = [line_item_params]
+    if @order.save
       redirect_to cart_path
     else
       redirect_to product_path(line_item["product_id"]), notice: '個数を入力してください'
@@ -41,7 +38,7 @@ class OrdersController < ApplicationController
   end
 
   def destroy_cart_line_item
-    current_user.orders.cart.first.update_for_delete_line_item!(params[:line_item_id])
+    @order.line_items.find(params[:line_item_id]).destroy
     redirect_to cart_path, notice: '商品が削除されました'
   end
 
@@ -50,8 +47,8 @@ class OrdersController < ApplicationController
       @order = current_user.orders.find_or_initialize_by(state: :cart)
     end
 
-    def order_lineitem_params
-      params.require(:order).permit(:id, line_items_attributes: [:product_id, :quantity])
+    def line_item_params
+      params.require(:line_item).permit(:product_id, :quantity)
     end
 
     def order_params
