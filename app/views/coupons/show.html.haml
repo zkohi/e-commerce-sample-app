@@ -1,0 +1,12 @@
+%p#notice= notice
+
+%p
+  %b String:
+  = @coupon.string
+%p
+  %b Integer:
+  = @coupon.integer
+
+= link_to 'Edit', edit_coupon_path(@coupon)
+\|
+= link_to 'Back', coupons_path

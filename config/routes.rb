@@ -1,4 +1,5 @@
 Rails.application.routes.draw do
+  resources :coupons
   root 'diaries#index'
   resources :diaries, except: [:index] do
     resources :comments, except: [:index, :show], controller: 'diary_comments'
