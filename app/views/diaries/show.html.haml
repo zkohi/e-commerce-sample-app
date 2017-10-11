@@ -15,4 +15,7 @@
   \|
   = link_to '削除する', @diary, method: :delete, data: { confirm: '削除してよろしいですか?' }
   \|
+- else
+  = link_to 'コメントを書く', new_diary_comment_path(@diary)
+  \|
 = link_to 'トップページを開く', root_path

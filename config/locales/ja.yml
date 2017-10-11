@@ -40,6 +40,8 @@ ja:
         title: タイトル
         content: 内容
         img_filename: 画像
+      diary_comment: &activerecord_attributes_diary_comment
+        content: 内容
     errors:
       models:
         order:
@@ -50,6 +52,7 @@ ja:
       product: *activerecord_attributes_product
       order: *activerecord_attributes_order
       diary: *activerecord_attributes_diary
+      diary_comment: *activerecord_attributes_diary_comment
     "yes": 'Yes'
     "no": 'No'
     required:

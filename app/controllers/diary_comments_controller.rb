@@ -1,12 +1,5 @@
 class DiaryCommentsController < ApplicationController
-  before_action :set_diary_comment, only: [:show, :edit, :update, :destroy]
-
-  def index
-    @diary_comments = DiaryComment.all
-  end
-
-  def show
-  end
+  before_action :set_diary_comment, only: [:edit, :update, :destroy]
 
   def new
     @diary_comment = DiaryComment.new
@@ -16,10 +9,10 @@ class DiaryCommentsController < ApplicationController
   end
 
   def create
-    @diary_comment = DiaryComment.new(diary_comment_params)
+    @diary_comment = current_user.diary_comments.new(diary_comment_params)
 
     if @diary_comment.save
-      redirect_to @diary_comment, notice: 'Diary comment was successfully created.'
+      redirect_to diary_path(@diary_comment.diary_id), notice: 'コメントを登録しました'
     else
       render :new
     end
@@ -27,7 +20,7 @@ class DiaryCommentsController < ApplicationController
 
   def update
     if @diary_comment.update(diary_comment_params)
-      redirect_to @diary_comment, notice: 'Diary comment was successfully updated.'
+      redirect_to @diary_comment, notice: 'コメントを更新しました'
     else
       render :edit
     end
@@ -35,15 +28,15 @@ class DiaryCommentsController < ApplicationController
 
   def destroy
     @diary_comment.destroy
-    redirect_to diary_comments_url, notice: 'Diary comment was successfully destroyed.'
+    redirect_to diary_comments_url, notice: 'コメントを削除しました'
   end
 
   private
     def set_diary_comment
-      @diary_comment = DiaryComment.find(params[:id])
+      @diary_comment = current_user.diary_comments.where(diary_id: params[:diary_id]).find(params[:id])
     end
 
     def diary_comment_params
-      params.require(:diary_comment).permit(:user_id, :diary_id, :content)
+      params.require(:diary_comment).permit(:content).merge(diary_id: params[:diary_id])
     end
 end
