@@ -1,7 +1,7 @@
 FactoryGirl.define do
   factory :diary_comment do
-    user nil
-    diary nil
-    content "MyText"
+    user
+    diary
+    content Faker::Book.unique.title
   end
 end
