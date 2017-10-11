@@ -1,4 +1,5 @@
 Rails.application.routes.draw do
+  resources :diary_comments
   root 'diaries#index'
   resources :diaries, except: [:index]
 

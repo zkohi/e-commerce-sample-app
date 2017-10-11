@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20171003071415) do
+ActiveRecord::Schema.define(version: 20171011003750) do
 
   create_table "admins", force: :cascade, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8" do |t|
     t.string "email", default: "", null: false
@@ -37,6 +37,16 @@ ActiveRecord::Schema.define(version: 20171003071415) do
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.index ["user_id"], name: "index_diaries_on_user_id"
+  end
+
+  create_table "diary_comments", force: :cascade, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8" do |t|
+    t.bigint "user_id"
+    t.bigint "diary_id"
+    t.text "content", null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["diary_id"], name: "index_diary_comments_on_diary_id"
+    t.index ["user_id"], name: "index_diary_comments_on_user_id"
   end
 
   create_table "line_items", force: :cascade, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8" do |t|
@@ -104,5 +114,7 @@ ActiveRecord::Schema.define(version: 20171003071415) do
   end
 
   add_foreign_key "diaries", "users"
+  add_foreign_key "diary_comments", "diaries"
+  add_foreign_key "diary_comments", "users"
   add_foreign_key "line_items", "orders"
 end
