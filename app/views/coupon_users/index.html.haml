@@ -1,0 +1,25 @@
+%h1 Listing coupon_users
+
+%table
+  %thead
+    %tr
+      %th Coupon
+      %th User
+      %th Point
+      %th
+      %th
+      %th
+
+  %tbody
+    - @coupon_users.each do |coupon_user|
+      %tr
+        %td= coupon_user.coupon
+        %td= coupon_user.user
+        %td= coupon_user.point
+        %td= link_to 'Show', coupon_user
+        %td= link_to 'Edit', edit_coupon_user_path(coupon_user)
+        %td= link_to 'Destroy', coupon_user, method: :delete, data: { confirm: 'Are you sure?' }
+
+%br
+
+= link_to 'New Coupon user', new_coupon_user_path
