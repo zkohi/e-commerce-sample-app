@@ -1,0 +1,10 @@
+= simple_form_for(@user_coupon) do |f|
+  = f.error_notification
+
+  .form-inputs
+    = f.association :user
+    = f.association :coupon
+    = f.input :point
+
+  .form-actions
+    = f.button :submit

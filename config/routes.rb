@@ -1,4 +1,5 @@
 Rails.application.routes.draw do
+  resources :user_coupons
   resources :coupons
   root 'diaries#index'
   resources :diaries, except: [:index] do
