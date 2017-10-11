@@ -30,6 +30,6 @@ class Backoffice::UsersController < Backoffice::ApplicationController
     end
 
     def user_params
-      params.require(:user).permit(:name, :zipcode, :address)
+      params.require(:user).permit(:name, :zipcode, :address, :nickname, :img_filename)
     end
 end

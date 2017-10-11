@@ -6,7 +6,7 @@ RSpec.describe User, type: :model do
     it { expect(build(:user)).to be_valid }
 
     context "with a profile" do
-      it { expect(build(:user, :with_profile)).to be_valid }
+      it { expect(build(:user, :with_profile, :with_img_filename)).to be_valid }
     end
 
   end
@@ -29,6 +29,16 @@ RSpec.describe User, type: :model do
     context "address length is too long" do
       let(:user) { build(:user, address: "a" * 101) }
       it { expect(user.errors[:address]).to include("は100文字以内で入力してください") }
+    end
+
+    context "nickname length is too long" do
+      let(:user) { build(:user, nickname: "a" * 31) }
+      it { expect(user.errors[:nickname]).to include("は30文字以内で入力してください") }
+    end
+
+    context "with a invalid img_filename extension" do
+      let(:user) { build(:user, :with_invalid_img_filename_extension) }
+      it { expect(user.errors[:img_filename]).to include("指定された拡張子[\"txt\"]のファイルは許可されていません。許可されている拡張子は[jpg, jpeg, gif, png]です。") }
     end
   end
 end
