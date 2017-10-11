@@ -7,8 +7,10 @@
         %thead
           %tr
             %th クーポン番号
+            %th クーポンタイトル
             %th クーポンコード
             %th ポイント
+            %th
             %th
             %th
             %th
@@ -17,11 +19,13 @@
           - @coupons.each do |coupon|
             %tr
               %td= coupon.id
+              %td= coupon.title
               %td= coupon.code
               %td= number_with_delimiter(coupon.point)
-              %td= link_to '詳細', [:backoffice, coupon]
+              %td= link_to '詳細', backoffice_coupon_path(coupon)
               %td= link_to '編集', edit_backoffice_coupon_path(coupon)
-              %td= link_to '削除', [:backoffice, coupon], method: :delete, data: { confirm: '削除してよろしいですか?' }
+              %td= link_to '使用履歴', backoffice_coupon_user_coupons_path(coupon)
+              %td= link_to '削除', backoffice_coupon_path(coupon), method: :delete, data: { confirm: '削除してよろしいですか?' }
       = paginate @coupons
 
 %br

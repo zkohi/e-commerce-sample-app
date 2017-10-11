@@ -44,6 +44,6 @@ class Backoffice::CouponsController < Backoffice::ApplicationController
     end
 
     def coupon_params
-      params.require(:coupon).permit(:code, :point)
+      params.require(:coupon).permit(:title, :code, :point)
     end
 end

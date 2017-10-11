@@ -1,6 +1,4 @@
 Rails.application.routes.draw do
-  resources :user_coupons
-  resources :coupons
   root 'diaries#index'
   resources :diaries, except: [:index] do
     resources :comments, except: [:index, :show], controller: 'diary_comments'
@@ -24,7 +22,9 @@ Rails.application.routes.draw do
 
   namespace :backoffice, path: '/backoffice' do
     resources :products
-    resources :coupons
+    resources :coupons do
+      resources :user_coupons, only: [:index, :show]
+    end
     resources :orders, except: [:new, :create, :destroy]
     resources :users, except: [:new, :create, :destroy]
   end

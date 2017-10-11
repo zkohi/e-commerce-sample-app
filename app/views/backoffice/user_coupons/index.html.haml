@@ -1,0 +1,29 @@
+.panel.panel-warning
+  .panel-heading
+    %h2.panel-title  クーポン使用履歴一覧
+  .panel-body
+    %div
+      %table.table.table-striped.table-hover
+        %thead
+          %tr
+            %th ユーザーID
+            %th クーポン番号
+            %th クーポンコード
+            %th ポイント
+            %th
+            %th
+            %th
+
+        %tbody
+          - @user_coupons.each do |user_coupon|
+            %tr
+              %td= user_coupon.user.id
+              %td= user_coupon.coupon.id
+              %td= user_coupon.coupon.code
+              %td= number_with_delimiter(user_coupon.point)
+              %td= link_to '詳細', backoffice_coupon_path(user_coupon)
+      = paginate @user_coupons
+
+%br
+
+= link_to 'クーポン一覧', backoffice_coupons_path

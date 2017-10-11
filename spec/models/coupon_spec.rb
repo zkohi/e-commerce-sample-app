@@ -10,6 +10,16 @@ RSpec.describe Coupon, type: :model do
       coupon.valid?
     end
 
+    context "without a title" do
+      let(:coupon) { build(:coupon, title: nil) }
+      it { expect(coupon.errors[:title]).to include("を入力してください") }
+    end
+
+    context "title length is too long" do
+      let(:coupon) { build(:coupon, title: 'a' * 51) }
+      it { expect(coupon.errors[:title]).to include("は50文字以内で入力してください") }
+    end
+
     context "without a code" do
       let(:coupon) { build(:coupon, code: nil) }
       it { expect(coupon.errors[:code]).to include("を入力してください") }

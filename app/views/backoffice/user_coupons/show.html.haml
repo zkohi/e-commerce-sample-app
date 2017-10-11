@@ -1,0 +1,15 @@
+%p#notice= notice
+
+%p
+  %b User:
+  = @user_coupon.user
+%p
+  %b Coupon:
+  = @user_coupon.coupon
+%p
+  %b Point:
+  = @user_coupon.point
+
+= link_to 'Edit', edit_user_coupon_path(@user_coupon)
+\|
+= link_to 'Back', user_coupons_path

@@ -1,7 +1,7 @@
 FactoryGirl.define do
   factory :user_coupon do
-    user nil
-    coupon nil
-    point 1
+    user
+    coupon
+    point Faker::Number.between(1, 999999)
   end
 end

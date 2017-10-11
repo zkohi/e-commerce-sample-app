@@ -3,6 +3,7 @@ class User < ApplicationRecord
   has_many :diaries
   has_many :diary_comments
   has_many :diary_evaluations
+  has_many :user_coupons
 
   # Include default devise modules. Others available are:
   # :confirmable, :lockable, :timeoutable and :omniauthable

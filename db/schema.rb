@@ -30,6 +30,7 @@ ActiveRecord::Schema.define(version: 20171011055553) do
   end
 
   create_table "coupons", force: :cascade, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8" do |t|
+    t.string "title", null: false
     t.string "code", null: false
     t.integer "point", null: false
     t.datetime "created_at", null: false
