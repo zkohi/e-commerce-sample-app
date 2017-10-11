@@ -1,49 +1,22 @@
 class DiaryEvaluationsController < ApplicationController
-  before_action :set_diary_evaluation, only: [:show, :edit, :update, :destroy]
-
-  def index
-    @diary_evaluations = DiaryEvaluation.all
-  end
-
-  def show
-  end
-
-  def new
-    @diary_evaluation = DiaryEvaluation.new
-  end
-
-  def edit
-  end
-
   def create
-    @diary_evaluation = DiaryEvaluation.new(diary_evaluation_params)
+    @diary_evaluation = current_user.diary_evaluations.new(diary_id: params[:diary_id])
 
     if @diary_evaluation.save
-      redirect_to @diary_evaluation, notice: 'Diary evaluation was successfully created.'
+      message = '評価を登録しました'
     else
-      render :new
+      message = '評価を削除できませんでした'
     end
-  end
-
-  def update
-    if @diary_evaluation.update(diary_evaluation_params)
-      redirect_to @diary_evaluation, notice: 'Diary evaluation was successfully updated.'
-    else
-      render :edit
-    end
+    redirect_to diary_url(@diary_evaluation.diary_id), notice: message
   end
 
   def destroy
-    @diary_evaluation.destroy
-    redirect_to diary_evaluations_url, notice: 'Diary evaluation was successfully destroyed.'
+    @diary_evaluation = current_user.diary_evaluations.where(diary_id: params[:diary_id]).find(params[:id])
+    if @diary_evaluation.destroy
+      message = '評価を削除しました'
+    else
+      message = '評価を削除できませんでした'
+    end
+    redirect_to diary_url(@diary_evaluation.diary_id), notice: message
   end
-
-  private
-    def set_diary_evaluation
-      @diary_evaluation = DiaryEvaluation.find(params[:id])
-    end
-
-    def diary_evaluation_params
-      params.require(:diary_evaluation).permit(:user_id, :diary_id)
-    end
 end

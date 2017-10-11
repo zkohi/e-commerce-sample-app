@@ -16,6 +16,11 @@
   = link_to '削除する', @diary, method: :delete, data: { confirm: '削除してよろしいですか?' }
   \|
 - else
+  - if diary_evaluation = current_user.diary_evaluations.find_by(diary_id: @diary.id)
+    = link_to 'Good!を削除する', diary_evaluation_path(@diary, diary_evaluation), method: :delete, data: { confirm: '評価を削除してよろしいですか?' }
+  - else
+    = link_to 'Good!', diary_evaluations_path(@diary), method: :post, data: { confirm: '評価を登録してよろしいですか?' }
+  \|
   = link_to 'コメントを書く', new_diary_comment_path(@diary)
   \|
 = link_to 'トップページを開く', root_path

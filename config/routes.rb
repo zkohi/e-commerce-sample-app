@@ -1,8 +1,8 @@
 Rails.application.routes.draw do
-  resources :diary_evaluations
   root 'diaries#index'
   resources :diaries, except: [:index] do
     resources :comments, except: [:index, :show], controller: 'diary_comments'
+    resources :evaluations, only: [:create, :destroy], controller: 'diary_evaluations'
   end
 
   get 'mypage', to: 'users#show'
