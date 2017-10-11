@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20171011054828) do
+ActiveRecord::Schema.define(version: 20171011040827) do
 
   create_table "admins", force: :cascade, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8" do |t|
     t.string "email", default: "", null: false
@@ -27,16 +27,6 @@ ActiveRecord::Schema.define(version: 20171011054828) do
     t.datetime "updated_at", null: false
     t.index ["email"], name: "index_admins_on_email", unique: true
     t.index ["reset_password_token"], name: "index_admins_on_reset_password_token", unique: true
-  end
-
-  create_table "coupon_users", force: :cascade, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8" do |t|
-    t.bigint "coupon_id"
-    t.bigint "user_id"
-    t.integer "point", null: false
-    t.datetime "created_at", null: false
-    t.datetime "updated_at", null: false
-    t.index ["coupon_id"], name: "index_coupon_users_on_coupon_id"
-    t.index ["user_id"], name: "index_coupon_users_on_user_id"
   end
 
   create_table "coupons", force: :cascade, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8" do |t|
@@ -140,8 +130,6 @@ ActiveRecord::Schema.define(version: 20171011054828) do
     t.index ["reset_password_token"], name: "index_users_on_reset_password_token", unique: true
   end
 
-  add_foreign_key "coupon_users", "coupons"
-  add_foreign_key "coupon_users", "users"
   add_foreign_key "diaries", "users"
   add_foreign_key "diary_comments", "diaries"
   add_foreign_key "diary_comments", "users"
