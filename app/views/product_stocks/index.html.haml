@@ -1,0 +1,25 @@
+%h1 Listing product_stocks
+
+%table
+  %thead
+    %tr
+      %th Product
+      %th Company
+      %th Stock
+      %th
+      %th
+      %th
+
+  %tbody
+    - @product_stocks.each do |product_stock|
+      %tr
+        %td= product_stock.product
+        %td= product_stock.company
+        %td= product_stock.stock
+        %td= link_to 'Show', product_stock
+        %td= link_to 'Edit', edit_product_stock_path(product_stock)
+        %td= link_to 'Destroy', product_stock, method: :delete, data: { confirm: 'Are you sure?' }
+
+%br
+
+= link_to 'New Product stock', new_product_stock_path

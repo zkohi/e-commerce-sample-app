@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20171011065226) do
+ActiveRecord::Schema.define(version: 20171011071724) do
 
   create_table "admins", force: :cascade, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8" do |t|
     t.string "email", default: "", null: false
@@ -118,6 +118,16 @@ ActiveRecord::Schema.define(version: 20171011065226) do
     t.index ["user_id"], name: "index_orders_on_user_id"
   end
 
+  create_table "product_stocks", force: :cascade, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8" do |t|
+    t.bigint "product_id"
+    t.bigint "company_id"
+    t.integer "stock", null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["company_id"], name: "index_product_stocks_on_company_id"
+    t.index ["product_id"], name: "index_product_stocks_on_product_id"
+  end
+
   create_table "products", force: :cascade, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8" do |t|
     t.string "name", null: false
     t.string "img_filename"
@@ -167,6 +177,8 @@ ActiveRecord::Schema.define(version: 20171011065226) do
   add_foreign_key "diary_evaluations", "diaries"
   add_foreign_key "diary_evaluations", "users"
   add_foreign_key "line_items", "orders"
+  add_foreign_key "product_stocks", "companies"
+  add_foreign_key "product_stocks", "products"
   add_foreign_key "user_coupons", "coupons"
   add_foreign_key "user_coupons", "users"
 end
