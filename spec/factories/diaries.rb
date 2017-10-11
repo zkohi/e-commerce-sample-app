@@ -1,6 +1,7 @@
 FactoryGirl.define do
   factory :diary do
     user
+    title Faker::Book.unique.title
     content Faker::Book.unique.title
     trait :with_img_filename do
       img_filename { Rack::Test::UploadedFile.new(File.join(Rails.root, 'spec', 'fixtures/', 'files', 'test.jpg'), 'image/jpg') }

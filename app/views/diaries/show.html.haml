@@ -1,15 +1,18 @@
-%p#notice= notice
+.content.col-lg-12
+  -if notice
+    %p.alert.alert-dismissible.alert-warning#notice= notice
 
-%p
-  %b User:
-  = @diary.user
-%p
-  %b Content:
-  = @diary.content
-%p
-  %b Img filename:
-  = @diary.img_filename
+  .col-lg-4
+    .panel.panel-default
+      .panel-body.text-center
+        = image_tag(@diary.img_filename, class: 'img-thumbnail')
+  .col-lg-8
+    %h1= @diary.title
+    .well= simple_format(@diary.content)
 
-= link_to 'Edit', edit_diary_path(@diary)
-\|
-= link_to 'Back', diaries_path
+- if @diary.user.id == current_user.id
+  = link_to '編集する', edit_diary_path(@diary)
+  \|
+  = link_to '削除する', @diary, method: :delete, data: { confirm: '削除してよろしいですか?' }
+  \|
+= link_to 'トップページを開く', root_path

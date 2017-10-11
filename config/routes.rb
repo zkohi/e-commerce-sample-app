@@ -1,6 +1,6 @@
 Rails.application.routes.draw do
-  resources :diaries
   root 'diaries#index'
+  resources :diaries, except: [:index]
 
   get 'mypage', to: 'users#show'
 

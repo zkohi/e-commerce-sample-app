@@ -36,6 +36,10 @@ ja:
         shipping_date: 配送日
         shipping_time_range: 配送時間帯
         shipping_time_range_string: 配送時間帯
+      diary: &activerecord_attributes_diary
+        title: タイトル
+        content: 内容
+        img_filename: 画像
     errors:
       models:
         order:
@@ -45,6 +49,7 @@ ja:
       user: *activerecord_attributes_user
       product: *activerecord_attributes_product
       order: *activerecord_attributes_order
+      diary: *activerecord_attributes_diary
     "yes": 'Yes'
     "no": 'No'
     required:

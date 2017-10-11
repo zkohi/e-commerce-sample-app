@@ -20,6 +20,16 @@ RSpec.describe Diary, type: :model do
       it { expect(diary.errors[:img_filename]).to include("指定された拡張子[\"txt\"]のファイルは許可されていません。許可されている拡張子は[jpg, jpeg, gif, png]です。") }
     end
 
+    context "without a title" do
+      let(:diary) { build(:diary, title: nil) }
+      it { expect(diary.errors[:title]).to include("を入力してください") }
+    end
+
+    context "title length is too long" do
+      let(:diary) { build(:diary, title: 'a' * 51) }
+      it { expect(diary.errors[:title]).to include("は50文字以内で入力してください") }
+    end
+
     context "without a content" do
       let(:diary) { build(:diary, content: nil) }
       it { expect(diary.errors[:content]).to include("を入力してください") }

@@ -1,11 +1,12 @@
 class DiariesController < ApplicationController
-  before_action :set_diary, only: [:show, :edit, :update, :destroy]
+  before_action :set_diary, only: [:edit, :update, :destroy]
 
   def index
-    @diaries = Diary.all
+    @diaries = Diary.page(params[:page]).order("created_at DESC")
   end
 
   def show
+    @diary = Diary.find(params[:id])
   end
 
   def new
@@ -16,10 +17,10 @@ class DiariesController < ApplicationController
   end
 
   def create
-    @diary = Diary.new(diary_params)
+    @diary = current_user.diaries.new(diary_params)
 
     if @diary.save
-      redirect_to @diary, notice: 'Diary was successfully created.'
+      redirect_to @diary, notice: '新しい日記が作成されました'
     else
       render :new
     end
@@ -27,7 +28,7 @@ class DiariesController < ApplicationController
 
   def update
     if @diary.update(diary_params)
-      redirect_to @diary, notice: 'Diary was successfully updated.'
+      redirect_to @diary, notice: '日記を更新しました'
     else
       render :edit
     end
@@ -35,15 +36,15 @@ class DiariesController < ApplicationController
 
   def destroy
     @diary.destroy
-    redirect_to diaries_url, notice: 'Diary was successfully destroyed.'
+    redirect_to diaries_url, notice: '日記を削除しました'
   end
 
   private
     def set_diary
-      @diary = Diary.find(params[:id])
+      @diary = current_user.diaries.find(params[:id])
     end
 
     def diary_params
-      params.require(:diary).permit(:user_id, :content, :img_filename)
+      params.require(:diary).permit(:user_id, :title, :content, :img_filename)
     end
 end

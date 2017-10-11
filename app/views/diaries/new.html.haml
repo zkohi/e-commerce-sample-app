@@ -1,5 +1,9 @@
-%h1 New diary
+.panel.panel-info
+  .panel-heading
+    %h2.panel-title  日記を書く
+  .panel-body
+    = render 'form'
 
-= render 'form'
+%br
 
-= link_to 'Back', diaries_path
+= link_to 'トップページを開く', root_path
