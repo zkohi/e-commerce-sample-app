@@ -1,5 +1,4 @@
 Rails.application.routes.draw do
-  devise_for :companies
   root 'diaries#index'
   resources :diaries, except: [:index] do
     resources :comments, except: [:index, :show], controller: 'diary_comments'
