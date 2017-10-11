@@ -1,4 +1,5 @@
 Rails.application.routes.draw do
+  resources :user_points
   resources :product_stocks
   root 'diaries#index'
   resources :diaries, except: [:index] do

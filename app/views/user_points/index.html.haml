@@ -1,0 +1,27 @@
+%h1 Listing user_points
+
+%table
+  %thead
+    %tr
+      %th User
+      %th User coupon
+      %th Status
+      %th Point
+      %th
+      %th
+      %th
+
+  %tbody
+    - @user_points.each do |user_point|
+      %tr
+        %td= user_point.user
+        %td= user_point.user_coupon_id
+        %td= user_point.status
+        %td= user_point.point
+        %td= link_to 'Show', user_point
+        %td= link_to 'Edit', edit_user_point_path(user_point)
+        %td= link_to 'Destroy', user_point, method: :delete, data: { confirm: 'Are you sure?' }
+
+%br
+
+= link_to 'New User point', new_user_point_path

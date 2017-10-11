@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20171011071724) do
+ActiveRecord::Schema.define(version: 20171011075124) do
 
   create_table "admins", force: :cascade, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8" do |t|
     t.string "email", default: "", null: false
@@ -149,6 +149,17 @@ ActiveRecord::Schema.define(version: 20171011071724) do
     t.index ["user_id"], name: "index_user_coupons_on_user_id"
   end
 
+  create_table "user_points", force: :cascade, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8" do |t|
+    t.bigint "user_id"
+    t.integer "user_coupon_id"
+    t.integer "status", null: false
+    t.integer "point", null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["user_coupon_id"], name: "index_user_points_on_user_coupon_id"
+    t.index ["user_id"], name: "index_user_points_on_user_id"
+  end
+
   create_table "users", force: :cascade, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8" do |t|
     t.string "email", default: "", null: false
     t.string "encrypted_password", default: "", null: false
@@ -181,4 +192,5 @@ ActiveRecord::Schema.define(version: 20171011071724) do
   add_foreign_key "product_stocks", "products"
   add_foreign_key "user_coupons", "coupons"
   add_foreign_key "user_coupons", "users"
+  add_foreign_key "user_points", "users"
 end
