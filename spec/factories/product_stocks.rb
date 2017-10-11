@@ -1,7 +1,7 @@
 FactoryGirl.define do
   factory :product_stock do
-    product nil
-    company nil
-    stock 1
+    product
+    company
+    stock Faker::Number.between(1, 999999)
   end
 end
