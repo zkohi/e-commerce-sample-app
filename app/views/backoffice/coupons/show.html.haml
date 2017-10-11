@@ -1,0 +1,24 @@
+-if notice
+  %p.alert.alert-dismissible.alert-success#notice= notice
+
+.panel.panel-info
+  .panel-heading
+    %h2.panel-title クーポン詳細
+  .panel-body
+    %table.table.table-striped.table-hover
+      %tbody
+        %tr
+          %td クーポンID
+          %td= @coupon.id
+        %tr
+          %td クーポンコード
+          %td= @coupon.code
+        %tr
+          %td ポイント
+          %td= number_with_delimiter(@coupon.point)
+
+%br
+
+= link_to '編集', edit_backoffice_coupon_path(@coupon)
+\|
+= link_to 'クーポン一覧', backoffice_coupons_path

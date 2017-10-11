@@ -1,0 +1,29 @@
+.panel.panel-warning
+  .panel-heading
+    %h2.panel-title  クーポン一覧
+  .panel-body
+    %div
+      %table.table.table-striped.table-hover
+        %thead
+          %tr
+            %th クーポン番号
+            %th クーポンコード
+            %th ポイント
+            %th
+            %th
+            %th
+
+        %tbody
+          - @coupons.each do |coupon|
+            %tr
+              %td= coupon.id
+              %td= coupon.code
+              %td= number_with_delimiter(coupon.point)
+              %td= link_to '詳細', [:backoffice, coupon]
+              %td= link_to '編集', edit_backoffice_coupon_path(coupon)
+              %td= link_to '削除', [:backoffice, coupon], method: :delete, data: { confirm: '削除してよろしいですか?' }
+      = paginate @coupons
+
+%br
+
+= link_to '新規作成', new_backoffice_coupon_path

@@ -22,8 +22,8 @@ Rails.application.routes.draw do
   end
 
   namespace :backoffice, path: '/backoffice' do
-    resources :users, except: [:new, :create]
     resources :products
+    resources :coupons
     resources :orders, except: [:new, :create, :destroy]
     resources :users, except: [:new, :create, :destroy]
   end

@@ -1,8 +1,8 @@
-class CouponsController < ApplicationController
+class Backoffice::CouponsController < Backoffice::ApplicationController
   before_action :set_coupon, only: [:show, :edit, :update, :destroy]
 
   def index
-    @coupons = Coupon.all
+    @coupons = Coupon.all.page(params[:page])
   end
 
   def show
@@ -19,7 +19,7 @@ class CouponsController < ApplicationController
     @coupon = Coupon.new(coupon_params)
 
     if @coupon.save
-      redirect_to @coupon, notice: 'Coupon was successfully created.'
+      redirect_to [:backoffice, @coupon], notice: 'クーポンが作成されました'
     else
       render :new
     end
@@ -27,7 +27,7 @@ class CouponsController < ApplicationController
 
   def update
     if @coupon.update(coupon_params)
-      redirect_to @coupon, notice: 'Coupon was successfully updated.'
+      redirect_to [:backoffice, @coupon], notice: 'クーポンが更新されました'
     else
       render :edit
     end
@@ -35,7 +35,7 @@ class CouponsController < ApplicationController
 
   def destroy
     @coupon.destroy
-    redirect_to coupons_url, notice: 'Coupon was successfully destroyed.'
+    redirect_to backoffice_coupons_url, notice: 'クーポンが削除されました'
   end
 
   private
@@ -44,6 +44,6 @@ class CouponsController < ApplicationController
     end
 
     def coupon_params
-      params.require(:coupon).permit(:string, :integer)
+      params.require(:coupon).permit(:code, :point)
     end
 end

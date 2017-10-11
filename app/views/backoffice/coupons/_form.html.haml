@@ -1,0 +1,9 @@
+= simple_form_for([:backoffice, @coupon], html: {class: 'form-horizontal'}, defaults: { wrapper_html: { class: 'col-lg-12' } }) do |f|
+  = f.error_notification
+
+  .form-inputs
+    = f.input :code
+    = f.input :point
+
+  .form-actions
+    = f.button :submit
