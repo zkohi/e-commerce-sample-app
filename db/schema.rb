@@ -40,6 +40,7 @@ ActiveRecord::Schema.define(version: 20171011065226) do
     t.datetime "last_sign_in_at"
     t.string "current_sign_in_ip"
     t.string "last_sign_in_ip"
+    t.string "name"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.index ["email"], name: "index_companies_on_email", unique: true

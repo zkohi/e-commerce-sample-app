@@ -30,6 +30,12 @@ Rails.application.routes.draw do
     resources :users, except: [:new, :create, :destroy]
   end
 
+  scope :company do
+    devise_for :companies, controllers: {
+      :sessions => "companies/sessions",
+    }
+  end
+
   devise_for :users, controllers: {
     sessions: "users/sessions",
     registrations: "users/registrations",
