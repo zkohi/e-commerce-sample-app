@@ -1,4 +1,4 @@
-= simple_form_for(@diary_comment) do |f|
+= simple_form_for(DiaryComment.new, url: diary_comments_path(@diary)) do |f|
   = f.error_notification
 
   .form-inputs

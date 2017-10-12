@@ -41,7 +41,7 @@ ja:
         content: 内容
         img_filename: 画像
       diary_comment: &activerecord_attributes_diary_comment
-        content: 内容
+        content: コメント
     errors:
       models:
         order:

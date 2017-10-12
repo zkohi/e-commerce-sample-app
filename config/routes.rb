@@ -3,7 +3,7 @@ Rails.application.routes.draw do
   resources :product_stocks
   root 'diaries#index'
   resources :diaries, except: [:index] do
-    resources :comments, except: [:index, :show], controller: 'diary_comments'
+    resources :comments, only: [:create, :destroy], controller: 'diary_comments'
     resources :evaluations, only: [:create, :destroy], controller: 'diary_evaluations'
   end
 

@@ -6,21 +6,27 @@
     .panel.panel-default
       .panel-body.text-center
         = image_tag(@diary.img_filename, class: 'img-thumbnail')
+
+    - if @diary.user.id == current_user.id
+      = link_to '編集する', edit_diary_path(@diary)
+      \|
+      = link_to '削除する', @diary, method: :delete, data: { confirm: '削除してよろしいですか?' }
+      \|
+    - else
+      - if diary_evaluation = current_user.diary_evaluations.find_by(diary_id: @diary.id)
+        = link_to 'Good!を削除する', diary_evaluation_path(@diary, diary_evaluation), method: :delete, data: { confirm: '評価を削除してよろしいですか?' }
+      - else
+        = link_to 'Good!', diary_evaluations_path(@diary), method: :post, data: { confirm: '評価を登録してよろしいですか?' }
+      \|
+    = link_to 'トップページを開く', root_path
   .col-lg-8
     %h1= @diary.title
     .well= simple_format(@diary.content)
+    - if @diary.diary_comments
+      %h2 コメント一覧
+      - @diary.diary_comments.includes(:user).each do |diary_comment|
+        .well.col-lg-10= simple_format(diary_comment.content)
+        - if diary_comment.user.id == current_user.id
+          .col-lg-2= link_to '削除', diary_comment_path(@diary, diary_comment), method: :delete, data: { confirm: '削除してよろしいですか?' }
 
-- if @diary.user.id == current_user.id
-  = link_to '編集する', edit_diary_path(@diary)
-  \|
-  = link_to '削除する', @diary, method: :delete, data: { confirm: '削除してよろしいですか?' }
-  \|
-- else
-  - if diary_evaluation = current_user.diary_evaluations.find_by(diary_id: @diary.id)
-    = link_to 'Good!を削除する', diary_evaluation_path(@diary, diary_evaluation), method: :delete, data: { confirm: '評価を削除してよろしいですか?' }
-  - else
-    = link_to 'Good!', diary_evaluations_path(@diary), method: :post, data: { confirm: '評価を登録してよろしいですか?' }
-  \|
-  = link_to 'コメントを書く', new_diary_comment_path(@diary)
-  \|
-= link_to 'トップページを開く', root_path
+      .col-lg-10= render "diary_comments/form"

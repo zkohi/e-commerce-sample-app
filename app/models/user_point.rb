@@ -2,6 +2,8 @@ class UserPoint < ApplicationRecord
   belongs_to :user
   belongs_to :user_coupon
 
+  default_scope { order(created_at: :desc) }
+
   enum status: {
     now: 0,
     used: 1,

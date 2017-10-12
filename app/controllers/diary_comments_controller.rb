@@ -1,12 +1,5 @@
 class DiaryCommentsController < ApplicationController
-  before_action :set_diary_comment, only: [:edit, :update, :destroy]
-
-  def new
-    @diary_comment = DiaryComment.new
-  end
-
-  def edit
-  end
+  before_action :set_diary_comment, only: [:destroy]
 
   def create
     @diary_comment = current_user.diary_comments.new(diary_comment_params)
@@ -18,17 +11,9 @@ class DiaryCommentsController < ApplicationController
     end
   end
 
-  def update
-    if @diary_comment.update(diary_comment_params)
-      redirect_to @diary_comment, notice: 'コメントを更新しました'
-    else
-      render :edit
-    end
-  end
-
   def destroy
     @diary_comment.destroy
-    redirect_to diary_comments_url, notice: 'コメントを削除しました'
+    redirect_to diary_path(@diary_comment.diary_id), notice: 'コメントを削除しました'
   end
 
   private
