@@ -1,0 +1,13 @@
+%h2 新しいコメントが登録されました。
+
+%div
+  %p
+    日記:
+    %span= @diary_comment.diary.title
+  %p
+    Comment:
+    %span= @diary_comment.content
+
+  %p
+    URL:
+    %span= diary_url(@diary_comment.diary.id)

@@ -5,6 +5,7 @@ class DiaryCommentsController < ApplicationController
     @diary_comment = current_user.diary_comments.new(diary_comment_params)
 
     if @diary_comment.save
+      DiaryCommentMailer.post_comment_email(@diary_comment).deliver_now
       redirect_to diary_path(@diary_comment.diary_id), notice: 'コメントを登録しました'
     else
       render :new
