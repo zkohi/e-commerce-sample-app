@@ -28,6 +28,7 @@ Rails.application.routes.draw do
     resources :coupons do
       resources :user_coupons, only: [:index, :show]
     end
+    get 'points', to: 'coupons#points'
     resources :orders, except: [:new, :create, :destroy]
     resources :users, except: [:new, :create, :destroy]
   end

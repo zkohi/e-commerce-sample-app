@@ -5,6 +5,10 @@ class Backoffice::CouponsController < Backoffice::ApplicationController
     @coupons = Coupon.all.page(params[:page])
   end
 
+  def points
+    @user_points = UserPoint.coupon.all.page(params[:page])
+  end
+
   def show
   end
 
