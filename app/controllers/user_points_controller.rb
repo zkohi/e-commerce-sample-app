@@ -1,49 +1,43 @@
 class UserPointsController < ApplicationController
-  before_action :set_user_point, only: [:show, :edit, :update, :destroy]
+  before_action :set_coupon, only: [:edit, :update]
 
-  def index
+  def points
     @user_points = UserPoint.page(params[:page])
   end
 
-  def show
-  end
-
-  def new
-    @user_point = UserPoint.new
+  def index
+    @coupons = Coupon.page(params[:page])
   end
 
   def edit
   end
 
   def create
-    @user_point = UserPoint.new(user_point_params)
+    @user_point = current_user.user_points.build(user_points_params)
+    @user_point.status = "coupon"
+    @user_point.point = @user_point.coupon.point
 
     if @user_point.save
-      redirect_to @user_point, notice: 'User point was successfully created.'
+      redirect_to points_path, notice: 'クーポンを使用しました'
     else
-      render :new
+      redirect_to @user_point.coupon, notice: 'クーポンを使用できませんでした'
     end
   end
 
   def update
-    if @user_point.update(user_point_params)
-      redirect_to @user_point, notice: 'User point was successfully updated.'
+    if @user_point.update(user_coupon_params)
+      redirect_to @user_point, notice: 'User coupon was successfully updated.'
     else
       render :edit
     end
   end
 
-  def destroy
-    @user_point.destroy
-    redirect_to user_points_url, notice: 'User point was successfully destroyed.'
-  end
-
   private
-    def set_user_point
-      @user_point = UserPoint.find(params[:id])
+    def set_coupon
+      @coupon = Coupon.find(params[:id])
     end
 
-    def user_point_params
-      params.require(:user_point).permit(:user_id, :user_coupon_id, :status, :point)
+    def user_points_params
+      params.require(:user_point).permit(:coupon_id)
     end
 end

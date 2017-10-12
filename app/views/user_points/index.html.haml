@@ -1,28 +1,29 @@
 .panel.panel-warning
   .panel-heading
-    %h2.panel-title  ポイント履歴一覧
+    %h2.panel-title  クーポン一覧
   .panel-body
     %div
       %table.table.table-striped.table-hover
         %thead
           %tr
-            %th ステータス
             %th クーポン番号
-            %th クーポンタイトル
             %th クーポンコード
             %th ポイント
             %th
 
         %tbody
-          - @user_points.each do |user_point|
+          - used_coupons = current_user.user_points.pluck(:coupon_id)
+          - @coupons.each do |coupon|
             %tr
-              %td= user_point.status
-              %td= user_point.coupon.id
-              %td= user_point.coupon.title
-              %td= user_point.coupon.code
-              %td= number_with_delimiter(user_point.point)
+              %td= coupon.id
+              %td= coupon.code
+              %td= number_with_delimiter(coupon.point)
+              - if used_coupons.include?(coupon.id)
+                %td 使用済みです
+              - else
+                %td= link_to '使用する', edit_coupon_path(coupon)
 
-      = paginate @user_points
+      = paginate @coupons
 
 %br
 

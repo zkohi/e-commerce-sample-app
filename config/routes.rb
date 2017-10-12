@@ -7,8 +7,8 @@ Rails.application.routes.draw do
 
   resources :products, only: [:index, :show]
   resources :orders, only: [:index, :show]
-  resources :coupons, except: [:show]
-  resources :user_points, only: [:index]
+  resources :coupons, except: [:show, :new, :destroy], controller: 'user_points'
+  get 'points', to: 'user_points#points'
 
   root 'diaries#index'
   resources :diaries, except: [:index] do
