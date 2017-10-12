@@ -2,7 +2,7 @@ class UserPointsController < ApplicationController
   before_action :set_user_point, only: [:show, :edit, :update, :destroy]
 
   def index
-    @user_points = UserPoint.all
+    @user_points = UserPoint.page(params[:page])
   end
 
   def show

@@ -1,0 +1,22 @@
+.panel.panel-info
+  .panel-heading
+    %h2.panel-title クーポンを使用する
+  .panel-body
+    %table.table.table-striped.table-hover
+      %thead
+        %tr
+          %th クーポン番号
+          %th クーポンコード
+          %th ポイント
+
+      %tbody
+        %tr
+          %td= @coupon.id
+          %td= @coupon.code
+          %td= number_with_delimiter(@coupon.point)
+
+    = render 'form'
+
+%br
+
+= link_to 'クーポン一覧', coupons_path

@@ -1,27 +1,29 @@
-%h1 Listing user_points
+.panel.panel-warning
+  .panel-heading
+    %h2.panel-title  ポイント履歴一覧
+  .panel-body
+    %div
+      %table.table.table-striped.table-hover
+        %thead
+          %tr
+            %th ステータス
+            %th クーポン番号
+            %th クーポンタイトル
+            %th クーポンコード
+            %th ポイント
+            %th
 
-%table
-  %thead
-    %tr
-      %th User
-      %th User coupon
-      %th Status
-      %th Point
-      %th
-      %th
-      %th
+        %tbody
+          - @user_points.each do |user_point|
+            %tr
+              %td= user_point.status
+              %td= user_point.coupon.id
+              %td= user_point.coupon.title
+              %td= user_point.coupon.code
+              %td= number_with_delimiter(user_point.point)
 
-  %tbody
-    - @user_points.each do |user_point|
-      %tr
-        %td= user_point.user
-        %td= user_point.user_coupon_id
-        %td= user_point.status
-        %td= user_point.point
-        %td= link_to 'Show', user_point
-        %td= link_to 'Edit', edit_user_point_path(user_point)
-        %td= link_to 'Destroy', user_point, method: :delete, data: { confirm: 'Are you sure?' }
+      = paginate @user_points
 
 %br
 
-= link_to 'New User point', new_user_point_path
+= link_to 'マイページ', mypage_path

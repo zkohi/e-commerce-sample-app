@@ -1,0 +1,8 @@
+= simple_form_for(UserPoint.new, url: coupons_path) do |f|
+  = f.error_notification
+
+  .form-inputs
+    = f.hidden_field :coupon_id, value: @coupon.id
+
+  .form-actions
+    = f.button :submit, '使用する'
