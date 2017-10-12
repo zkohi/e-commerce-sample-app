@@ -4,6 +4,7 @@ class User < ApplicationRecord
   has_many :diary_comments
   has_many :diary_evaluations
   has_many :user_coupons
+  has_many :user_points
 
   mount_uploader :img_filename, UserUploader
 
