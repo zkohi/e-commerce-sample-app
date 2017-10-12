@@ -1,0 +1,10 @@
+%h2 新しい評価が登録されました。
+
+%div
+  %p
+    日記:
+    %span= @diary_evaluation.diary.title
+
+  %p
+    URL:
+    %span= diary_url(@diary_evaluation.diary.id)

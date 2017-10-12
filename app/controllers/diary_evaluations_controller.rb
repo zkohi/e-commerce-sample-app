@@ -3,6 +3,7 @@ class DiaryEvaluationsController < ApplicationController
     @diary_evaluation = current_user.diary_evaluations.new(diary_id: params[:diary_id])
 
     if @diary_evaluation.save
+      DiaryEvaluationMailer.post_evaluation_email(@diary_evaluation).deliver_now
       message = '評価を登録しました'
     else
       message = '評価を削除できませんでした'
