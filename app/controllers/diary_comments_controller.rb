@@ -1,4 +1,4 @@
-class DiaryCommentsController < ApplicationController
+class DiaryCommentsController < Users::ApplicationController
   before_action :set_diary_comment, only: [:destroy]
 
   def create

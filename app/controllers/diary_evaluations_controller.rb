@@ -1,4 +1,5 @@
-class DiaryEvaluationsController < ApplicationController
+class DiaryEvaluationsController < Users::ApplicationController
+
   def create
     @diary_evaluation = current_user.diary_evaluations.new(diary_id: params[:diary_id])
 

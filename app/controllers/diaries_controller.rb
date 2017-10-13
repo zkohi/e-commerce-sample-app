@@ -1,4 +1,4 @@
-class DiariesController < ApplicationController
+class DiariesController < Users::ApplicationController
   before_action :set_diary, only: [:edit, :update, :destroy]
 
   def index

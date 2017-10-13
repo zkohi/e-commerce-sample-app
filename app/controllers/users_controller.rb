@@ -1,6 +1,4 @@
-class UsersController < ApplicationController
-  before_action :authenticate_user!
-
+class UsersController < Users::ApplicationController
   def show
   end
 end

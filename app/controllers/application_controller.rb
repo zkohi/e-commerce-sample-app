@@ -24,24 +24,22 @@ class ApplicationController < ActionController::Base
     end
 
     def after_sign_in_path_for(resource)
-      case resource.class
-        when Admin
-          backoffice_products_path
-        when Company
-          companies_product_stocks_path
-        else
-          root_path
-        end
+      if resource.class == Admin
+        backoffice_products_path
+      elsif resource.class == Company
+        companies_product_stocks_path
+      else
+        root_path
+      end
     end
 
     def after_sign_out_path_for(resource_name)
-      case resource_name
-        when :admin
-          new_admin_session_path
-        when :company
-          new_company_session_path
-        else
-          new_user_session_path
-        end
+      if resource_name == :admin
+        new_admin_session_path
+      elsif resource_name == :company
+        new_company_session_path
+      else
+        new_user_session_path
+      end
     end
 end

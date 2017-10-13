@@ -1,5 +1,4 @@
-class ProductsController < ApplicationController
-  before_action :authenticate_user!
+class ProductsController < Users::ApplicationController
 
   def index
     @products = Product.display.page(params[:page]).order("sort_order DESC")

@@ -1,4 +1,4 @@
-class UserPointsController < ApplicationController
+class UserPointsController < Users::ApplicationController
   before_action :set_coupon, only: [:edit, :update]
 
   def points

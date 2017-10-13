@@ -1,4 +1,4 @@
-class Company::ProductStocksController < Company::ApplicationController
+class Companies::ProductStocksController < Companies::ApplicationController
   before_action :set_product_stock, only: [:show, :edit, :update, :destroy]
 
   def index
