@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20171011075124) do
+ActiveRecord::Schema.define(version: 20171013055617) do
 
   create_table "admins", force: :cascade, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8" do |t|
     t.string "email", default: "", null: false
@@ -139,15 +139,6 @@ ActiveRecord::Schema.define(version: 20171011075124) do
     t.datetime "updated_at", null: false
   end
 
-  create_table "user_coupons", force: :cascade, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8" do |t|
-    t.bigint "user_id"
-    t.bigint "coupon_id"
-    t.datetime "created_at", null: false
-    t.datetime "updated_at", null: false
-    t.index ["coupon_id"], name: "index_user_coupons_on_coupon_id"
-    t.index ["user_id"], name: "index_user_coupons_on_user_id"
-  end
-
   create_table "user_points", force: :cascade, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8" do |t|
     t.bigint "user_id"
     t.integer "coupon_id"
@@ -189,7 +180,5 @@ ActiveRecord::Schema.define(version: 20171011075124) do
   add_foreign_key "line_items", "orders"
   add_foreign_key "product_stocks", "companies"
   add_foreign_key "product_stocks", "products"
-  add_foreign_key "user_coupons", "coupons"
-  add_foreign_key "user_coupons", "users"
   add_foreign_key "user_points", "users"
 end

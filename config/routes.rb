@@ -1,5 +1,10 @@
 Rails.application.routes.draw do
-  get 'mypage', to: 'users#show'
+  root 'diaries#index'
+
+  resources :diaries, except: [:index] do
+    resources :comments, only: [:create, :destroy], controller: 'diary_comments'
+    resources :evaluations, only: [:create, :destroy], controller: 'diary_evaluations'
+  end
 
   resource :cart, controller: 'orders', only: [:create, :update, :edit]
   get 'cart', to: 'orders#cart'
@@ -10,12 +15,11 @@ Rails.application.routes.draw do
   resources :coupons, except: [:show, :new, :destroy], controller: 'user_points'
   get 'points', to: 'user_points#points'
 
-  root 'diaries#index'
-  resources :diaries, except: [:index] do
-    resources :comments, only: [:create, :destroy], controller: 'diary_comments'
-    resources :evaluations, only: [:create, :destroy], controller: 'diary_evaluations'
-  end
-
+  get 'mypage', to: 'users#show'
+  devise_for :users, controllers: {
+    sessions: "users/sessions",
+    registrations: "users/registrations",
+  }
 
   scope :backoffice do
     devise_for :admins, controllers: {
@@ -40,9 +44,4 @@ Rails.application.routes.draw do
   namespace :companies, path: '/companies' do
     resources :product_stocks
   end
-
-  devise_for :users, controllers: {
-    sessions: "users/sessions",
-    registrations: "users/registrations",
-  }
 end
