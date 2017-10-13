@@ -27,7 +27,7 @@ class ApplicationController < ActionController::Base
       if resource.class == Admin
         backoffice_products_path
       elsif resource.class == Company
-        companies_product_stocks_path
+        companies_stocks_path
       else
         root_path
       end

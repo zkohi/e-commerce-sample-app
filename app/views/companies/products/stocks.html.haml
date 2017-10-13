@@ -1,0 +1,16 @@
+.content.col-lg-12
+  -if notice
+    %p.alert.alert-dismissible.alert-warning#notice= notice
+
+  - @product_stocks.includes(:product).each do |product_stock| 
+    .col-md-4.col-sm-4.col-xs-6.product-list-item
+      .panel.panel-default
+        = link_to companies_product_path(product_stock.product.id) do
+          .panel-body.text-center.product-body
+            = image_tag(product_stock.product.img_filename, class: 'img-thumbnail', alt: "#{product_stock.product.name}", size: "250x250")
+            %p= product_stock.product.name
+            %p= "在庫：#{product_stock.stock}個"
+
+%br
+
+= paginate @product_stocks

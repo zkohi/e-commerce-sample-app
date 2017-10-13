@@ -42,6 +42,9 @@ Rails.application.routes.draw do
   }
 
   namespace :companies, path: '/companies' do
-    resources :product_stocks
+    resources :products, only: [:index, :show] do
+      resources :stocks, only: [:create], controller: 'products'
+    end
+    get 'stocks', to: 'products#stocks'
   end
 end

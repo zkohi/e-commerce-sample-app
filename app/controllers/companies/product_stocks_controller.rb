@@ -1,49 +1,26 @@
 class Companies::ProductStocksController < Companies::ApplicationController
-  before_action :set_product_stock, only: [:show, :edit, :update, :destroy]
 
   def index
-    @product_stocks = ProductStock.all
-  end
-
-  def show
-  end
-
-  def new
-    @product_stock = ProductStock.new
-  end
-
-  def edit
+    @products = current_company.product_stocks.all.page(params[:page])
   end
 
   def create
-    @product_stock = ProductStock.new(product_stock_params)
+    @product_stock = current_company.product_stocks.find_or_initialize_by(product_stock_params)
 
     if @product_stock.save
-      redirect_to @product_stock, notice: 'Product stock was successfully created.'
+      message = '商品在庫が登録されました'
     else
-      render :new
+      message = '商品在庫が登録されませんでした'
     end
-  end
-
-  def update
-    if @product_stock.update(product_stock_params)
-      redirect_to @product_stock, notice: 'Product stock was successfully updated.'
-    else
-      render :edit
-    end
-  end
-
-  def destroy
-    @product_stock.destroy
-    redirect_to product_stocks_url, notice: 'Product stock was successfully destroyed.'
+    redirect_to companies_product_path(@product_stock.product_id), notice: message
   end
 
   private
-    def set_product_stock
-      @product_stock = ProductStock.find(params[:id])
+    def set_product
+      @product = Product.find(params[:id])
     end
 
     def product_stock_params
-      params.require(:product_stock).permit(:product_id, :company_id, :stock)
+      params.require(:product_stock).permit(:stock).merge(product_id: params[:product_id])
     end
 end
