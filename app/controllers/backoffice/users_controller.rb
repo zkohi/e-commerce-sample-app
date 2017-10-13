@@ -6,6 +6,7 @@ class Backoffice::UsersController < Backoffice::ApplicationController
   end
 
   def show
+    @user_points = @user.user_points.page(params[:page])
   end
 
   def edit
@@ -13,7 +14,7 @@ class Backoffice::UsersController < Backoffice::ApplicationController
 
   def update
     if @user.update(user_params)
-      redirect_to [:backoffice, @user], notice: 'ユーザーが更新されました'
+      redirect_to backoffice_user_path(@user), notice: 'ユーザーが更新されました'
     else
       render :edit
     end

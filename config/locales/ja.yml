@@ -42,6 +42,15 @@ ja:
         img_filename: 画像
       diary_comment: &activerecord_attributes_diary_comment
         content: コメント
+      coupon: &activerecord_attributes_coupon
+        title: タイトル
+        code: コード
+        point: ポイント
+      user_point: &activerecord_attributes_user_point
+        user_id: ユーザーID
+        coupon_id: クーポンID
+        status: ステータス
+        point: ポイント
     errors:
       models:
         order:
@@ -53,6 +62,8 @@ ja:
       order: *activerecord_attributes_order
       diary: *activerecord_attributes_diary
       diary_comment: *activerecord_attributes_diary_comment
+      coupon: *activerecord_attributes_coupon
+      user_point: *activerecord_attributes_user_point
     "yes": 'Yes'
     "no": 'No'
     required:
@@ -105,6 +116,11 @@ ja:
         sixteen_to_eighteen: 16時〜18時
         eighteen_to_twenty: 18時〜20時
         twenty_to_twenty_one: 20時〜21時
+    user_point:
+      status:
+        used: 使用
+        coupon: クーポン
+        admin: 管理者
 
   errors:
     messages:

@@ -25,12 +25,11 @@ Rails.application.routes.draw do
 
   namespace :backoffice, path: '/backoffice' do
     resources :products
-    resources :coupons do
-      resources :user_coupons, only: [:index, :show]
-    end
-    get 'points', to: 'coupons#points'
+    resources :coupons
     resources :orders, except: [:new, :create, :destroy]
-    resources :users, except: [:new, :create, :destroy]
+    resources :users, except: [:new, :create, :destroy] do
+      resources :points, only: [:index, :new, :create], controller: 'user_points'
+    end
   end
 
   scope :company do

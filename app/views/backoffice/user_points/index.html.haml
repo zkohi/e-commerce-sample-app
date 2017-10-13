@@ -1,6 +1,6 @@
 .panel.panel-warning
   .panel-heading
-    %h2.panel-title  クーポン使用履歴一覧
+    %h2.panel-title  クーポン・ポイント履歴一覧
   .panel-body
     %div
       %table.table.table-striped.table-hover
@@ -11,10 +11,6 @@
             %th クーポンタイトル
             %th クーポンコード
             %th ポイント
-            %th
-            %th
-            %th
-            %th
 
         %tbody
           - @user_points.each do |user_point|

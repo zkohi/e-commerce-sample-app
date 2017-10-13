@@ -5,11 +5,8 @@ class Backoffice::CouponsController < Backoffice::ApplicationController
     @coupons = Coupon.all.page(params[:page])
   end
 
-  def points
-    @user_points = UserPoint.coupon.all.page(params[:page])
-  end
-
   def show
+    @user_points = UserPoint.coupon.where(coupon_id: params[:id]).page(params[:page])
   end
 
   def new

@@ -1,0 +1,28 @@
+-if notice
+  %p.alert.alert-dismissible.alert-success#notice= notice
+
+.panel.panel-danger
+  .panel-heading
+    %h2.panel-title ポイント登録
+  .panel-body
+    %div
+      %table.table.table-striped.table-hover
+        %thead
+          %tr
+            %th ID
+            %th メールアドレス
+            %th 名前
+            %th ポイント
+
+        %tbody
+          %tr
+            %td= @user.id
+            %td= @user.email
+            %td= @user.name
+            %td= @user.user_points.sum("point")
+
+    = render 'form'
+
+%br
+
+= link_to 'ユーザー一覧', backoffice_users_path

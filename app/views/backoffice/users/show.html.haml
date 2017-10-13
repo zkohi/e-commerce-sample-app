@@ -13,15 +13,37 @@
           %th 名前
           %th 郵便番号
           %th 住所
+          %th ポイント
         %tr
           %td= @user.id
           %td= @user.email
           %td= @user.name
           %td= @user.zipcode
           %td= @user.address
+          %td= number_with_delimiter(@user.user_points.sum("point"))
+
+.panel.panel-danger
+  .panel-heading
+    %h2.panel-title ポイント履歴
+  .panel-body
+    %table.table.table-striped.table-hover
+      %tbody
+        %tr
+          %th ステータス
+          %th ポイント
+          %th 登録日時
+        - @user_points.each do |user_point|
+          %tr
+            %td= user_point.status_i18n
+            %td= user_point.point
+            %td= user_point.created_at
+
+    = paginate @user_points
 
 %br
 
-= link_to '編集', edit_backoffice_user_path(@user)
+= link_to '登録情報編集', edit_backoffice_user_path(@user)
+\|
+= link_to 'ポイント登録', new_backoffice_user_point_path(@user)
 \|
 = link_to 'ユーザー覧', backoffice_users_path

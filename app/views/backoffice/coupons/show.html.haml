@@ -1,27 +1,50 @@
 -if notice
   %p.alert.alert-dismissible.alert-success#notice= notice
 
-.panel.panel-info
+.panel.panel-warning
   .panel-heading
-    %h2.panel-title クーポン詳細
+    %h2.panel-title  クーポン詳細
   .panel-body
-    %table.table.table-striped.table-hover
-      %tbody
-        %tr
-          %td クーポンID
-          %td= @coupon.id
-        %tr
-          %td クーポンタイトル
-          %td= @coupon.title
-        %tr
-          %td クーポンコード
-          %td= @coupon.code
-        %tr
-          %td ポイント
-          %td= number_with_delimiter(@coupon.point)
+    %div
+      %table.table.table-striped.table-hover
+        %thead
+          %tr
+            %th クーポン番号
+            %th クーポンタイトル
+            %th クーポンコード
+            %th ポイント
+
+        %tbody
+          %tr
+            %td= @coupon.id
+            %td= @coupon.title
+            %td= @coupon.code
+            %td= number_with_delimiter(@coupon.point)
+
+.panel.panel-warning
+  .panel-heading
+    %h2.panel-title  クーポン使用履歴
+  .panel-body
+    %div
+      %table.table.table-striped.table-hover
+        %thead
+          %tr
+            %th ユーザーID
+            %th ポイント
+            %th 使用日時
+
+        %tbody
+          - @user_points.each do |user_point|
+            %tr
+              %td= user_point.user.id
+              %td= number_with_delimiter(user_point.point)
+              %td= user_point.created_at
+
+      = paginate @user_points
 
 %br
 
 = link_to '編集', edit_backoffice_coupon_path(@coupon)
 \|
 = link_to 'クーポン一覧', backoffice_coupons_path
+

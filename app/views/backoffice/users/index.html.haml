@@ -14,11 +14,13 @@
             %th 名前
             %th 郵便番号
             %th 住所
+            %th ポイント
             %th
             %th
             %th
 
         %tbody
+          - user_points = @users.includes(:user_points).group("users.id").sum("user_points.point")
           - @users.each do |user|
             %tr
               %td= user.id
@@ -26,8 +28,10 @@
               %td= user.name
               %td= user.zipcode
               %td= user.address
-              %td= link_to '詳細', [:backoffice, user]
+              %td= user_points[user.id]
+              %td= link_to '詳細', backoffice_user_path(user)
               %td= link_to '編集', edit_backoffice_user_path(user)
-              %td= link_to '削除', [:backoffice, user], method: :delete, data: { confirm: '削除してよろしいですか?' }
+              %td= link_to '削除', backoffice_user_path(user), method: :delete, data: { confirm: '削除してよろしいですか?' }
+              %td= link_to 'ポイント登録', new_backoffice_user_point_path(user)
 
       = paginate @users
