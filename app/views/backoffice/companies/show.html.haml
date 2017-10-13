@@ -1,0 +1,27 @@
+-if notice
+  %p.alert.alert-dismissible.alert-success#notice= notice
+
+.panel.panel-warning
+  .panel-heading
+    %h2.panel-title  業者詳細
+  .panel-body
+    %div
+      %table.table.table-striped.table-hover
+        %thead
+          %tr
+            %th 業者番号
+            %th 業者名
+            %th メールアドレス
+
+        %tbody
+          %tr
+            %td= @company.id
+            %td= @company.name
+            %td= @company.email
+
+%br
+
+= link_to '編集', edit_backoffice_company_path(@company)
+\|
+= link_to '業者一覧', backoffice_companies_path
+

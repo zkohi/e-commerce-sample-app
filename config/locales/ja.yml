@@ -18,7 +18,14 @@ ja:
     models:
       order: 注文
     attributes:
+      admin: &activerecord_attributes_admin
+        email: メールアドレス
+        password: パスワード
+        password_confirmation: パスワード確認
       user: &activerecord_attributes_user
+        email: メールアドレス
+        password: パスワード
+        password_confirmation: パスワード確認
         name: 名前
         zipcode: 郵便番号
         address: 住所
@@ -51,12 +58,18 @@ ja:
         coupon_id: クーポンID
         status: ステータス
         point: ポイント
+      company: &activerecord_attributes_company
+        email: メールアドレス
+        password: パスワード
+        password_confirmation: パスワード確認
+        name:  業者名
     errors:
       models:
         order:
           invalid_date: の日時を正しく入力してください
   simple_form:
     labels:
+      admin: *activerecord_attributes_admin
       user: *activerecord_attributes_user
       product: *activerecord_attributes_product
       order: *activerecord_attributes_order
@@ -64,6 +77,7 @@ ja:
       diary_comment: *activerecord_attributes_diary_comment
       coupon: *activerecord_attributes_coupon
       user_point: *activerecord_attributes_user_point
+      company: *activerecord_attributes_company
     "yes": 'Yes'
     "no": 'No'
     required:

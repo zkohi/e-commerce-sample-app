@@ -19,26 +19,25 @@ Rails.application.routes.draw do
 
   scope :backoffice do
     devise_for :admins, controllers: {
-      :sessions => "admins/sessions",
+      sessions: "admins/sessions",
     }
   end
 
   namespace :backoffice, path: '/backoffice' do
     resources :products
     resources :coupons
+    resources :companies
     resources :orders, except: [:new, :create, :destroy]
     resources :users, except: [:new, :create, :destroy] do
       resources :points, only: [:index, :new, :create], controller: 'user_points'
     end
   end
 
-  scope :company do
-    devise_for :companies, controllers: {
-      :sessions => "companies/sessions",
-    }
-  end
+  devise_for :companies, controllers: {
+    sessions: "companies/sessions",
+  }
 
-  namespace :company, path: '/company' do
+  namespace :companies, path: '/companies' do
     resources :product_stocks
   end
 

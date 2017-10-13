@@ -1,0 +1,28 @@
+.panel.panel-warning
+  .panel-heading
+    %h2.panel-title  業者一覧
+  .panel-body
+    %div
+      %table.table.table-striped.table-hover
+        %thead
+          %tr
+            %th 業者番号
+            %th 業者名
+            %th
+            %th
+            %th
+
+        %tbody
+          - @companies.each do |company|
+            %tr
+              %td= company.id
+              %td= company.name
+              %td= link_to '詳細', backoffice_company_path(company)
+              %td= link_to '編集', edit_backoffice_company_path(company)
+              %td= link_to '削除', backoffice_company_path(company), method: :delete, data: { confirm: '削除してよろしいですか?' }
+
+      = paginate @companies
+
+%br
+
+= link_to '新規作成', new_backoffice_company_path
