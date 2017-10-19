@@ -43,6 +43,7 @@ ja:
         shipping_date: 配送日
         shipping_time_range: 配送時間帯
         shipping_time_range_string: 配送時間帯
+        point_total: ポイント利用
       diary: &activerecord_attributes_diary
         title: タイトル
         content: 内容
@@ -132,9 +133,9 @@ ja:
         twenty_to_twenty_one: 20時〜21時
     user_point:
       status:
-        used: 使用
-        coupon: クーポン
-        admin: 管理者
+        used: ポイント利用
+        coupon: クーポン利用
+        admin: 管理者登録
 
   errors:
     messages:

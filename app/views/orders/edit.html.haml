@@ -12,9 +12,6 @@
           %th 画像
           %th 価格
           %th 数量
-          %th
-          %th
-          %th
 
       %tbody
         - @order.line_items.includes(:product).each do |line_item|
@@ -73,6 +70,8 @@
             = f.input :shipping_date, as: :string, input_html: {"data-datepicker-options" => @order.available_shipping_date_range.to_json }
           .col-lg-12
             = f.input :shipping_time_range, as: :select, collection: Order.shipping_time_ranges.map { |k, v| [ApplicationController.helpers.t("enums.order.shipping_time_range.#{k}"), k] }, include_blank: false
+          .col-lg-12
+            = f.input :point_total, input_html: { value: f.object.point_total }
           .col-lg-12
             = f.button :submit, '注文する'
           = f.fields_for :line_items do |line_item|

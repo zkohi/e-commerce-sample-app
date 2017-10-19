@@ -10,16 +10,26 @@
             %th クーポン番号
             %th クーポンタイトル
             %th クーポンコード
+            %th 注文番号
             %th ポイント
             %th
 
         %tbody
-          - @user_points.each do |user_point|
+          - @user_points.includes(:coupon).includes(:order).each do |user_point|
             %tr
-              %td= user_point.status
-              %td= user_point.coupon.id
-              %td= user_point.coupon.title
-              %td= user_point.coupon.code
+              %td= user_point.status_i18n
+              - if user_point.coupon
+                %td= user_point.coupon.id
+                %td= user_point.coupon.title
+                %td= user_point.coupon.code
+              - else
+                %td
+                %td
+                %td
+              - if user_point.order
+                %td= link_to user_point.order.id, order_path(user_point.order.id)
+              - else
+                %td
               %td= number_with_delimiter(user_point.point)
 
       = paginate @user_points

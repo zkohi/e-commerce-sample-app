@@ -1,6 +1,7 @@
 class UserPoint < ApplicationRecord
   belongs_to :user
   belongs_to :coupon, optional: true
+  belongs_to :order, optional: true
 
   default_scope { order(created_at: :desc) }
 

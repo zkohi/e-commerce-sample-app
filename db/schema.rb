@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20171013055617) do
+ActiveRecord::Schema.define(version: 20171019052717) do
 
   create_table "admins", force: :cascade, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8" do |t|
     t.string "email", default: "", null: false
@@ -146,7 +146,9 @@ ActiveRecord::Schema.define(version: 20171013055617) do
     t.integer "point", null: false
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.integer "order_id"
     t.index ["coupon_id"], name: "index_user_points_on_coupon_id"
+    t.index ["order_id"], name: "index_user_points_on_order_id"
     t.index ["user_id"], name: "index_user_points_on_user_id"
   end
 

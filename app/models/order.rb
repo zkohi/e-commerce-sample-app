@@ -1,7 +1,9 @@
 class Order < ApplicationRecord
   attr_accessor :shipping_time_range
+  attr_accessor :point_total
 
   belongs_to :user
+  has_many :user_point
 
   has_many :line_items, dependent: :destroy, inverse_of: :order
   validates_associated :line_items
@@ -15,9 +17,12 @@ class Order < ApplicationRecord
   validates :adjustment_total, presence: true, numericality: { only_integer: true, greater_than_or_equal_to: 0 }
   validates :tax_total, presence: true, numericality: { only_integer: true, greater_than_or_equal_to: 0 }
   validates :total, presence: true, numericality: { only_integer: true, greater_than_or_equal_to: 0 }
+  validates :point_total, allow_blank: true, numericality: { only_integer: true, greater_than_or_equal_to: 1, less_than_or_equal_to: 999999 }
+  validates :point_total, allow_blank: true, numericality: { only_integer: true, greater_than_or_equal_to: 1, less_than_or_equal_to: 999999 }
 
   with_options if: :ordered? do
     validates_date :shipping_date, presence: true
+    validate :valid_point_total?
     validate :valid_shipping_date?
     validates :shipping_time_range_string, presence: true, inclusion: { in: ['8時〜12時', '12時〜14時', '14時〜16時', '16時〜18時', '18時〜20時', '20時〜21時'] }
     validates :user_name, presence: true, length: { maximum: 30 }
@@ -28,6 +33,7 @@ class Order < ApplicationRecord
   after_find :set_item_count, :set_item_total, :set_shipment_total, :set_payment_total, :set_adjustment_total, :set_tax_total, :set_total, if: :cart?
 
   before_validation :set_shipping_time_range_string
+  after_update :save_user_point
 
   enum state: {
     cart: 0,
@@ -112,6 +118,9 @@ class Order < ApplicationRecord
 
     def set_adjustment_total
       self.adjustment_total = self.shipment_total + self.item_total + self.payment_total
+      if self.point_total.present?
+        self.adjustment_total = self.adjustment_total - self.point_total
+      end
     end
 
     def set_tax_total
@@ -132,9 +141,24 @@ class Order < ApplicationRecord
       end
     end
 
+    def valid_point_total?
+      if self.point_total.present?
+        total = self.item_total + self.shipment_total
+        if self.point_total.to_i > total.to_i
+          errors.add(:point_total, "は1以上#{total}以下の値にしてください")
+        end
+      end
+    end
+
     def set_shipping_time_range_string
       if self.shipping_time_range.present?
         self.shipping_time_range_string = Order.shipping_time_ranges_i18n[self.shipping_time_range]
+      end
+    end
+
+    def save_user_point
+      if self.point_total.present?
+        UserPoint.create(user_id: self.user_id, order_id: self.id, point: -self.point_total.to_i, status: 'used').save!
       end
     end
 end

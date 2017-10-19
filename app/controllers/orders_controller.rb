@@ -65,6 +65,7 @@ class OrdersController < Users::ApplicationController
         :user_name,
         :user_zipcode,
         :user_address,
+        :point_total,
         line_items_attributes: [
           :id,
           :product_id,
