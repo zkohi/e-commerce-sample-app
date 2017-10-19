@@ -5,47 +5,7 @@
   .panel-heading
     %h2.panel-title 注文確認画面
   .panel-body
-    %table.table.table-striped.table-hover
-      %thead
-        %tr
-          %th 商品名
-          %th 画像
-          %th 価格
-          %th 数量
-
-      %tbody
-        - @order.line_items.includes(:product).each do |line_item|
-          %tr
-            %td= line_item.product.name
-            %td= image_tag(line_item.product.img_filename, class: 'img-thumbnail', alt: "#{line_item.product.name}", size: "100x100")
-            %td= line_item.product.price
-            %td= line_item.quantity
-
-    .panel.panel-warning
-      .panel-heading
-        %h2.panel-title 料金明細
-      .panel-body
-        %table.table.table-striped.table-hover
-          %thead
-            %tr
-              %th 商品料金
-              %th 数量
-              %th 配送料
-              %th 代引き手数料
-              %th 小計
-              %th 税金
-              %th 合計
-              %th
-
-          %tbody
-            %tr
-              %td= number_to_currency(@order.item_total, locale: :ja)
-              %td= @order.item_count
-              %td= number_to_currency(@order.shipment_total, locale: :ja)
-              %td= number_to_currency(@order.payment_total, locale: :ja)
-              %td= number_to_currency(@order.adjustment_total, locale: :ja)
-              %td= number_to_currency(@order.tax_total, locale: :ja)
-              %td= number_to_currency(@order.total, locale: :ja)
+    = render 'line_item'
 
     .panel.panel-danger
       .panel-heading
@@ -59,7 +19,7 @@
               %th 住所
               %th 配送日
               %th 配送時間帯
-              %th ポイント
+              %th ポイント利用
 
           %tbody
             %tr
@@ -87,6 +47,10 @@
           = f.hidden_field :shipping_date, as: :string, input_html: {"data-datepicker-options" => @order.available_shipping_date_range.to_json }
           = f.hidden_field :shipping_time_range, as: :select, collection: Order.shipping_time_ranges.map { |k, v| [ApplicationController.helpers.t("enums.order.shipping_time_range.#{k}"), k] }, include_blank: false
           = f.hidden_field :point_total, input_html: { value: f.object.point_total }
+
+          .col-lg-12
+            = render 'payment_detail'
+
           .col-lg-12
             = f.button :submit, '注文する'
           = f.fields_for :line_items do |line_item|
