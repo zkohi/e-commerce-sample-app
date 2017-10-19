@@ -1,5 +1,5 @@
 class OrdersController < Users::ApplicationController
-  before_action :set_order, only: [:cart, :create, :edit, :update, :destroy_cart_line_item]
+  before_action :set_order, only: [:cart, :create, :edit, :confirm, :update, :destroy_cart_line_item]
 
   def index
     @orders = current_user.orders.ordered.page(params[:page])
@@ -25,6 +25,13 @@ class OrdersController < Users::ApplicationController
     if @order.line_items.empty?
       redirect_to cart_path
     end
+  end
+
+  def confirm
+    if @order.line_items.empty?
+      redirect_to cart_path
+    end
+    @order.attributes = order_params
   end
 
   def update
