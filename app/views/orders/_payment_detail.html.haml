@@ -5,14 +5,13 @@
     %table.table.table-striped.table-hover
       %thead
         %tr
-          %th 商品料金
-          %th 数量
-          %th 配送料
-          %th 代引き手数料
-          %th 小計
-          %th 税金
-          %th 合計
-          %th
+          %th= Order.human_attribute_name(:item_total)
+          %th= Order.human_attribute_name(:item_count)
+          %th= Order.human_attribute_name(:shipment_total) 
+          %th= Order.human_attribute_name(:payment_total)
+          %th= Order.human_attribute_name(:adjustment_total)
+          %th= Order.human_attribute_name(:tax_total)
+          %th= Order.human_attribute_name(:total)
 
       %tbody
         %tr

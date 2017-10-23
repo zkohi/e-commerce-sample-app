@@ -13,7 +13,7 @@
 
     = simple_form_for(@product_stock, url: companies_product_stocks_path(@product), method: :post, html: {class: 'form-horizontal'}, defaults: { wrapper_html: { class: 'col-lg-12' } }) do |f|
       .form-inputs
-        = f.input :stock, label: '在庫数', input_html: {min: 1, max: 99}
+        = f.input :stock, input_html: {min: 1, max: 99}
 
       .form-actions
         = f.button :submit

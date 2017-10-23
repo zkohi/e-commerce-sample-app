@@ -9,9 +9,9 @@
       %table.table.table-striped.table-hover
         %thead
           %tr
-            %th 商品名
-            %th 画像
-            %th 価格
+            %th= Product.human_attribute_name(:name)
+            %th= Product.human_attribute_name(:img_filename)
+            %th= Product.human_attribute_name(:price)
             %th
             %th
             %th

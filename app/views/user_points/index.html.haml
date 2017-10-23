@@ -6,9 +6,9 @@
       %table.table.table-striped.table-hover
         %thead
           %tr
-            %th クーポン番号
-            %th クーポンコード
-            %th ポイント
+            %th= Coupon.human_attribute_name(:id)
+            %th= Coupon.human_attribute_name(:code)
+            %th= Coupon.human_attribute_name(:point)
             %th
 
         %tbody

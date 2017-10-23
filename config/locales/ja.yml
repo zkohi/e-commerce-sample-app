@@ -23,6 +23,7 @@ ja:
         password: パスワード
         password_confirmation: パスワード確認
       user: &activerecord_attributes_user
+        id: ユーザーID
         email: メールアドレス
         password: パスワード
         password_confirmation: パスワード確認
@@ -36,13 +37,26 @@ ja:
         description: 説明
         flg_non_display: 非表示フラグ
         sort_order: 表示順
+      line_item: &activerecord_attributes_line_item
+        price: 価格
+        quantity: 数量
       order: &activerecord_attributes_order
+        id: 注文番号
+        item_total: 商品料金
+        item_count: 数量
+        shipment_total: 配送料
+        payment_total: 代引き手数料
+        adjustment_total: 小計
+        tax_total: 消費税
+        total: 合計
         user_name: 名前
         user_zipcode: 郵便番号
         user_address: 住所
         shipping_date: 配送日
         shipping_time_range: 配送時間帯
         shipping_time_range_string: 配送時間帯
+        shipment_state: 配送状況
+        payment_state: 支払い状況
         point_total: ポイント利用
       diary: &activerecord_attributes_diary
         title: タイトル
@@ -51,6 +65,7 @@ ja:
       diary_comment: &activerecord_attributes_diary_comment
         content: コメント
       coupon: &activerecord_attributes_coupon
+        id: クーポン番号
         title: タイトル
         code: コード
         point: ポイント
@@ -59,11 +74,14 @@ ja:
         coupon_id: クーポンID
         status: ステータス
         point: ポイント
+        created_at: 登録日時
       company: &activerecord_attributes_company
         email: メールアドレス
         password: パスワード
         password_confirmation: パスワード確認
         name:  業者名
+      product_stock: &activerecord_attributes_product_stock
+        stock: 在庫数
     errors:
       models:
         order:
@@ -73,12 +91,14 @@ ja:
       admin: *activerecord_attributes_admin
       user: *activerecord_attributes_user
       product: *activerecord_attributes_product
+      product: *activerecord_attributes_line_item
       order: *activerecord_attributes_order
       diary: *activerecord_attributes_diary
       diary_comment: *activerecord_attributes_diary_comment
       coupon: *activerecord_attributes_coupon
       user_point: *activerecord_attributes_user_point
       company: *activerecord_attributes_company
+      product_stock: *activerecord_attributes_product_stock
     "yes": 'Yes'
     "no": 'No'
     required:

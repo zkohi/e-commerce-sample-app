@@ -8,13 +8,13 @@
         %h2.panel-title 登録情報
       .panel-body
         %div
-          %label 名前
+          %label= User.human_attribute_name(:name)
           %p= current_user.name
         %div
-          %label 郵便番号
+          %label= User.human_attribute_name(:zipcode)
           %p= current_user.zipcode
         %div
-          %label 住所
+          %label= User.human_attribute_name(:address)
           %p= current_user.address
   .panel-body.col-md-4
     .panel.panel-info

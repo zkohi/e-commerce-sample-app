@@ -1,13 +1,13 @@
 .panel.panel-warning
   .panel-heading
-    %h2.panel-title  業者一覧
+    %h2.panel-title 業者一覧
   .panel-body
     %div
       %table.table.table-striped.table-hover
         %thead
           %tr
-            %th 業者番号
-            %th 業者名
+            %th= Company.human_attribute_name(:id)
+            %th= Company.human_attribute_name(:name)
             %th
             %th
             %th

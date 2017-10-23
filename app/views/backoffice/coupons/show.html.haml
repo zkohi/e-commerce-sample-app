@@ -3,16 +3,16 @@
 
 .panel.panel-warning
   .panel-heading
-    %h2.panel-title  クーポン詳細
+    %h2.panel-title クーポン詳細
   .panel-body
     %div
       %table.table.table-striped.table-hover
         %thead
           %tr
-            %th クーポン番号
-            %th クーポンタイトル
-            %th クーポンコード
-            %th ポイント
+            %th= Coupon.human_attribute_name(:id)
+            %th= Coupon.human_attribute_name(:title)
+            %th= Coupon.human_attribute_name(:code)
+            %th= Coupon.human_attribute_name(:point)
 
         %tbody
           %tr
@@ -29,9 +29,9 @@
       %table.table.table-striped.table-hover
         %thead
           %tr
-            %th ユーザーID
-            %th ポイント
-            %th 使用日時
+            %th= User.human_attribute_name(:id)
+            %th= UserPoint.human_attribute_name(:point)
+            %th= UserPoint.human_attribute_name(:created_at)
 
         %tbody
           - @user_points.each do |user_point|

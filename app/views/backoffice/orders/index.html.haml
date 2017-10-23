@@ -6,17 +6,15 @@
       %table.table.table-striped.table-hover
         %thead
           %tr
-            %th 注文番号
-            %th 商品個数
-            %th 商品料金
-            %th 配送料金
-            %th 支払い手数料金
-            %th 税金
-            %th 総計
-            %th 支払状況
-            %th 配送状況
-            %th
-            %th
+            %th= Order.human_attribute_name(:id)
+            %th= Order.human_attribute_name(:item_count)
+            %th= Order.human_attribute_name(:item_total)
+            %th= Order.human_attribute_name(:shipment_total)
+            %th= Order.human_attribute_name(:payment_total)
+            %th= Order.human_attribute_name(:tax_total)
+            %th= Order.human_attribute_name(:total)
+            %th= Order.human_attribute_name(:payment_state)
+            %th= Order.human_attribute_name(:shipment_state)
             %th
 
         %tbody

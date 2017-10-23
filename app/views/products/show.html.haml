@@ -15,7 +15,7 @@
       = f.hidden_field :product_id, value: @product.id
 
       .form-inputs
-        = f.input :quantity, label: '個数', input_html: {min: 1, max: 99}
+        = f.input :quantity, input_html: {min: 1, max: 99}
 
       .form-actions
         = f.button :submit, 'カートに入れる'

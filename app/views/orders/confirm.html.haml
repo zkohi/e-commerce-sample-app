@@ -14,12 +14,12 @@
         %table.table.table-striped.table-hover
           %thead
             %tr
-              %th 名前
-              %th 郵便番号
-              %th 住所
-              %th 配送日
-              %th 配送時間帯
-              %th ポイント利用
+              %th= Order.human_attribute_name(:user_name)
+              %th= Order.human_attribute_name(:user_zipcode)
+              %th= Order.human_attribute_name(:user_address)
+              %th= Order.human_attribute_name(:shipping_date)
+              %th= Order.human_attribute_name(:shipping_time_range)
+              %th= Order.human_attribute_name(:point_total)
 
           %tbody
             %tr

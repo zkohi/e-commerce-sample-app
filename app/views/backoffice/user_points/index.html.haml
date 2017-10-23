@@ -6,11 +6,11 @@
       %table.table.table-striped.table-hover
         %thead
           %tr
-            %th ユーザーID
-            %th クーポン番号
-            %th クーポンタイトル
-            %th クーポンコード
-            %th ポイント
+            %th= User.human_attribute_name(:id)
+            %th= Coupon.human_attribute_name(:id)
+            %th= Coupon.human_attribute_name(:title)
+            %th= Coupon.human_attribute_name(:code)
+            %th= UserPoint.human_attribute_name(:point)
 
         %tbody
           - @user_points.each do |user_point|

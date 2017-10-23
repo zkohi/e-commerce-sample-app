@@ -3,15 +3,15 @@
 
 .panel.panel-warning
   .panel-heading
-    %h2.panel-title  業者詳細
+    %h2.panel-title 業者詳細
   .panel-body
     %div
       %table.table.table-striped.table-hover
         %thead
           %tr
-            %th 業者番号
-            %th 業者名
-            %th メールアドレス
+            %th= Company.human_attribute_name(:id)
+            %th= Company.human_attribute_name(:name)
+            %th= Company.human_attribute_name(:email)
 
         %tbody
           %tr
