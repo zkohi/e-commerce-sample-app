@@ -16,7 +16,6 @@ class Backoffice::UserPointsController < Backoffice::ApplicationController
     if @user_point.save
       redirect_to backoffice_user_path(@user_point.user_id), notice: 'ポイントを登録しました'
     else
-    a
       redirect_to new_backoffice_user_point_path(@user_point.user_id), notice: 'ポイントを登録できませんでした'
     end
   end

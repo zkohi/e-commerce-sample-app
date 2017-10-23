@@ -1,5 +1,4 @@
 class Companies::ProductStocksController < Companies::ApplicationController
-
   def index
     @products = current_company.product_stocks.all.page(params[:page])
   end
