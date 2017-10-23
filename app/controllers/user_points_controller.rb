@@ -1,5 +1,6 @@
 class UserPointsController < Users::ApplicationController
-  before_action :set_coupon, only: [:edit, :update]
+  before_action :set_coupon, only: [:show]
+  before_action :used_coupon?, only: [:create]
 
   def points
     @user_points = UserPoint.page(params[:page])
@@ -9,7 +10,7 @@ class UserPointsController < Users::ApplicationController
     @coupons = Coupon.page(params[:page])
   end
 
-  def edit
+  def show
   end
 
   def create
@@ -20,21 +21,19 @@ class UserPointsController < Users::ApplicationController
     if @user_point.save
       redirect_to points_path, notice: 'クーポンを使用しました'
     else
-      redirect_to @user_point.coupon, notice: 'クーポンを使用できませんでした'
-    end
-  end
-
-  def update
-    if @user_point.update(user_coupon_params)
-      redirect_to @user_point, notice: 'User coupon was successfully updated.'
-    else
-      render :edit
+      redirect_to coupon_path(@user_point.coupon_id), notice: 'クーポンを使用できませんでした'
     end
   end
 
   private
     def set_coupon
       @coupon = Coupon.find(params[:id])
+    end
+
+    def used_coupon?
+      if current_user.user_points.where(coupon_id: user_points_params[:coupon_id]).exists?
+        redirect_to coupon_path(user_points_params[:coupon_id]), notice: 'クーポンは使用済みです'
+      end
     end
 
     def user_points_params

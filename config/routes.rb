@@ -13,7 +13,8 @@ Rails.application.routes.draw do
 
   resources :products, only: [:index, :show]
   resources :orders, only: [:index, :show]
-  resources :coupons, except: [:show, :new, :destroy], controller: 'user_points'
+  resources :coupons, only: [:index, :show], controller: 'user_points'
+  resources :points, only: [:create], controller: 'user_points'
   get 'points', to: 'user_points#points'
 
   get 'mypage', to: 'users#show'

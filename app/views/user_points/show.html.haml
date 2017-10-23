@@ -1,3 +1,6 @@
+-if notice
+  %p.alert.alert-dismissible.alert-success#notice= notice
+
 .panel.panel-info
   .panel-heading
     %h2.panel-title クーポンを使用する
@@ -17,7 +20,10 @@
           %td= @coupon.code
           %td= number_with_delimiter(@coupon.point)
 
-    = render 'form'
+    - if current_user.user_points.where(coupon_id: @coupon.id).exists?
+      使用済みです
+    - else
+      = render 'form'
 
 %br
 
