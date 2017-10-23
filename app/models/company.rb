@@ -1,5 +1,6 @@
 class Company < ApplicationRecord
   has_many :product_stocks
+  has_many :orders
 
   # Include default devise modules. Others available are:
   # :confirmable, :lockable, :timeoutable and :omniauthable

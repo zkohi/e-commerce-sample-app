@@ -3,6 +3,7 @@ class Order < ApplicationRecord
   attr_accessor :point_total
 
   belongs_to :user
+  belongs_to :company
   has_many :user_point
 
   has_many :line_items, dependent: :destroy, inverse_of: :order
