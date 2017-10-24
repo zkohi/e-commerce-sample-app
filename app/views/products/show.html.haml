@@ -10,12 +10,21 @@
     %h1= @product.name
     .well= simple_format(@product.description)
     %span.lead.price.selling= "価格 #{number_to_currency(@product.price, locale: :ja)}"
-    - line_item = LineItem.new
-    = simple_form_for(line_item, url: cart_path, html: {class: 'form-horizontal'}, defaults: { wrapper_html: { class: 'col-lg-12' } }) do |f|
-      = f.hidden_field :product_id, value: @product.id
 
-      .form-inputs
-        = f.input :quantity, input_html: {min: 1, max: 99}
+    - if @companies.blank?
+      %p 取り扱い会社がありません
+    - else
+      - order = Order.new
+      - order.line_items.build
+      = simple_form_for(order, url: carts_path, html: {class: 'form-horizontal'}, defaults: { wrapper_html: { class: 'col-lg-12' } }) do |f|
+        .form-inputs
+          = f.input :company_id, collection: @companies.map { |company| ["#{company.name}(在庫:#{number_with_delimiter(company.product_stocks.first.stock)}個)", company.id] }, as: :radio_buttons
 
-      .form-actions
-        = f.button :submit, 'カートに入れる'
+        = f.fields_for :line_items do |line_item|
+          = line_item.hidden_field :product_id, value: @product.id
+
+          .form-inputs
+            = line_item.input :quantity, label: '個数', input_html: {min: 1, max: 99}
+
+        .form-actions
+          = f.button :submit, 'カートに入れる'

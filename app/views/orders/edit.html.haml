@@ -11,7 +11,7 @@
       .panel-heading
         %h2.panel-title 配送先と配送日時を指定して注文ボタンをクリックしてください
       .panel-body
-        = simple_form_for(@order, url: cart_confirm_path, html: {class: 'form-horizontal'}, defaults: { wrapper_html: { class: 'col-lg-12' } }) do |f|
+        = simple_form_for(@order, url: confirm_cart_path, html: {class: 'form-horizontal'}, defaults: { wrapper_html: { class: 'col-lg-12' } }) do |f|
           = f.error_notification
 
           = f.hidden_field :id
