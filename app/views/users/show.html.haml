@@ -8,6 +8,12 @@
         %h2.panel-title 登録情報
       .panel-body
         %div
+          %label= User.human_attribute_name(:img_filename)
+          %p= image_tag(current_user.img_filename, class: 'img-thumbnail', size: "100x100")
+        %div
+          %label= User.human_attribute_name(:nickname)
+          %p= current_user.nickname
+        %div
           %label= User.human_attribute_name(:name)
           %p= current_user.name
         %div

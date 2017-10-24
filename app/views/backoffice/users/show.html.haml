@@ -8,15 +8,19 @@
     %table.table.table-striped.table-hover
       %tbody
         %tr
+          %th= User.human_attribute_name(:img_filename)
           %th= User.human_attribute_name(:id)
           %th= User.human_attribute_name(:email)
+          %th= User.human_attribute_name(:nickname)
           %th= User.human_attribute_name(:name)
           %th= User.human_attribute_name(:zipcode)
           %th= User.human_attribute_name(:address)
           %th= "現在の#{UserPoint.human_attribute_name(:point)}"
         %tr
+          %td= image_tag(@user.img_filename, class: 'img-thumbnail', size: "100x100")
           %td= @user.id
           %td= @user.email
+          %td= @user.nickname
           %td= @user.name
           %td= @user.zipcode
           %td= @user.address

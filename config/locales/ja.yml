@@ -27,6 +27,8 @@ ja:
         email: メールアドレス
         password: パスワード
         password_confirmation: パスワード確認
+        nickname: ニックネーム
+        img_filename: プロフィール画像
         name: 名前
         zipcode: 郵便番号
         address: 住所
