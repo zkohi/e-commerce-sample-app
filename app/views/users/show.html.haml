@@ -16,6 +16,9 @@
         %div
           %label= User.human_attribute_name(:address)
           %p= current_user.address
+        %div
+          %label= "現在の#{UserPoint.human_attribute_name(:point)}"
+          %p= number_with_delimiter(current_user.user_points.total.first.point)
   .panel-body.col-md-4
     .panel.panel-info
       .panel-heading

@@ -13,14 +13,14 @@
           %th= User.human_attribute_name(:name)
           %th= User.human_attribute_name(:zipcode)
           %th= User.human_attribute_name(:address)
-          %th= UserPoint.human_attribute_name(:point)
+          %th= "現在の#{UserPoint.human_attribute_name(:point)}"
         %tr
           %td= @user.id
           %td= @user.email
           %td= @user.name
           %td= @user.zipcode
           %td= @user.address
-          %td= number_with_delimiter(@user.user_points.sum("point"))
+          %td= number_with_delimiter(@user.user_points.total.first.point)
 
 .panel.panel-danger
   .panel-heading

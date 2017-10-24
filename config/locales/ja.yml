@@ -153,6 +153,7 @@ ja:
         twenty_to_twenty_one: 20時〜21時
     user_point:
       status:
+        total: 現在のポイント
         used: ポイント利用
         coupon: クーポン利用
         admin: 管理者登録

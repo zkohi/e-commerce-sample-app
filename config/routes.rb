@@ -35,7 +35,7 @@ Rails.application.routes.draw do
     resources :companies
     resources :orders, except: [:new, :create, :destroy]
     resources :users, except: [:new, :create, :destroy] do
-      resources :points, only: [:index, :new, :create], controller: 'user_points'
+      resources :points, only: [:new, :create], controller: 'user_points'
     end
   end
 

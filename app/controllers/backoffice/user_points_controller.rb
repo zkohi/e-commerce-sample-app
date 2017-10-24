@@ -1,10 +1,6 @@
 class Backoffice::UserPointsController < Backoffice::ApplicationController
   before_action :set_user, only: [:new, :create]
 
-  def index
-    @user_points = UserPoint.all.page(params[:page])
-  end
-
   def new
     @user_point = UserPoint.new
   end
