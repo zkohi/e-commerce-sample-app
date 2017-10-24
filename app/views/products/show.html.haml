@@ -17,14 +17,20 @@
       - order = Order.new
       - order.line_items.build
       = simple_form_for(order, url: carts_path, html: {class: 'form-horizontal'}, defaults: { wrapper_html: { class: 'col-lg-12' } }) do |f|
+
+        = f.error_notification
+
         .form-inputs
           = f.input :company_id, collection: @companies.map { |company| ["#{company.name}(在庫:#{number_with_delimiter(company.product_stocks.first.stock)}個)", company.id] }, as: :radio_buttons
 
         = f.fields_for :line_items do |line_item|
+
+          = line_item.error_notification
+
           = line_item.hidden_field :product_id, value: @product.id
 
           .form-inputs
-            = line_item.input :quantity, label: '個数', input_html: {min: 1, max: 99}
+            = line_item.input :quantity, input_html: {min: 1, max: 99}
 
         .form-actions
           = f.button :submit, 'カートに入れる'

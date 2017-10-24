@@ -18,7 +18,7 @@ class OrdersController < Users::ApplicationController
     if @order.save
       redirect_to carts_path
     else
-      redirect_to product_path(line_item["product_id"]), notice: '個数を入力してください'
+      redirect_to product_path(order_line_item_params[:line_items_attributes]["0"][:product_id]), notice: '業者を選択し、数量を入力してください'
     end
   end
 

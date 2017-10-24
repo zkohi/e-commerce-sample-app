@@ -11,6 +11,7 @@ class Order < ApplicationRecord
   accepts_nested_attributes_for :line_items
 
   validates :user_id, presence: true
+  validates :company_id, presence: true
   validates :item_count, presence: true, numericality: { only_integer: true, greater_than_or_equal_to: 0 }
   validates :item_total, presence: true, numericality: { only_integer: true, greater_than_or_equal_to: 0 }
   validates :shipment_total, presence: true, numericality: { only_integer: true, greater_than_or_equal_to: 0 }
