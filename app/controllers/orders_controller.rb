@@ -4,11 +4,11 @@ class OrdersController < Users::ApplicationController
   before_action :set_order_state_to_ordered, only: [:confirm, :update]
 
   def index
-    @orders = current_user.orders.ordered.page(params[:page])
+    @orders = current_user.orders.ordered.includes(:company).page(params[:page])
   end
 
   def show
-    @order = current_user.orders.ordered.find(params[:id])
+    @order = current_user.orders.ordered.includes(:company).find(params[:id])
   end
 
   def create

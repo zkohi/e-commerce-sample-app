@@ -5,75 +5,79 @@
   .panel-heading
     %h2.panel-title 注文詳細画面
   .panel-body
-    %table.table.table-striped.table-hover
-      %thead
-        %tr
-          %th= Product.human_attribute_name(:name)
-          %th= Product.human_attribute_name(:img_filename)
-          %th= LineItem.human_attribute_name(:price)
-          %th= LineItem.human_attribute_name(:quantity)
-
-      %tbody
-        - @order.line_items.includes(:product).each do |line_item|
-          %tr
-            - if line_item.product
-              %td= line_item.product.name
-              %td= image_tag(line_item.product.img_filename, class: 'img-thumbnail', alt: "#{line_item.product.name}", size: "100x100")
-              %td= number_to_currency(line_item.price, locale: :ja)
-            - else
-              %td 商品情報は削除されました
-              %td 商品情報は削除されました
-              %td= number_to_currency(line_item.price, locale: :ja)
-            %td= line_item.quantity
-
-    .panel.panel-danger
+    .panel.panel-success
       .panel-heading
-        %h2.panel-title 配送情報
+        %h2.panel-title= "#{@order.company.name}の商品"
       .panel-body
         %table.table.table-striped.table-hover
           %thead
             %tr
-              %th= Order.human_attribute_name(:user_name)
-              %th= Order.human_attribute_name(:user_zipcode)
-              %th= Order.human_attribute_name(:user_address)
-              %th= Order.human_attribute_name(:shipping_date)
-              %th= Order.human_attribute_name(:shipping_time_range)
-              %th= Order.human_attribute_name(:shipment_state)
+              %th= Product.human_attribute_name(:name)
+              %th= Product.human_attribute_name(:img_filename)
+              %th= LineItem.human_attribute_name(:price)
+              %th= LineItem.human_attribute_name(:quantity)
 
           %tbody
-            %tr
-              %td= @order.user_name
-              %td= @order.user_zipcode
-              %td= @order.user_address
-              %td= @order.shipping_date
-              %td= @order.shipping_time_range_string
-              %td= @order.shipment_state_i18n
+            - @order.line_items.includes(:product).each do |line_item|
+              %tr
+                - if line_item.product
+                  %td= line_item.product.name
+                  %td= image_tag(line_item.product.img_filename, class: 'img-thumbnail', alt: "#{line_item.product.name}", size: "100x100")
+                  %td= number_to_currency(line_item.price, locale: :ja)
+                - else
+                  %td 商品情報は削除されました
+                  %td 商品情報は削除されました
+                  %td= number_to_currency(line_item.price, locale: :ja)
+                %td= line_item.quantity
 
-    .panel.panel-warning
-      .panel-heading
-        %h2.panel-title 料金明細
-      .panel-body
-        %table.table.table-striped.table-hover
-          %thead
-            %tr
-              %th= Order.human_attribute_name(:item_total)
-              %th= Order.human_attribute_name(:item_count)
-              %th= Order.human_attribute_name(:shipment_total) 
-              %th= Order.human_attribute_name(:payment_total)
-              %th= Order.human_attribute_name(:adjustment_total)
-              %th= Order.human_attribute_name(:tax_total)
-              %th= Order.human_attribute_name(:total)
-              %th= Order.human_attribute_name(:payment_state)
+        .panel.panel-danger
+          .panel-heading
+            %h2.panel-title 配送情報
+          .panel-body
+            %table.table.table-striped.table-hover
+              %thead
+                %tr
+                  %th= Order.human_attribute_name(:user_name)
+                  %th= Order.human_attribute_name(:user_zipcode)
+                  %th= Order.human_attribute_name(:user_address)
+                  %th= Order.human_attribute_name(:shipping_date)
+                  %th= Order.human_attribute_name(:shipping_time_range)
+                  %th= Order.human_attribute_name(:shipment_state)
 
-          %tbody
-            %tr
-              %td= number_to_currency(@order.item_total, locale: :ja)
-              %td= @order.item_count
-              %td= number_to_currency(@order.shipment_total, locale: :ja)
-              %td= number_to_currency(@order.payment_total, locale: :ja)
-              %td= number_to_currency(@order.adjustment_total, locale: :ja)
-              %td= number_to_currency(@order.tax_total, locale: :ja)
-              %td= number_to_currency(@order.total, locale: :ja)
-              %td= @order.payment_state_i18n
+              %tbody
+                %tr
+                  %td= @order.user_name
+                  %td= @order.user_zipcode
+                  %td= @order.user_address
+                  %td= @order.shipping_date
+                  %td= @order.shipping_time_range_string
+                  %td= @order.shipment_state_i18n
+
+        .panel.panel-warning
+          .panel-heading
+            %h2.panel-title 料金明細
+          .panel-body
+            %table.table.table-striped.table-hover
+              %thead
+                %tr
+                  %th= Order.human_attribute_name(:item_total)
+                  %th= Order.human_attribute_name(:item_count)
+                  %th= Order.human_attribute_name(:shipment_total) 
+                  %th= Order.human_attribute_name(:payment_total)
+                  %th= Order.human_attribute_name(:adjustment_total)
+                  %th= Order.human_attribute_name(:tax_total)
+                  %th= Order.human_attribute_name(:total)
+                  %th= Order.human_attribute_name(:payment_state)
+
+              %tbody
+                %tr
+                  %td= number_to_currency(@order.item_total, locale: :ja)
+                  %td= @order.item_count
+                  %td= number_to_currency(@order.shipment_total, locale: :ja)
+                  %td= number_to_currency(@order.payment_total, locale: :ja)
+                  %td= number_to_currency(@order.adjustment_total, locale: :ja)
+                  %td= number_to_currency(@order.tax_total, locale: :ja)
+                  %td= number_to_currency(@order.total, locale: :ja)
+                  %td= @order.payment_state_i18n
 
 = link_to '注文履歴一覧画面を見る', orders_path
