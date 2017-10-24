@@ -4,7 +4,7 @@ class Order < ApplicationRecord
 
   belongs_to :user
   belongs_to :company
-  has_many :user_point
+  has_one :user_point
 
   has_many :line_items, dependent: :destroy, inverse_of: :order
   validates_associated :line_items
@@ -31,9 +31,10 @@ class Order < ApplicationRecord
     validates :user_address, presence: true, length: { maximum: 100 }
   end
 
-  after_find :set_item_count, :set_item_total, :set_shipment_total, :set_payment_total, :set_adjustment_total, :set_tax_total, :set_total, if: :cart?
+  after_find :set_item_count, :set_item_total, :set_shipment_total, :set_adjustment_total, :set_payment_total, :set_tax_total, :set_total, if: :cart?
 
   before_validation :set_shipping_time_range_string
+  before_validation :set_point_total, :set_adjustment_total, :set_payment_total, :set_tax_total, :set_total, if: Proc.new { |order| order.point_total.present? }
   after_update :save_user_point
 
   enum state: {
@@ -89,6 +90,10 @@ class Order < ApplicationRecord
 
   private
 
+    def set_point_total
+      self.point_total = self.point_total.to_i
+    end
+
     def set_item_count
       self.item_count = self.line_items.inject(0) { |sum, i| sum + i.quantity }
     end
@@ -103,7 +108,7 @@ class Order < ApplicationRecord
 
     def set_payment_total
       self.payment_total =
-        case self.item_total
+        case self.adjustment_total
         when 0
           0
         when 1 ... 10000
@@ -118,18 +123,18 @@ class Order < ApplicationRecord
     end
 
     def set_adjustment_total
-      self.adjustment_total = self.shipment_total + self.item_total + self.payment_total
+      self.adjustment_total = self.shipment_total + self.item_total
       if self.point_total.present?
         self.adjustment_total = self.adjustment_total - self.point_total
       end
     end
 
     def set_tax_total
-      self.tax_total = (self.adjustment_total * 0.08).floor
+      self.tax_total = ((self.adjustment_total + payment_total) * 0.08).floor
     end
 
     def set_total
-      self.total = self.adjustment_total + self.tax_total
+      self.total = self.adjustment_total + self.payment_total + self.tax_total
     end
 
     def valid_shipping_date?
@@ -144,9 +149,13 @@ class Order < ApplicationRecord
 
     def valid_point_total?
       if self.point_total.present?
-        total = self.item_total + self.shipment_total
-        if self.point_total.to_i > total.to_i
+        if self.point_total > self.adjustment_total
           errors.add(:point_total, "は1以上#{total}以下の値にしてください")
+        end
+
+        user_point_total = UserPoint.find_by(user_id: self.user_id, status: :total)
+        if user_point_total.present? && self.point_total > user_point_total.point
+          errors.add(:point_total, "は#{user_point_total.point}以下の値にしてください")
         end
       end
     end
@@ -159,7 +168,7 @@ class Order < ApplicationRecord
 
     def save_user_point
       if self.point_total.present?
-        UserPoint.create(user_id: self.user_id, order_id: self.id, point: -self.point_total.to_i, status: 'used').save!
+        UserPoint.create(user_id: self.user_id, order_id: self.id, point: -self.point_total, status: 'used').save!
       end
     end
 end

@@ -20,7 +20,7 @@
           %td= @user.name
           %td= @user.zipcode
           %td= @user.address
-          %td= number_with_delimiter(@user.user_points.total.first.point)
+          %td= number_with_delimiter(@user.user_points.total.present? ? @user.user_points.total.first.point : 0)
 
 .panel.panel-danger
   .panel-heading

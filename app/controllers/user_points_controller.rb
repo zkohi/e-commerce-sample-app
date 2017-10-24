@@ -1,9 +1,10 @@
 class UserPointsController < Users::ApplicationController
   before_action :set_coupon, only: [:show]
   before_action :used_coupon?, only: [:create]
+  before_action :set_user_point_total, only: [:points]
 
   def points
-    @user_points = UserPoint.page(params[:page])
+    @user_points = UserPoint.where.not(status: :total).page(params[:page])
   end
 
   def index

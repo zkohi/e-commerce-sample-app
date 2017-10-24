@@ -2,13 +2,14 @@ class OrdersController < Users::ApplicationController
   before_action :set_order, only: [:edit, :confirm, :update, :destroy_cart_line_item]
   before_action :order_has_line_items?, only: [:edit, :confirm, :update, :destroy_cart_line_item]
   before_action :set_order_state_to_ordered, only: [:confirm, :update]
+  before_action :set_user_point_total, only: [:edit, :confirm, :update]
 
   def index
-    @orders = current_user.orders.ordered.includes(:company).page(params[:page])
+    @orders = current_user.orders.ordered.includes(:company).includes(:user_point).page(params[:page])
   end
 
   def show
-    @order = current_user.orders.ordered.includes(:company).find(params[:id])
+    @order = current_user.orders.ordered.includes(:company).includes(:user_point).find(params[:id])
   end
 
   def create

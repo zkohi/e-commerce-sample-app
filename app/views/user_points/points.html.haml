@@ -5,42 +5,43 @@
   .panel-heading
     %h2.panel-title= "現在の#{UserPoint.human_attribute_name(:point)}"
   .panel-body
-    %p= number_with_delimiter(current_user.user_points.total.first.point)
+    %p= user_point_total
 
-.panel.panel-warning
-  .panel-heading
-    %h2.panel-title ポイント履歴一覧
-  .panel-body
-    %div
-      %table.table.table-striped.table-hover
-        %thead
-          %tr
-            %th= UserPoint.human_attribute_name(:status)
-            %th= Coupon.human_attribute_name(:id)
-            %th= Coupon.human_attribute_name(:title)
-            %th= Coupon.human_attribute_name(:code)
-            %th= Order.human_attribute_name(:id)
-            %th= UserPoint.human_attribute_name(:point)
-
-        %tbody
-          - @user_points.includes(:coupon).includes(:order).each do |user_point|
+- if @user_point_total.present?
+  .panel.panel-warning
+    .panel-heading
+      %h2.panel-title ポイント履歴一覧
+    .panel-body
+      %div
+        %table.table.table-striped.table-hover
+          %thead
             %tr
-              %td= user_point.status_i18n
-              - if user_point.coupon
-                %td= user_point.coupon.id
-                %td= user_point.coupon.title
-                %td= user_point.coupon.code
-              - else
-                %td
-                %td
-                %td
-              - if user_point.order
-                %td= link_to user_point.order.id, order_path(user_point.order.id)
-              - else
-                %td
-              %td= number_with_delimiter(user_point.point)
+              %th= UserPoint.human_attribute_name(:status)
+              %th= Coupon.human_attribute_name(:id)
+              %th= Coupon.human_attribute_name(:title)
+              %th= Coupon.human_attribute_name(:code)
+              %th= Order.human_attribute_name(:id)
+              %th= UserPoint.human_attribute_name(:point)
 
-      = paginate @user_points
+          %tbody
+            - @user_points.includes(:coupon).includes(:order).each do |user_point|
+              %tr
+                %td= user_point.status_i18n
+                - if user_point.coupon
+                  %td= user_point.coupon.id
+                  %td= user_point.coupon.title
+                  %td= user_point.coupon.code
+                - else
+                  %td
+                  %td
+                  %td
+                - if user_point.order
+                  %td= link_to user_point.order.id, order_path(user_point.order.id)
+                - else
+                  %td
+                %td= number_with_delimiter(user_point.point)
+
+        = paginate @user_points
 
 %br
 

@@ -19,7 +19,6 @@
               %th= Order.human_attribute_name(:user_address)
               %th= Order.human_attribute_name(:shipping_date)
               %th= Order.human_attribute_name(:shipping_time_range)
-              %th= Order.human_attribute_name(:point_total)
 
           %tbody
             %tr
@@ -28,7 +27,6 @@
               %td= @order.user_address
               %td= @order.shipping_date
               %td= @order.shipping_time_range_i18n
-              %td= number_with_delimiter(@order.point_total, locale: :ja)
 
         = simple_form_for(@order, url: cart_path, html: {class: 'form-horizontal'}, defaults: { wrapper_html: { class: 'col-lg-12' } }) do |f|
           = f.error_notification
