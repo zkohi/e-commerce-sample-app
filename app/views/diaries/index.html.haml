@@ -32,12 +32,14 @@
     - @diaries.each do |diary| 
       .panel.panel-default
         .panel-body
-          .well.col-lg-12
+          .col-lg-12
             .col-lg-2.text-center
               = image_tag(diary.user.img_filename, class: 'img-circle', size: "50x50")
             .col-lg-10
               %p= diary.title
-              %p= diary.user.nickname
+              %p
+                %span= diary.user.nickname
+                %span= diary_created_at_ago(diary)
           = link_to diary_path(diary) do
             .well.col-lg-12
               - if diary.img_filename
