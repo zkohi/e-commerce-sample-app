@@ -24,7 +24,8 @@
           %p= current_user.address
         %div
           %label= "現在の#{UserPoint.human_attribute_name(:point)}"
-          %p= user_point_total
+          - point = @user_point_total.present? ? number_with_delimiter(@user_point_total.point) : 0
+          %p= "#{point}ポイント"
 
     .panel.panel-info
       .panel-heading
