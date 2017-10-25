@@ -2,12 +2,28 @@
   -if notice
     %p.alert.alert-dismissible.alert-warning#notice= notice
 
-  .col-lg-4
-    .panel.panel-default
-      .panel-body.text-center
-        = image_tag(@diary.img_filename, class: 'img-thumbnail')
+  .panel.panel-default
+    .panel-body
+      .col-lg-12
+        .col-lg-2.text-center
+          = image_tag(@diary.user.img_filename, class: 'img-circle', size: "90x90")
+        .col-lg-10
+          %h1= @diary.title
+          %p
+            %span= @diary.user.nickname
+            %span= diary_created_at_ago(@diary)
+      .well.col-lg-12
+        - if @diary.img_filename
+          .col-lg-4
+            = image_tag(@diary.img_filename, class: 'img-rounded', alt: "#{@diary.title}", size: "250x250")
+          .col-lg-8
+            = simple_format(@diary.content)
+        - else
+          .col-lg-12
+            = simple_format(@diary.content)
 
-    - if @diary.user.id == current_user.id
+  .col-lg-4
+    - if @diary.user_id == current_user.id
       = link_to '編集する', edit_diary_path(@diary)
       \|
       = link_to '削除する', @diary, method: :delete, data: { confirm: '削除してよろしいですか?' }
@@ -20,13 +36,16 @@
       \|
     = link_to 'トップページを開く', root_path
   .col-lg-8
-    %h1= @diary.title
-    .well= simple_format(@diary.content)
     - if @diary.diary_comments
-      %h2 コメント一覧
+      %h3 コメント一覧
       - @diary.diary_comments.includes(:user).each do |diary_comment|
-        .well.col-lg-10= simple_format(diary_comment.content)
-        - if diary_comment.user.id == current_user.id
-          .col-lg-2= link_to '削除', diary_comment_path(@diary, diary_comment), method: :delete, data: { confirm: '削除してよろしいですか?' }
+        .well.col-lg-12
+          .col-lg-2.text-center
+            = image_tag(diary_comment.user.img_filename, class: 'img-circle', size: "50x50")
+            %p= diary_comment.user.nickname
+          .col-lg-8= simple_format(diary_comment.content)
+          - if diary_comment.user.id == current_user.id
+            .col-lg-2= link_to '削除', diary_comment_path(@diary, diary_comment), method: :delete, data: { confirm: '削除してよろしいですか?' }
 
-      .col-lg-10= render "diary_comments/form"
+      - if @diary.user_id != current_user.id
+        = render "diary_comments/form"
