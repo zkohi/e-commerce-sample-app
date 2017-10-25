@@ -2,7 +2,7 @@ class DiariesController < Users::ApplicationController
   before_action :set_diary, only: [:edit, :update, :destroy]
 
   def index
-    @diaries = Diary.page(params[:page])
+    @diaries = Diary.includes(:user).page(params[:page])
   end
 
   def show

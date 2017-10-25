@@ -1,15 +1,54 @@
-.content.col-lg-12
-  -if notice
-    %p.alert.alert-dismissible.alert-warning#notice= notice
+.content.row
+  .col-lg-3
+    .panel.panel-default
+      .panel-body.text-center
+        = image_tag(current_user.img_filename, class: 'img-thumbnail', size: "100x100")
+        = current_user.nickname
 
-  - @diaries.each do |diary| 
-    .col-md-4.col-sm-4.col-xs-6
+    .panel.panel-default
+      .panel-body
+        %p= link_to "登録情報を変更する", edit_user_registration_path
+        %p= link_to "注文履歴を見る", orders_path
+        %p= link_to "クーポン一覧を見る", coupons_path
+        %p= link_to "ポイント履歴を見る", points_path
+
+    .panel.panel-default
+      .panel-body
+        = link_to "日記を書く", new_diary_path
+        - latest_evaluation = current_user.diaries.includes(:diary_evaluations).where(diary_evaluations: { id: nil}).order("diary_evaluations.created_at DESC").first
+        - if latest_evaluation.present?
+          %div 新着Good!
+          = link_to "#{latest_evaluation.diary.title}に#{latest_evaluation.user.nickname}がGood!しました", diary_path(latest_evaluation.diary)
+
+        - latest_comment = current_user.diaries.includes(:diary_comments).where(diary_comments: { id: nil}).order("diary_comments.created_at DESC").first
+        - if latest_comment.present?
+          %div 新着コメント
+          = link_to "#{latest_comment.diary.title}に#{latest_comment.user.nickname}がコメントしました", diary_path(latest_comment.diary)
+
+  .col-lg-9
+    -if notice
+      %p.alert.alert-dismissible.alert-warning#notice= notice
+
+    - @diaries.each do |diary| 
       .panel.panel-default
-        = link_to diary_path(diary) do
-          .panel-body.text-center
-            = image_tag(diary.img_filename, class: 'img-thumbnail', alt: "#{diary.title}", size: "250x250")
-            %p= diary.title
+        .panel-body
+          .well.col-lg-12
+            .col-lg-2.text-center
+              = image_tag(diary.user.img_filename, class: 'img-circle', size: "50x50")
+            .col-lg-10
+              %p= diary.title
+              %p= diary.user.nickname
+          = link_to diary_path(diary) do
+            .well.col-lg-12
+              - if diary.img_filename
+                .col-lg-4
+                  = image_tag(diary.img_filename, class: 'img-rounded', alt: "#{diary.title}", size: "200x200")
+                .col-lg-8
+                  = simple_format(diary.content)
+              - else
+                .col-lg-12
+                  = simple_format(diary.content)
 
-%br
+  %br
 
-= paginate @diaries
+  = paginate @diaries
