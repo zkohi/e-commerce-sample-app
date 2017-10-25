@@ -23,7 +23,7 @@ class OrdersController < Users::ApplicationController
   end
 
   def cart
-    @orders = current_user.orders.includes(:company).includes(:line_items).where(state: :cart).order("created_at DESC").all
+    @orders = current_user.orders.includes(:company).includes(:line_items).where(state: :cart).order(created_at: :desc).all
   end
 
   def edit

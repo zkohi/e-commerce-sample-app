@@ -2,8 +2,8 @@
   .col-lg-3
     .panel.panel-default
       .panel-body.text-center
-        = image_tag(current_user.img_filename, class: 'img-thumbnail', size: "100x100")
-        = current_user.nickname
+        %p= image_tag(current_user.img_filename, class: 'img-thumbnail', size: "100x100")
+        %p= current_user.nickname
 
     .panel.panel-default
       .panel-body
@@ -11,19 +11,25 @@
         %p= link_to "注文履歴を見る", orders_path
         %p= link_to "クーポン一覧を見る", coupons_path
         %p= link_to "ポイント履歴を見る", points_path
+        %p= link_to "日記を書く", new_diary_path
 
     .panel.panel-default
       .panel-body
-        = link_to "日記を書く", new_diary_path
         - latest_evaluation_diary = current_user.diaries.includes(:diary_evaluations).order("diary_evaluations.created_at DESC").where.not(diary_evaluations: { id: nil}).first
-        - if latest_evaluation_diary.present?
-          %div 新着Good!
-          = link_to "#{latest_evaluation_diary.title}に#{latest_evaluation_diary.diary_evaluations.includes(:user).first.user.nickname}がGood!しました", latest_evaluation_diary
+        .well
+          %h5 新着Good!
+          - if latest_evaluation_diary.present?
+            = link_to "#{latest_evaluation_diary.title}に#{latest_evaluation_diary.diary_evaluations.includes(:user).first.user.nickname || '名無し'}さんがGood!しました", latest_evaluation_diary
+          - else
+            ありません
 
         - latest_comment_diary = current_user.diaries.includes(:diary_comments).order("diary_comments.created_at DESC").where.not(diary_comments: { id: nil}).first
-        - if latest_comment_diary.present?
-          %div 新着コメント
-          = link_to "#{latest_comment_diary.title}に#{latest_comment_diary.diary_comments.includes(:user).first.user.nickname}がコメントしました", latest_comment_diary
+        .well
+          %h5 新着コメント
+          - if latest_comment_diary.present?
+            = link_to "#{latest_comment_diary.title}に#{latest_comment_diary.diary_comments.includes(:user).first.user.nickname || '名無し'}さんがコメントしました", latest_comment_diary
+          - else
+            ありません
 
   .col-lg-9
     -if notice
