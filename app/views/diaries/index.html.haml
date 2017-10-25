@@ -15,15 +15,15 @@
     .panel.panel-default
       .panel-body
         = link_to "日記を書く", new_diary_path
-        - latest_evaluation = current_user.diaries.includes(:diary_evaluations).order("diary_evaluations.created_at DESC").find_by(diary_evaluations: { id: nil})
-        - if latest_evaluation.present?
+        - latest_evaluation_diary = current_user.diaries.includes(:diary_evaluations).order("diary_evaluations.created_at DESC").where.not(diary_evaluations: { id: nil}).first
+        - if latest_evaluation_diary.present?
           %div 新着Good!
-          = link_to "#{latest_evaluation.diary.title}に#{latest_evaluation.user.nickname}がGood!しました", diary_path(latest_evaluation.diary)
+          = link_to "#{latest_evaluation_diary.title}に#{latest_evaluation_diary.diary_evaluations.includes(:user).first.user.nickname}がGood!しました", latest_evaluation_diary
 
-        - latest_comment = current_user.diaries.includes(:diary_comments).order("diary_comments.created_at DESC").find_by(diary_comments: { id: nil})
-        - if latest_comment.present?
+        - latest_comment_diary = current_user.diaries.includes(:diary_comments).order("diary_comments.created_at DESC").where.not(diary_comments: { id: nil}).first
+        - if latest_comment_diary.present?
           %div 新着コメント
-          = link_to "#{latest_comment.diary.title}に#{latest_comment.user.nickname}がコメントしました", diary_path(latest_comment.diary)
+          = link_to "#{latest_comment_diary.title}に#{latest_comment_diary.diary_comments.includes(:user).first.user.nickname}がコメントしました", latest_comment_diary
 
   .col-lg-9
     -if notice
@@ -40,7 +40,7 @@
               %p
                 %span= diary.user.nickname
                 %span= diary_created_at_ago(diary)
-          = link_to diary_path(diary) do
+          = link_to diary do
             .well.col-lg-12
               - if diary.img_filename
                 .col-lg-4

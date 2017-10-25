@@ -36,7 +36,7 @@
       \|
     = link_to 'トップページを開く', root_path
   .col-lg-8
-    - if @diary.diary_comments
+    - if @diary.diary_comments.present?
       %h3 コメント一覧
       - @diary.diary_comments.includes(:user).each do |diary_comment|
         .well.col-lg-12

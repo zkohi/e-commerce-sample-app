@@ -25,7 +25,7 @@
         %div
           %label= "現在の#{UserPoint.human_attribute_name(:point)}"
           %p= user_point_total
-  .panel-body.col-md-4
+
     .panel.panel-info
       .panel-heading
         %h2.panel-title メニュー
@@ -35,3 +35,19 @@
         %p= link_to "日記を書く", new_diary_path
         %p= link_to "クーポン一覧を見る", coupons_path
         %p= link_to "ポイント履歴を見る", points_path
+  .panel-body.col-md-8
+    .panel.panel-info
+      .panel-heading
+        %h2.panel-title 日記
+      .panel-body
+        - @diaries.each do |diary|
+          = link_to diary_path(diary) do
+            .well.col-lg-12
+              - if diary.img_filename
+                .col-lg-4
+                  = image_tag(diary.img_filename, class: 'img-rounded', alt: "#{diary.title}", size: "100x100")
+                .col-lg-8
+                  = simple_format(diary.content)
+              - else
+                .col-lg-12
+                  = simple_format(diary.content)

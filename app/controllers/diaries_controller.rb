@@ -36,7 +36,7 @@ class DiariesController < Users::ApplicationController
 
   def destroy
     @diary.destroy
-    redirect_to diaries_url, notice: '日記を削除しました'
+    redirect_to mypage_path, notice: '日記を削除しました'
   end
 
   private
