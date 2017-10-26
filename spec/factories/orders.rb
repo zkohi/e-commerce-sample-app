@@ -1,6 +1,7 @@
 FactoryGirl.define do
   factory :order do
     user
+    company
     state "cart"
     item_count 2
     item_total 2000

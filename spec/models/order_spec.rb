@@ -470,65 +470,59 @@ RSpec.describe Order, type: :model do
   describe "set_payment_total" do
     subject { order.send(:set_payment_total) }
 
-    let(:order) { build(:order, item_total: item_total) }
+    let(:order) { build(:order, adjustment_total: adjustment_total) }
 
-    context "if item_total is zero" do
-      let(:item_total) { 0 }
-      let(:expected) { 0 }
+    context "if adjustment_total is zero" do
+      let(:adjustment_total) { 0 }
 
       it do
         should
-        expect(order.payment_total).to eq expected
+        expect(order.payment_total).to eq 0
       end
     end
 
-    context "if item_total is 9999" do
-      let(:item_total) { 9999 }
-      let(:expected) { 300 }
+    context "if adjustment_total is 9999" do
+      let(:adjustment_total) { 9999 }
 
       it do
         should
-        expect(order.payment_total).to eq expected
+        expect(order.payment_total).to eq 300
       end
     end
 
-    context "if item_total is 10000" do
-      let(:item_total) { 10000 }
-      let(:expected) { 400 }
+    context "if adjustment_total is 10000" do
+      let(:adjustment_total) { 10000 }
 
       it do
         should
-        expect(order.payment_total).to eq expected
+        expect(order.payment_total).to eq 400
       end
     end
 
-    context "if item_total is 29999" do
-      let(:item_total) { 29999 }
-      let(:expected) { 400 }
+    context "if adjustment_total is 29999" do
+      let(:adjustment_total) { 29999 }
 
       it do
         should
-        expect(order.payment_total).to eq expected
+        expect(order.payment_total).to eq 400
       end
     end
 
-    context "if item_total is 99999" do
-      let(:item_total) { 99999 }
-      let(:expected) { 600 }
+    context "if adjustment_total is 99999" do
+      let(:adjustment_total) { 99999 }
 
       it do
         should
-        expect(order.payment_total).to eq expected
+        expect(order.payment_total).to eq 600
       end
     end
 
-    context "if item_total is 100000" do
-      let(:item_total) { 100000 }
-      let(:expected) { 1000 }
+    context "if adjustment_total is 100000" do
+      let(:adjustment_total) { 100000 }
 
       it do
         should
-        expect(order.payment_total).to eq expected
+        expect(order.payment_total).to eq 1000
       end
     end
   end
@@ -536,40 +530,51 @@ RSpec.describe Order, type: :model do
   describe "set_adjustment_total" do
     subject { order.send(:set_adjustment_total) }
 
-    let(:order) { build(:order, item_total: item_total, shipment_total: shipment_total, payment_total: payment_total) }
-    let(:shipment_total) { 10 }
-    let(:item_total) { 200 }
-    let(:payment_total) { 3000 }
-    let(:expected) { 3210 }
+    let(:order) { build(:order, item_total: item_total, shipment_total: shipment_total, point_total: point_total) }
+    let(:shipment_total) { 600 }
+    let(:item_total) { 1000 }
 
-    it do
-      should
-      expect(order.adjustment_total).to eq expected
+    context "if point_total is present" do
+      let(:point_total) { 100 }
+
+      it do
+        should
+        expect(order.adjustment_total).to eq 1500
+      end
+    end
+
+    context "if point_total is not present" do
+      let(:point_total) { nil }
+
+      it do
+        should
+        expect(order.adjustment_total).to eq 1600
+      end
     end
   end
 
   describe "set_tax_total" do
     subject { order.send(:set_tax_total) }
 
-    let(:order) { build(:order, adjustment_total: adjustment_total) }
+    let(:order) { build(:order, adjustment_total: adjustment_total, payment_total: payment_total) }
 
     context "小数点が発生する場合" do
-      let(:adjustment_total) { 30 }
-      let(:expected) { 2 }
+      let(:adjustment_total) { 10 }
+      let(:payment_total) { 20 }
 
       it "小数点以下は切り捨てられること" do
         should
-        expect(order.tax_total).to eq expected
+        expect(order.tax_total).to eq 2
       end
     end
 
     context "小数点が発生しない場合" do
-      let(:adjustment_total) { 3000 }
-      let(:expected) { 240 }
+      let(:adjustment_total) { 1000 }
+      let(:payment_total) { 2000 }
 
       it do
         should
-        expect(order.tax_total).to eq expected
+        expect(order.tax_total).to eq 240
       end
     end
   end
@@ -577,8 +582,9 @@ RSpec.describe Order, type: :model do
   describe "set_total" do
     subject { order.send(:set_total) }
 
-    let(:order) { build(:order, adjustment_total: adjustment_total, tax_total: tax_total) }
-    let(:adjustment_total) { 3000 }
+    let(:order) { build(:order, adjustment_total: adjustment_total, payment_total: payment_total, tax_total: tax_total) }
+    let(:adjustment_total) { 2000 }
+    let(:payment_total) { 1000 }
     let(:tax_total) { 240 }
     let(:expected) { 3240 }
 

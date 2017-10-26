@@ -15,16 +15,14 @@ class UserPoint < ApplicationRecord
   validates :status, inclusion: { in: ["total", "used", "coupon", "admin"] }
   validates :point, presence: true, numericality: { only_integer: true, greater_than_or_equal_to: -999999, less_than_or_equal_to: 999999 }
 
-  after_create :update_total
+  after_create :update_total, unless: :total?
 
   private
 
     def update_total
-      unless self.total?
-        total = UserPoint.find_or_initialize_by(user_id: self.user_id, status: :total)
-        total.status = "total"
-        total.point = total.point.to_i + self.point
-        total.save!
-      end
+      total = UserPoint.find_or_initialize_by(user_id: self.user_id, status: :total)
+      total.status = "total"
+      total.point = total.point.to_i + self.point
+      total.save
     end
 end
