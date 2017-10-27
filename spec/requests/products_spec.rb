@@ -13,7 +13,7 @@ RSpec.describe "Products", type: :request do
   end
 
   describe "GET /products/:id" do
-    it "updates a Product and redirects to the Product's page" do
+    it "shows Product" do
       user = FactoryGirl.create(:user)
       login_as(user, scope: :user)
 
