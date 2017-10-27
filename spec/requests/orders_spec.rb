@@ -46,6 +46,13 @@ RSpec.describe "Orders", type: :request do
 
       expect(response).to render_template(:cart)
       expect(response.body).to include("商品が削除されました")
+
+      get edit_cart_path order
+
+      expect(response).to redirect_to(carts_path)
+      follow_redirect!
+
+      expect(response).to render_template(:cart)
     end
   end
 
