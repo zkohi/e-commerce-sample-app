@@ -35,6 +35,7 @@
         = link_to 'Good!', diary_evaluations_path(@diary), method: :post, data: { confirm: '評価を登録してよろしいですか?' }
       \|
     = link_to 'トップページを開く', root_path
+
   .col-lg-8
     - if @diary.diary_comments.present?
       %h3 コメント一覧
@@ -48,4 +49,11 @@
             .col-lg-2= link_to '削除', diary_comment_path(@diary, diary_comment), method: :delete, data: { confirm: '削除してよろしいですか?' }
 
       - if @diary.user_id != current_user.id
-        = render "diary_comments/form"
+        = simple_form_for(DiaryComment.new, url: diary_comments_path(@diary)) do |f|
+          = f.error_notification
+
+          .form-inputs
+            = f.input :content
+
+          .form-actions
+            = f.button :submit

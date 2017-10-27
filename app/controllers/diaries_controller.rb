@@ -20,7 +20,7 @@ class DiariesController < Users::ApplicationController
     @diary = current_user.diaries.new(diary_params)
 
     if @diary.save
-      redirect_to @diary, notice: '新しい日記が作成されました'
+      redirect_to @diary, notice: '新しい日記を作成しました'
     else
       render :new
     end
