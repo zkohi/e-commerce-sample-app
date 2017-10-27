@@ -15,5 +15,14 @@ FactoryGirl.define do
     trait :with_invalid_img_filename_extension do
       img_filename { Rack::Test::UploadedFile.new(File.join(Rails.root, 'spec', 'fixtures/', 'files', 'test.txt')) }
     end
+    factory :product_with_product_stocks do
+      transient do
+        product_stocks_count 2
+        product_stocks_stock 99
+      end
+      after(:build) do |product, evaluator|
+        create_list :product_stock, evaluator.product_stocks_count, company: create(:company), product: product, stock: evaluator.product_stocks_stock
+      end
+    end
   end
 end
