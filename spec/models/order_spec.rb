@@ -96,6 +96,16 @@ RSpec.describe Order, type: :model do
       it { expect(order.errors[:item_total]).to include("は0以上の値にしてください") }
     end
 
+    context "point_total is zero" do
+      let(:order) { build(:order, point_total: 0) }
+      it { expect(order.errors[:point_total]).to include("は1以上の値にしてください") }
+    end
+
+    context "point_total greater than 999999" do
+      let(:order) { build(:order, point_total: 1000000) }
+      it { expect(order.errors[:point_total]).to include("は999999以下の値にしてください") }
+    end
+
     context "state is ordered" do
       before :all do
         Timecop.freeze(Time.local(2017, 9, 4, 10, 5, 0))
@@ -273,6 +283,46 @@ RSpec.describe Order, type: :model do
     end
   end
 
+  describe "point_total" do
+    subject { order.valid? }
+
+    context "if point_total greater than adjustment_total" do
+      let(:order) { build(:order, :ordered, point_total: 2601) }
+
+      it do
+        should
+        expect(order.errors[:point_total]).to include("は1以上2600以下の値にしてください")
+      end
+    end
+
+    context "if point is not exist" do
+      let(:order) { build(:order, :ordered, point_total: 1000) }
+
+      it do
+        should
+        expect(order.errors[:point_total]).to include("がありません")
+      end
+    end
+
+    context "if point_total greater than users point total" do
+      before :each do
+        user_point.save
+      end
+
+      let(:user_point) { UserPoint.create(user_id: order.user.id, status: :total, point: 999) }
+      let(:order) { build(:order, :ordered, point_total: 1000) }
+
+      it do
+        should
+        expect(order.errors[:point_total]).to include("は999以下の値にしてください")
+      end
+
+      after :each do
+        user_point.destroy
+      end
+    end
+  end
+
   describe "available_shipping_date_range" do
     subject { build(:order).available_shipping_date_range }
 
@@ -369,15 +419,25 @@ RSpec.describe Order, type: :model do
     end
   end
 
+  describe "set_point_total" do
+    subject { order.send(:set_point_total) }
+
+    let(:order) { build(:order, :with_point_total) }
+
+    it do
+      should
+      expect(order.point_total).to eq 1000
+    end
+  end
+
   describe "set_item_count" do
     subject { order.send(:set_item_count) }
 
     let(:order) { create(:order_with_line_items).reload }
-    let(:expected) { 20 }
 
     it do
       should
-      expect(order.item_count).to eq expected
+      expect(order.item_count).to eq 20
     end
 
     after :each do
@@ -597,22 +657,33 @@ RSpec.describe Order, type: :model do
   describe "set_shipping_time_range_string" do
     subject { order.send(:set_shipping_time_range_string) }
 
-    context "if shipping_time_range is present?" do
-      let(:order) { build(:order) }
+    let(:order) { build(:order) }
 
-      it do
-        should
-        expect(order.shipping_time_range_string).to eq "8時〜12時"
-      end
+    it do
+      should
+      expect(order.shipping_time_range_string).to eq "8時〜12時"
+    end
+  end
+
+  describe "save_user_point" do
+    subject { order.send(:save_user_point) }
+
+    let(:order) { create(:order, :with_point_total) }
+    let(:user_point) { UserPoint.find_by(order_id: order.id, user_id: order.user.id) }
+
+    it do
+      should
+      expect(user_point.point).to eq -order.point_total
     end
 
-    context "if shipping_time_range is not present?" do
-      let(:order) { build(:order, shipping_time_range: nil) }
+    it do
+      should
+      expect(user_point.status).to eq "used"
+    end
 
-      it do
-        should
-        expect(order.shipping_time_range_string).to be_nil
-      end
+    after :each do
+      order.destroy
+      user_point.destroy
     end
   end
 

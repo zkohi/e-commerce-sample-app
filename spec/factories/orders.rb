@@ -8,6 +8,7 @@ FactoryGirl.define do
     shipment_state 0
     payment_state 0
     shipment_total 600
+    adjustment_total 2600
     payment_total 300
     tax_total 232
     total 3132
@@ -20,6 +21,9 @@ FactoryGirl.define do
         create_list :line_item, evaluator.line_items_count, order: order, product: create(:product, :with_price_1000), quantity: 10
       end
     end
+    trait :with_point_total do
+      point_total "1000"
+    end
     trait :ordered do
       state "ordered"
       item_count 2
@@ -27,6 +31,7 @@ FactoryGirl.define do
       shipment_state 0
       payment_state 0
       shipment_total 600
+      adjustment_total 2600
       payment_total 300
       tax_total 232
       total 3132
@@ -36,6 +41,9 @@ FactoryGirl.define do
       user_name Faker::Name.unique.name
       user_zipcode Faker::Number.number(7)
       user_address [Faker::Address.state, Faker::Address.unique.city, Faker::Address.unique.street_name, Faker::Address.unique.street_address].join(" ")
+      trait :with_point_total do
+        point_total "1000"
+      end
     end
   end
 end
