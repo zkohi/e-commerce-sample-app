@@ -41,9 +41,6 @@ FactoryGirl.define do
       user_name Faker::Name.unique.name
       user_zipcode Faker::Number.number(7)
       user_address [Faker::Address.state, Faker::Address.unique.city, Faker::Address.unique.street_name, Faker::Address.unique.street_address].join(" ")
-      trait :with_point_total do
-        point_total "1000"
-      end
     end
   end
 end
