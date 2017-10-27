@@ -34,7 +34,7 @@ Rails.application.routes.draw do
     resources :coupons
     resources :companies
     resources :orders, except: [:new, :create, :destroy]
-    resources :users, except: [:new, :create, :destroy] do
+    resources :users, except: [:new, :create] do
       resources :points, only: [:new, :create], controller: 'user_points'
     end
   end
