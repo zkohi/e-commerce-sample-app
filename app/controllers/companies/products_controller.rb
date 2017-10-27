@@ -1,4 +1,6 @@
 class Companies::ProductsController < Companies::ApplicationController
+  before_action :set_product_stock, only: [:create, :destroy]
+
   def index
     @products = Product.all.page(params[:page])
   end
@@ -13,16 +15,25 @@ class Companies::ProductsController < Companies::ApplicationController
   end
 
   def create
-    @product_stock = current_company.product_stocks.find_or_initialize_by(product_id: params[:product_id])
     @product_stock.stock = product_stock_params[:stock]
     if @product_stock.save
-      redirect_to companies_stocks_path, notice: '商品在庫が登録されました'
+      message = '商品在庫が登録されました'
     else
-      redirect_to companies_product_path(@product_stock.product_id), notice: '商品在庫が登録されませんでした'
+      message = '商品在庫が登録されませんでした'
     end
+    redirect_to companies_product_path(@product_stock.product_id), notice: message
+  end
+
+  def destroy
+    @product_stock.destroy
+    redirect_to companies_stocks_url, notice: '商品在庫が削除されました'
   end
 
   private
+    def set_product_stock
+      @product_stock = current_company.product_stocks.find_or_initialize_by(product_id: params[:product_id])
+    end
+
     def product_stock_params
       params.require(:product_stock).permit(:stock)
     end

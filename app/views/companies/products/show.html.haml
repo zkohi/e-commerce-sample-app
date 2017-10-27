@@ -17,3 +17,6 @@
 
       .form-actions
         = f.button :submit
+
+        - unless @product_stock.new_record?
+          %button= link_to '削除する', companies_product_stock_path(@product, @product_stock), method: :delete, data: { confirm: '削除してよろしいですか?' }

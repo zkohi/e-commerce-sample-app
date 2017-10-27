@@ -16,8 +16,8 @@ RSpec.describe ProductStock, type: :model do
     end
 
     context "stock is zero" do
-      let(:product_stock) { build(:product_stock, stock: 0) }
-      it { expect(product_stock.errors[:stock]).to include("は1以上の値にしてください") }
+      let(:product_stock) { build(:product_stock, stock: -1) }
+      it { expect(product_stock.errors[:stock]).to include("は0以上の値にしてください") }
     end
 
     context "stock is 1000000" do
