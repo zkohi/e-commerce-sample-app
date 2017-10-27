@@ -2,6 +2,31 @@ require 'rails_helper'
 
 RSpec.describe "Companies", type: :request do
 
+  describe "GET /companies/sign_in" do
+    it "creates a Admin and redirects to the Product's page and sign_out and sign_in" do
+      company = FactoryGirl.create(:company)
+
+      post new_company_session_path, params: {
+        company: {
+          email: company.email,
+          password: company.password
+        }
+      }
+
+      expect(response).to redirect_to(companies_stocks_path)
+      follow_redirect!
+
+      expect(response).to render_template(:stocks)
+
+      get destroy_company_session_path
+
+      expect(response).to redirect_to(new_company_session_path)
+      follow_redirect!
+
+      expect(response).to render_template(:new)
+    end
+  end
+
   describe "GET /backoffice/companies" do
     it "shows Companies" do
       user = FactoryGirl.create(:admin)
