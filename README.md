@@ -25,10 +25,16 @@ export MYSQL_DATABASE_PASSWORD=xxx
 
 ```
 bundle exec rails db:create
-bundle exec rails db:seed_fu
 ```
 
 * Database initialization
+
+```
+bundle exec rails db:migrate
+bundle exec rails db:seed_fu FILTER=users,admins,companies
+bundle exec rails db:seed_fu FILTER=coupons,diaries,products
+bundle exec rails db:seed_fu FILTER=product_stocks
+```
 
 * How to run the test suite
 
