@@ -35,6 +35,7 @@
     -if notice
       %p.alert.alert-dismissible.alert-warning#notice= notice
 
+    - diary_evaluations = current_user.diary_evaluations.where(diary_id: @diaries.pluck(:id)).each_with_object({}) {|i, d| d[i.diary_id] = i.id}
     - @diaries.each do |diary| 
       .panel.panel-default
         .panel-body
@@ -46,16 +47,23 @@
               %p
                 %span= diary.user.nickname
                 %span= diary_created_at_ago(diary)
-          = link_to diary do
-            .well.col-lg-12
-              - if diary.img_filename
-                .col-lg-4
-                  = image_tag(diary.img_filename, class: 'img-rounded', alt: "#{diary.title}", size: "200x200")
-                .col-lg-8
-                  = simple_format(diary.content)
-              - else
-                .col-lg-12
-                  = simple_format(diary.content)
+          .well.col-lg-12
+            - if diary.img_filename
+              .col-lg-4
+                = image_tag(diary.img_filename, class: 'img-rounded', alt: "#{diary.title}", size: "200x200")
+              .col-lg-8
+                = simple_format(diary.content)
+            - else
+              .col-lg-12
+                = simple_format(diary.content)
+
+          - if diary.user_id != current_user.id
+            - if diary_evaluations.has_key?(diary.id)
+              %span= link_to 'Good!を削除する', diary_evaluation_path(diary, diary_evaluations[diary.id]), method: :delete, data: { confirm: '評価を削除してよろしいですか?' }
+            - else
+              %span= link_to 'Good!', diary_evaluations_path(diary), method: :post, data: { confirm: '評価を登録してよろしいですか?' }
+            \|
+            %span= link_to 'コメントする', diary_path(diary)
 
   %br
 
