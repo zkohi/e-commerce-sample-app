@@ -48,12 +48,12 @@
           - if diary_comment.user.id == current_user.id
             .col-lg-2= link_to '削除', diary_comment_path(@diary, diary_comment), method: :delete, data: { confirm: '削除してよろしいですか?' }
 
-      - if @diary.user_id != current_user.id
-        = simple_form_for(DiaryComment.new, url: diary_comments_path(@diary)) do |f|
-          = f.error_notification
+    - if @diary.user_id != current_user.id
+      = simple_form_for(DiaryComment.new, url: diary_comments_path(@diary)) do |f|
+        = f.error_notification
 
-          .form-inputs
-            = f.input :content
+        .form-inputs
+          = f.input :content
 
-          .form-actions
-            = f.button :submit
+        .form-actions
+          = f.button :submit

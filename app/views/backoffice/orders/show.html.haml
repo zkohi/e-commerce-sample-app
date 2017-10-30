@@ -4,7 +4,7 @@
   .panel-body
     .panel.panel-success
       .panel-heading
-        %h2.panel-title= "#{@order.company.name}の商品"
+        %h2.panel-title= @order.company.present? ? "#{@order.company.name}に注文した商品" : "注文した商品"
       .panel-body
         %table.table.table-striped.table-hover
           %thead

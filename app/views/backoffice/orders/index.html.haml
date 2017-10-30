@@ -23,7 +23,7 @@
         %tbody
           - @orders.each do |order|
             %tr
-              %td= order.company.name
+              %td= order.company.present? ? order.company.name : "-"
               %td= order.id
               %td= order.item_count
               %td= number_to_currency(order.item_total, locale: :ja)

@@ -30,19 +30,22 @@
   .panel-heading
     %h2.panel-title ポイント履歴
   .panel-body
-    %table.table.table-striped.table-hover
-      %tbody
-        %tr
-          %th= UserPoint.human_attribute_name(:status)
-          %th= UserPoint.human_attribute_name(:point)
-          %th= UserPoint.human_attribute_name(:created_at)
-        - @user_points.each do |user_point|
+    - if @user_points.blank?
+      %h4 ポイント履歴はありません
+    - else
+      %table.table.table-striped.table-hover
+        %tbody
           %tr
-            %td= user_point.status_i18n
-            %td= user_point.point
-            %td= user_point.created_at
+            %th= UserPoint.human_attribute_name(:status)
+            %th= UserPoint.human_attribute_name(:point)
+            %th= UserPoint.human_attribute_name(:created_at)
+          - @user_points.each do |user_point|
+            %tr
+              %td= user_point.status_i18n
+              %td= number_with_delimiter(user_point.point)
+              %td= user_point.created_at
 
-    = paginate @user_points
+        = paginate @user_points
 
 %br
 
