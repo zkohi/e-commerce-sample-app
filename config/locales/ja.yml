@@ -79,6 +79,7 @@ ja:
         point: ポイント
         created_at: 登録日時
       company: &activerecord_attributes_company
+        id: 業者ID
         email: メールアドレス
         password: パスワード
         password_confirmation: パスワード確認
