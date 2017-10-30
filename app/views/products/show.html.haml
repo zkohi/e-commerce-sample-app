@@ -11,8 +11,9 @@
     .well= simple_format(@product.description)
     %span.lead.price.selling= "価格 #{number_to_currency(@product.price, locale: :ja)}"
 
-    - if @companies.blank?
-      %p 取り扱い会社がありません
+    - product_stocks = @product.product_stocks.includes(:company)
+    - if @product.product_stocks.blank?
+      %h4 取り扱い会社がありません
     - else
       - order = Order.new
       - order.line_items.build
@@ -20,7 +21,7 @@
 
         = f.error_notification
 
-        = f.input :company_id, collection: @companies.map { |company| ["#{company.name}(在庫:#{number_with_delimiter(company.product_stocks.first.stock)}個)", company.id] }, as: :radio_buttons
+        = f.input :company_id, collection: product_stocks.map { |product_stock| ["#{product_stock.company.name}(在庫:#{number_with_delimiter(product_stock.stock)}個)", product_stock.company.id] }, as: :radio_buttons
 
         = f.fields_for :line_items do |line_item|
 

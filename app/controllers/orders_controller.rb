@@ -5,7 +5,7 @@ class OrdersController < Users::ApplicationController
   before_action :set_user_point_total, only: [:edit, :confirm, :update]
 
   def index
-    @orders = current_user.orders.ordered.includes(:company).includes(:user_point).page(params[:page])
+    @orders = current_user.orders.ordered.includes(:company).includes(:user_point).order(created_at: :desc).page(params[:page])
   end
 
   def show

@@ -19,7 +19,7 @@
           %td= number_to_currency(@order.item_total, locale: :ja)
           %td= @order.item_count
           %td= number_to_currency(@order.shipment_total, locale: :ja)
-          %td= number_with_delimiter(@order.point_total)
+          %td= @order.point_total.present? ? number_with_delimiter(@order.point_total) : 0
           %td= number_to_currency(@order.adjustment_total, locale: :ja)
           %td= number_to_currency(@order.payment_total, locale: :ja)
           %td= number_to_currency(@order.tax_total, locale: :ja)

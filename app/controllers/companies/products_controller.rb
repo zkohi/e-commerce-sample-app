@@ -6,7 +6,7 @@ class Companies::ProductsController < Companies::ApplicationController
   end
 
   def stocks
-    @product_stocks = current_company.product_stocks.all.page(params[:page])
+    @product_stocks = current_company.product_stocks.order(updated_at: :desc).all.page(params[:page])
   end
 
   def show
