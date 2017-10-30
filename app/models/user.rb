@@ -1,9 +1,9 @@
 class User < ApplicationRecord
   has_many :orders
-  has_many :diaries
-  has_many :diary_comments
-  has_many :diary_evaluations
-  has_many :user_points
+  has_many :diaries, dependent: :destroy, inverse_of: :user
+  has_many :diary_comments, dependent: :destroy, inverse_of: :user
+  has_many :diary_evaluations, dependent: :destroy, inverse_of: :user
+  has_many :user_points, dependent: :destroy, inverse_of: :user
 
   mount_uploader :img_filename, UserUploader
 

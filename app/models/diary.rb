@@ -1,9 +1,9 @@
 require 'carrierwave/orm/activerecord'
 
 class Diary < ApplicationRecord
-  belongs_to :user
-  has_many :diary_comments
-  has_many :diary_evaluations, through: :user
+  belongs_to :user, inverse_of: :diaries
+  has_many :diary_comments, dependent: :destroy, inverse_of: :diary
+  has_many :diary_evaluations, dependent: :destroy, inverse_of: :diary
 
   mount_uploader :img_filename, DiaryUploader
 
