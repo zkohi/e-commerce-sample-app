@@ -41,14 +41,20 @@
       .panel-heading
         %h2.panel-title 日記
       .panel-body
-        - @diaries.each do |diary|
-          = link_to diary_path(diary) do
-            .well.col-lg-12
-              - if diary.img_filename
-                .col-lg-4
-                  = image_tag(diary.img_filename, class: 'img-rounded', alt: "#{diary.title}", size: "100x100")
-                .col-lg-8
-                  = simple_format(diary.content)
-              - else
-                .col-lg-12
-                  = simple_format(diary.content)
+        - if @diaries.blank?
+          %p 日記が登録されていません
+        - else
+          - @diaries.each do |diary|
+            = link_to diary_path(diary) do
+              .well.col-lg-12
+                - if diary.img_filename
+                  .col-lg-4
+                    = image_tag(diary.img_filename, class: 'img-rounded', alt: "#{diary.title}", size: "100x100")
+                  .col-lg-8
+                    = simple_format(diary.content)
+                - else
+                  .col-lg-12
+                    = simple_format(diary.content)
+          %br
+
+          = paginate @diaries
