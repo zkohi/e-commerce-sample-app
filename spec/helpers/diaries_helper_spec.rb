@@ -3,6 +3,13 @@ require 'rails_helper'
 RSpec.describe DiariesHelper, type: :helper do
   describe "diary_created_at_ago" do
     describe "change diary created_at to time ago" do
+      before :all do
+        Timecop.freeze(Time.local(2017, 9, 4, 10, 5, 0))
+      end
+
+      after :all do
+        Timecop.return
+      end
 
       subject { helper.diary_created_at_ago(diary) }
 
