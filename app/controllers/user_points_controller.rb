@@ -4,7 +4,7 @@ class UserPointsController < Users::ApplicationController
   before_action :set_user_point_total, only: [:points]
 
   def points
-    @user_points = UserPoint.where.not(status: :total).page(params[:page])
+    @user_points = current_user.user_points.where.not(status: :total).page(params[:page])
   end
 
   def index
