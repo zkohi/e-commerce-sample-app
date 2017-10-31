@@ -19,7 +19,7 @@
         .well
           %h5 新着Good!
           - if latest_evaluation_diary.present?
-            = link_to "#{latest_evaluation_diary.title}に#{latest_evaluation_diary.diary_evaluations.includes(:user).first.user.nickname || '名無し'}さんがGood!しました", latest_evaluation_diary
+            = link_to "#{latest_evaluation_diary.title}に#{latest_evaluation_diary.diary_evaluations.order(created_at: :desc).includes(:user).first.user.nickname || '名無し'}さんがGood!しました", latest_evaluation_diary
           - else
             ありません
 
@@ -27,7 +27,7 @@
         .well
           %h5 新着コメント
           - if latest_comment_diary.present?
-            = link_to "#{latest_comment_diary.title}に#{latest_comment_diary.diary_comments.includes(:user).first.user.nickname || '名無し'}さんがコメントしました", latest_comment_diary
+            = link_to "#{latest_comment_diary.title}に#{latest_comment_diary.diary_comments.order(created_at: :desc).includes(:user).first.user.nickname || '名無し'}さんがコメントしました", latest_comment_diary
           - else
             ありません
 
