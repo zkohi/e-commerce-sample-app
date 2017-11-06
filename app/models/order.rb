@@ -171,6 +171,6 @@ class Order < ApplicationRecord
     end
 
     def save_user_point
-      UserPoint.create(user_id: self.user_id, order_id: self.id, point: -self.point_total, status: 'used').save
+      UserPoint.new(user_id: self.user_id, order_id: self.id, point: -self.point_total, status: 'used').save!
     end
 end

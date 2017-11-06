@@ -11,7 +11,7 @@ RSpec.describe "UserPoints", type: :request do
     end
   end
 
-  describe "GET /coupons/:id/ and POST /points" do
+  describe "GET /coupons/:id/ and POST /user_points" do
     it "shows coupon and use coupon" do
       user = FactoryGirl.create(:user)
       login_as(user, scope: :user)
@@ -22,13 +22,13 @@ RSpec.describe "UserPoints", type: :request do
 
       expect(response).to render_template(:show)
 
-      post points_path, params: {
+      post user_points_path, params: {
         user_point: {
           coupon_id: coupon.id
         }
       }
 
-      expect(response).to redirect_to(points_path)
+      expect(response).to redirect_to(user_points_path)
       follow_redirect!
 
       expect(response).to render_template(:index)
@@ -36,12 +36,12 @@ RSpec.describe "UserPoints", type: :request do
     end
   end
 
-  describe "GET /points" do
-    it "shows points" do
+  describe "GET /user_points" do
+    it "shows user_points" do
       user = FactoryGirl.create(:user)
       login_as(user, scope: :user)
 
-      get points_path
+      get user_points_path
       expect(response).to render_template(:index)
     end
   end

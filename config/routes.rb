@@ -14,7 +14,7 @@ Rails.application.routes.draw do
   resources :products, only: [:index, :show]
   resources :orders, only: [:index, :show]
   resources :coupons, only: [:index, :show]
-  resources :points, only: [:index, :create], controller: 'user_points'
+  resources :user_points, only: [:index, :create]
 
   get 'mypage', to: 'users#show'
   devise_for :users, controllers: {

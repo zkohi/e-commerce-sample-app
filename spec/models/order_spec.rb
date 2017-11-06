@@ -668,6 +668,10 @@ RSpec.describe Order, type: :model do
   describe "save_user_point" do
     subject { order.send(:save_user_point) }
 
+    before :each do
+      @user_point_total = create(:user_point, :user_point_total, user: order.user, point: order.point_total + 1)
+    end
+
     let(:order) { create(:order, :with_point_total) }
     let(:user_point) { UserPoint.find_by(order_id: order.id, user_id: order.user.id) }
 
@@ -683,6 +687,7 @@ RSpec.describe Order, type: :model do
 
     after :each do
       order.destroy
+      @user_point_total.destroy
       user_point.destroy
     end
   end

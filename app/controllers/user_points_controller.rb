@@ -11,7 +11,7 @@ class UserPointsController < Users::ApplicationController
     @user_point.point = @user_point.coupon.point
 
     if @user_point.save
-      redirect_to points_path, notice: 'クーポンを使用しました'
+      redirect_to user_points_path, notice: 'クーポンを使用しました'
     else
       redirect_to coupon_path(@user_point.coupon_id), notice: 'クーポンを使用できませんでした'
     end
