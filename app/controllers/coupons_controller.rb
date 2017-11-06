@@ -1,6 +1,5 @@
 class CouponsController < Users::ApplicationController
   before_action :set_coupon, only: [:show]
-  before_action :used_coupon?, only: [:create]
 
   def index
     @coupons = Coupon.page(params[:page])
