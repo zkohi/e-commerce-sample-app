@@ -30,4 +30,7 @@
                 =link_to 'ログイン', new_admin_session_path
 
     .container
+      -if notice
+        %p.alert.alert-dismissible.alert-success#notice= notice
+
       = yield
