@@ -32,34 +32,44 @@ RSpec.describe DiariesHelper, type: :helper do
         it { is_expected.to eq "1分前" }
       end
 
-      context "if 3599 seconds ago" do
-        let(:sub_seconds) { 3599 }
-        it { is_expected.to eq "59分前" }
+      context "if 2669 seconds ago" do
+        let(:sub_seconds) { 2669 }
+        it { is_expected.to eq "44分前" }
       end
 
-      context "if 3600 seconds ago" do
-        let(:sub_seconds) { 3600 }
-        it { is_expected.to eq "1時間前" }
+      context "if 2670 seconds ago" do
+        let(:sub_seconds) { 2670 }
+        it { is_expected.to eq "約1時間前" }
       end
 
-      context "if 86399 seconds ago" do
-        let(:sub_seconds) { 86399 }
-        it { is_expected.to eq "23時間前" }
+      context "if 86369 seconds ago" do
+        let(:sub_seconds) { 86369 }
+        it { is_expected.to eq "約24時間前" }
       end
 
-      context "if 86400 seconds ago" do
-        let(:sub_seconds) { 86400 }
+      context "if 86370 seconds ago" do
+        let(:sub_seconds) { 86370 }
         it { is_expected.to eq "1日前" }
       end
 
-      context "if 172799 seconds ago" do
-        let(:sub_seconds) { 172799 }
+      context "if 151169 seconds ago" do
+        let(:sub_seconds) { 151169 }
         it { is_expected.to eq "1日前" }
       end
 
-      context "if 172800 seconds ago" do
-        let(:sub_seconds) { 172800 }
+      context "if 151170 seconds ago" do
+        let(:sub_seconds) { 151170 }
         it { is_expected.to eq "2日前" }
+      end
+
+      context "if 2591969 seconds ago" do
+        let(:sub_seconds) { 2591969 }
+        it { is_expected.to eq "30日前" }
+      end
+
+      context "if 2591970 seconds ago" do
+        let(:sub_seconds) { 2591970 }
+        it { is_expected.to eq "約1ヶ月前" }
       end
     end
   end
