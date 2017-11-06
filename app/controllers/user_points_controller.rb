@@ -1,6 +1,5 @@
 class UserPointsController < Users::ApplicationController
   before_action :used_coupon?, only: [:create]
-  before_action :set_user_point_total, only: [:index]
 
   def index
     @user_points = current_user.user_points.where.not(status: :total).page(params[:page])
