@@ -18,11 +18,11 @@ class User < ApplicationRecord
   validates :nickname, allow_blank: true, length: { maximum: 30 }
 
   def set_diary_evaluation_ids(diaries)
-    @diary_evaluation_ids = self.diary_evaluations.where(diary_id: diaries.pluck(:id)).each_with_object({}) {|i, d| d[i.diary_id] = i.id}
+    @diary_evaluation_ids = self.diary_evaluations.where(diary_id: diaries.pluck(:id)).each_with_object({}) { |i, d| d[i.diary_id] = i.id }
   end
 
   def diary_evaluated?(diary)
-    @diary_evaluation_ids.has_key?(diary.id) 
+    @diary_evaluation_ids.has_key?(diary.id)
   end
 
   def diary_evaluation_id(diary)

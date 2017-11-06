@@ -33,18 +33,18 @@ RSpec.describe UserPoint, type: :model do
     end
   end
 
-    context "status is total" do
-      context "point is -1" do
-        let(:user_point) { build(:user_point, :user_point_total, point: -1) }
-        it do
-          user_point.valid?
-          expect(user_point.errors[:point]).to include("は0以上の値にしてください")
-        end
-      end
-      context "point is zero" do
-        it { expect(build(:user_point, :user_point_total, point: 0)).to be_valid }
+  context "status is total" do
+    context "point is -1" do
+      let(:user_point) { build(:user_point, :user_point_total, point: -1) }
+      it do
+        user_point.valid?
+        expect(user_point.errors[:point]).to include("は0以上の値にしてください")
       end
     end
+    context "point is zero" do
+      it { expect(build(:user_point, :user_point_total, point: 0)).to be_valid }
+    end
+  end
 
   describe "update_total" do
     subject { user_point.send(:update_total) }
