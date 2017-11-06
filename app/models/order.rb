@@ -157,7 +157,7 @@ class Order < ApplicationRecord
           errors.add(:point_total, "は1以上#{use_point_max}以下の値にしてください")
         end
 
-        user_point_total = UserPoint.find_by(user_id: self.user_id, status: :total)
+        user_point_total = user.user_points.total.first
         if user_point_total.blank?
           errors.add(:point_total, "がありません")
         elsif self.point_total > user_point_total.point
