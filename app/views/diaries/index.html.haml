@@ -35,7 +35,7 @@
     -if notice
       %p.alert.alert-dismissible.alert-warning#notice= notice
 
-    - diary_evaluations = current_user.diary_evaluations.where(diary_id: @diaries.pluck(:id)).each_with_object({}) {|i, d| d[i.diary_id] = i.id}
+    - current_user.set_diary_evaluation_ids(@diaries)
     - @diaries.each do |diary| 
       .panel.panel-default
         .panel-body
@@ -60,8 +60,8 @@
           - if diary.user_id == current_user.id
             %span= link_to '日記を見る', diary_path(diary)
           - else
-            - if diary_evaluations.has_key?(diary.id)
-              %span= link_to 'Good!を削除する', diary_evaluation_path(diary, diary_evaluations[diary.id]), method: :delete, data: { confirm: '評価を削除してよろしいですか?' }
+            - if current_user.diary_evaluated?(diary)
+              %span= link_to 'Good!を削除する', diary_evaluation_path(diary, current_user.diary_evaluation_id(diary)), method: :delete, data: { confirm: '評価を削除してよろしいですか?' }
             - else
               %span= link_to 'Good!', diary_evaluations_path(diary), method: :post, data: { confirm: '評価を登録してよろしいですか?' }
             \|

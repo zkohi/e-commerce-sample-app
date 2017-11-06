@@ -1,6 +1,6 @@
 FactoryGirl.define do
   factory :diary_evaluation do
-    user nil
-    diary nil
+    user
+    diary
   end
 end

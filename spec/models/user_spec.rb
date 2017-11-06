@@ -41,4 +41,73 @@ RSpec.describe User, type: :model do
       it { expect(user.errors[:img_filename]).to include("指定された拡張子[\"txt\"]のファイルは許可されていません。許可されている拡張子は[jpg, jpeg, gif, png]です。") }
     end
   end
+
+  describe "set_diary_evaluation_ids" do
+    subject { user.set_diary_evaluation_ids(diaries) }
+
+    let(:diary_evaluation) { create(:diary_evaluation) }
+    let(:user) { diary_evaluation.user }
+    let(:diary) { diary_evaluation.diary }
+    let(:diaries) { [diary] }
+    let(:expected) {
+      {
+        diary_evaluation.diary.id => diary_evaluation.id
+      }
+    }
+
+    it do
+      should
+      expect(user.instance_variable_get(:@diary_evaluation_ids)).to eq expected
+    end
+
+    after :each do
+      user.destroy
+    end
+  end
+
+  describe "diary_evaluated?" do
+    subject { user.diary_evaluated?(diary) }
+
+    before :each do
+      user.set_diary_evaluation_ids(diaries)
+    end
+
+    let(:diary_evaluation) { create(:diary_evaluation) }
+    let(:diary) { diary_evaluation.diary }
+    let(:diaries) { [diary] }
+
+    context "a diary is evaluated by user" do
+      let(:user) { diary_evaluation.user }
+      it { is_expected.to be_truthy }
+    end
+
+    context "a diary is not evaluated by user" do
+      let(:user) { create(:user) }
+      it { is_expected.to be_falsey }
+    end
+
+    after :each do
+      user.destroy
+      diary.destroy
+    end
+  end
+
+  describe "diary_evaluation_id" do
+    subject { user.diary_evaluation_id(diary) }
+
+    before :each do
+      user.set_diary_evaluation_ids(diaries)
+    end
+
+    let(:diary_evaluation) { create(:diary_evaluation) }
+    let(:user) { diary_evaluation.user }
+    let(:diary) { diary_evaluation.diary }
+    let(:diaries) { [diary] }
+
+    it { is_expected.to eq diary_evaluation.id }
+
+    after :each do
+      user.destroy
+    end
+  end
 end
