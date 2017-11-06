@@ -8,6 +8,4 @@
     Comment:
     %span= @diary_comment.content
 
-  %p
-    URL:
-    %span= diary_url(@diary_comment.diary.id)
+  %p= link_to "日記を見る", diary_url(@diary_comment.diary.id)

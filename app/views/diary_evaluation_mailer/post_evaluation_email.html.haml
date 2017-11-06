@@ -5,6 +5,4 @@
     日記:
     %span= @diary_evaluation.diary.title
 
-  %p
-    URL:
-    %span= diary_url(@diary_evaluation.diary.id)
+  %p= link_to "日記を見る", diary_url(@diary_evaluation.diary.id)
