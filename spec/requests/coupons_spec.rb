@@ -1,6 +1,6 @@
 require 'rails_helper'
 
-RSpec.describe "Companies", type: :request do
+RSpec.describe "Coupons", type: :request do
 
   describe "GET /backoffice/coupons" do
     it "shows Companies" do

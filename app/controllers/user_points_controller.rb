@@ -1,17 +1,9 @@
 class UserPointsController < Users::ApplicationController
-  before_action :set_coupon, only: [:show]
   before_action :used_coupon?, only: [:create]
-  before_action :set_user_point_total, only: [:points]
-
-  def points
-    @user_points = current_user.user_points.where.not(status: :total).page(params[:page])
-  end
+  before_action :set_user_point_total, only: [:index]
 
   def index
-    @coupons = Coupon.page(params[:page])
-  end
-
-  def show
+    @user_points = current_user.user_points.where.not(status: :total).page(params[:page])
   end
 
   def create
@@ -27,10 +19,6 @@ class UserPointsController < Users::ApplicationController
   end
 
   private
-    def set_coupon
-      @coupon = Coupon.find(params[:id])
-    end
-
     def used_coupon?
       if current_user.user_points.where(coupon_id: user_points_params[:coupon_id]).exists?
         redirect_to coupon_path(user_points_params[:coupon_id]), notice: 'クーポンは使用済みです'

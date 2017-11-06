@@ -1,0 +1,33 @@
+-if notice
+  %p.alert.alert-dismissible.alert-success#notice= notice
+
+.panel.panel-warning
+  .panel-heading
+    %h2.panel-title  クーポン一覧
+  .panel-body
+    %div
+      %table.table.table-striped.table-hover
+        %thead
+          %tr
+            %th= Coupon.human_attribute_name(:id)
+            %th= Coupon.human_attribute_name(:code)
+            %th= Coupon.human_attribute_name(:point)
+            %th
+
+        %tbody
+          - used_coupons = current_user.user_points.pluck(:coupon_id)
+          - @coupons.each do |coupon|
+            %tr
+              %td= coupon.id
+              %td= coupon.code
+              %td= number_with_delimiter(coupon.point)
+              - if used_coupons.include?(coupon.id)
+                %td 使用済みです
+              - else
+                %td= link_to '使用する', coupon_path(coupon)
+
+      = paginate @coupons
+
+%br
+
+= link_to 'マイページ', mypage_path

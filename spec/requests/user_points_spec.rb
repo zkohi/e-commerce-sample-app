@@ -31,7 +31,7 @@ RSpec.describe "UserPoints", type: :request do
       expect(response).to redirect_to(points_path)
       follow_redirect!
 
-      expect(response).to render_template(:points)
+      expect(response).to render_template(:index)
       expect(response.body).to include("クーポンを使用しました")
     end
   end
@@ -42,7 +42,7 @@ RSpec.describe "UserPoints", type: :request do
       login_as(user, scope: :user)
 
       get points_path
-      expect(response).to render_template(:points)
+      expect(response).to render_template(:index)
     end
   end
 
