@@ -5,7 +5,7 @@
   .panel-heading
     %h2.panel-title= "現在の#{UserPoint.human_attribute_name(:point)}"
   .panel-body
-    %p= "#{number_with_delimiter(current_user.user_points.total&.first&.point || 0)}ポイント"
+    %p= "#{number_with_delimiter(current_user.user_points.total.first&.point || 0)}ポイント"
 
 - if @user_points.present?
   .panel.panel-warning
