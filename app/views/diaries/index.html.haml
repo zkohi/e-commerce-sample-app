@@ -32,9 +32,6 @@
             ありません
 
   .col-lg-9
-    -if notice
-      %p.alert.alert-dismissible.alert-warning#notice= notice
-
     - current_user.set_diary_evaluation_ids(@diaries)
     - @diaries.each do |diary| 
       .panel.panel-default
