@@ -1,7 +1,4 @@
 .content.col-lg-12
-  -if notice
-    %p.alert.alert-dismissible.alert-warning#notice= notice
-
   - if @products.blank?
     %div 商品は登録されていません
   -else 
