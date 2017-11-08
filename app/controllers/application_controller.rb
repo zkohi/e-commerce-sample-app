@@ -8,8 +8,8 @@ class ApplicationController < ActionController::Base
   protected
 
     def configure_permitted_parameters
-      if devise_controller? && resource_name != :admin
-        devise_parameter_sanitizer.permit(:account_update, keys: [:name, :zipcode, :address])
+      if devise_controller? && resource_name != :company
+        devise_parameter_sanitizer.permit(:account_update, keys: [:name, :zipcode, :address, :nickname, :img_filename])
       end
     end
 
@@ -18,6 +18,8 @@ class ApplicationController < ActionController::Base
     def layout_by_resource
       if devise_controller? && resource_name == :admin
         "backoffice"
+      elsif devise_controller? && resource_name == :company
+        "company"
       else
         "application"
       end
@@ -26,6 +28,8 @@ class ApplicationController < ActionController::Base
     def after_sign_in_path_for(resource)
       if resource.class == Admin
         backoffice_products_path
+      elsif resource.class == Company
+        companies_stocks_path
       else
         root_path
       end
@@ -34,6 +38,8 @@ class ApplicationController < ActionController::Base
     def after_sign_out_path_for(resource_name)
       if resource_name == :admin
         new_admin_session_path
+      elsif resource_name == :company
+        new_company_session_path
       else
         new_user_session_path
       end

@@ -1,40 +1,44 @@
-class OrdersController < ApplicationController
-  before_action :authenticate_user!
-  before_action :set_order, only: [:cart, :edit]
+class OrdersController < Users::ApplicationController
+  before_action :set_order, only: [:edit, :confirm, :update, :destroy_cart_line_item]
+  before_action :order_has_line_items?, only: [:edit, :confirm, :update, :destroy_cart_line_item]
+  before_action :set_order_state_to_ordered, only: [:confirm, :update]
 
   def index
-    @orders = current_user.orders.ordered.page(params[:page])
+    @orders = current_user.orders.ordered.includes(:company).includes(:user_point).order(created_at: :desc).page(params[:page])
   end
 
   def show
-    @order = current_user.orders.ordered.find(params[:id])
+    @order = current_user.orders.ordered.includes(:company).includes(:user_point).find(params[:id])
   end
 
   def create
-    line_item = order_lineitem_params[:line_items_attributes]["0"]
-    if line_item["quantity"].present?
-      @order = current_user.orders.find_or_initialize_by(state: :cart)
-
-      @order.save_for_add_line_item!(order_lineitem_params)
-      redirect_to cart_path
+    @order = current_user.orders.find_or_initialize_by(state: :cart, company_id: order_line_item_params[:company_id])
+    @order.attributes = order_line_item_params
+    if @order.save
+      redirect_to carts_path
     else
-      redirect_to product_path(line_item["product_id"]), notice: '個数を入力してください'
+      redirect_to product_path(order_line_item_params[:line_items_attributes]["0"][:product_id]), notice: '業者を選択し、数量を入力してください'
     end
   end
 
   def cart
+    @orders = current_user.orders.includes(:company).includes(:line_items).where(state: :cart).order(created_at: :desc).all
   end
 
   def edit
-    if @order.line_items.empty?
-      redirect_to cart_path
+  end
+
+  def confirm
+    @order.attributes = order_params
+    if @order.valid?
+      render :confirm
+    else
+      render :edit
     end
   end
 
   def update
-    @order = current_user.orders.cart.first
-
-    if @order && @order.order(order_params)
+    if @order.update(order_params)
       redirect_to @order, notice: 'ご注文完了しました'
     else
       render :edit
@@ -42,17 +46,33 @@ class OrdersController < ApplicationController
   end
 
   def destroy_cart_line_item
-    current_user.orders.cart.first.update_for_delete_line_item!(params[:line_item_id])
-    redirect_to cart_path, notice: '商品が削除されました'
+    @order.line_items.find(params[:line_item_id]).destroy
+    redirect_to carts_path, notice: '商品が削除されました'
   end
 
   private
     def set_order
-      @order = current_user.orders.find_or_initialize_by(state: :cart)
+      @order = current_user.orders.find_or_initialize_by(id: params[:id], state: :cart)
     end
 
-    def order_lineitem_params
-      params.require(:order).permit(:id, line_items_attributes: [:product_id, :quantity])
+    def set_order_state_to_ordered
+      @order.state = "ordered"
+    end
+
+    def order_has_line_items?
+      if @order.line_items.empty?
+        redirect_to carts_path
+      end
+    end
+
+    def order_line_item_params
+      params.require(:order).permit(
+        :company_id,
+        line_items_attributes: [
+          :product_id,
+          :quantity,
+        ]
+      )
     end
 
     def order_params
@@ -70,6 +90,7 @@ class OrdersController < ApplicationController
         :user_name,
         :user_zipcode,
         :user_address,
+        :point_total,
         line_items_attributes: [
           :id,
           :product_id,

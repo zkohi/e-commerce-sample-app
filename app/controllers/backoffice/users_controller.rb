@@ -6,6 +6,7 @@ class Backoffice::UsersController < Backoffice::ApplicationController
   end
 
   def show
+    @user_points = @user.user_points.where.not(status: :total).page(params[:page])
   end
 
   def edit
@@ -13,7 +14,7 @@ class Backoffice::UsersController < Backoffice::ApplicationController
 
   def update
     if @user.update(user_params)
-      redirect_to [:backoffice, @user], notice: 'ユーザーが更新されました'
+      redirect_to backoffice_user_path(@user), notice: 'ユーザーが更新されました'
     else
       render :edit
     end
@@ -30,6 +31,6 @@ class Backoffice::UsersController < Backoffice::ApplicationController
     end
 
     def user_params
-      params.require(:user).permit(:name, :zipcode, :address)
+      params.require(:user).permit(:name, :zipcode, :address, :nickname, :img_filename)
     end
 end

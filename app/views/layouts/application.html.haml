@@ -14,7 +14,9 @@
         .navbar-collapse.collapse
           %ul.nav.navbar-nav.navbar-right
             %li
-              =link_to 'ショッピングカート', cart_path
+              =link_to 'お買い物', products_path
+            %li
+              =link_to 'ショッピングカート', carts_path
             %li
               =link_to 'マイページ', mypage_path
             %li
@@ -24,4 +26,7 @@
                 =link_to 'ログイン', new_user_session_path
 
     .container
+      -if notice
+        %p.alert.alert-dismissible.alert-success#notice= notice
+
       = yield

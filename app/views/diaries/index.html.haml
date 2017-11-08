@@ -1,0 +1,69 @@
+.content.row
+  .col-lg-3
+    .panel.panel-default
+      .panel-body.text-center
+        %p= image_tag(current_user.img_filename, class: 'img-thumbnail', size: "100x100")
+        %p= current_user.nickname
+
+    .panel.panel-default
+      .panel-body
+        %p= link_to "登録情報を変更する", edit_user_registration_path
+        %p= link_to "注文履歴を見る", orders_path
+        %p= link_to "クーポン一覧を見る", coupons_path
+        %p= link_to "ポイント履歴を見る", user_points_path
+        %p= link_to "日記を書く", new_diary_path
+
+    .panel.panel-default
+      .panel-body
+        - latest_evaluation_diary = current_user.diaries.includes(:diary_evaluations).order("diary_evaluations.created_at DESC").where.not(diary_evaluations: { id: nil}).first
+        .well
+          %h5 新着Good!
+          - if latest_evaluation_diary.present?
+            = link_to "#{latest_evaluation_diary.title}に#{latest_evaluation_diary.diary_evaluations.order(created_at: :desc).includes(:user).first.user.nickname || '名無し'}さんがGood!しました", latest_evaluation_diary
+          - else
+            ありません
+
+        - latest_comment_diary = current_user.diaries.includes(:diary_comments).order("diary_comments.created_at DESC").where.not(diary_comments: { id: nil}).first
+        .well
+          %h5 新着コメント
+          - if latest_comment_diary.present?
+            = link_to "#{latest_comment_diary.title}に#{latest_comment_diary.diary_comments.order(created_at: :desc).includes(:user).first.user.nickname || '名無し'}さんがコメントしました", latest_comment_diary
+          - else
+            ありません
+
+  .col-lg-9
+    - current_user.set_diary_evaluation_ids(@diaries)
+    - @diaries.each do |diary| 
+      .panel.panel-default
+        .panel-body
+          .col-lg-12
+            .col-lg-2.text-center
+              = image_tag(diary.user.img_filename, class: 'img-circle', size: "50x50")
+            .col-lg-10
+              %p= diary.title
+              %p
+                %span= diary.user.nickname
+                %span= diary_created_at_ago(diary)
+          .well.col-lg-12
+            - if diary.img_filename
+              .col-lg-4
+                = image_tag(diary.img_filename, class: 'img-rounded', alt: "#{diary.title}", size: "200x200")
+              .col-lg-8
+                = simple_format(diary.content)
+            - else
+              .col-lg-12
+                = simple_format(diary.content)
+
+          - if diary.user_id == current_user.id
+            %span= link_to '日記を見る', diary_path(diary)
+          - else
+            - if current_user.diary_evaluated?(diary)
+              %span= link_to 'Good!を削除する', diary_evaluation_path(diary, current_user.diary_evaluation_id(diary)), method: :delete, data: { confirm: '評価を削除してよろしいですか?' }
+            - else
+              %span= link_to 'Good!', diary_evaluations_path(diary), method: :post, data: { confirm: '評価を登録してよろしいですか?' }
+            \|
+            %span= link_to 'コメントする', diary_path(diary)
+
+  %br
+
+  = paginate @diaries

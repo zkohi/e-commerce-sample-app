@@ -1,0 +1,56 @@
+.content.col-lg-12
+  .panel.panel-default
+    .panel-body
+      .col-lg-12
+        .col-lg-2.text-center
+          = image_tag(@diary.user.img_filename, class: 'img-circle', size: "90x90")
+        .col-lg-10
+          %h1= @diary.title
+          %p
+            %span= @diary.user.nickname
+            %span= diary_created_at_ago(@diary)
+      .well.col-lg-12
+        - if @diary.img_filename
+          .col-lg-4
+            = image_tag(@diary.img_filename, class: 'img-rounded', alt: "#{@diary.title}", size: "250x250")
+          .col-lg-8
+            = simple_format(@diary.content)
+        - else
+          .col-lg-12
+            = simple_format(@diary.content)
+
+  .col-lg-4
+    - if @diary.user_id == current_user.id
+      = link_to '編集する', edit_diary_path(@diary)
+      \|
+      = link_to '削除する', @diary, method: :delete, data: { confirm: '削除してよろしいですか?' }
+      \|
+    - else
+      - if diary_evaluation = current_user.diary_evaluations.find_by(diary_id: @diary.id)
+        = link_to 'Good!を削除する', diary_evaluation_path(@diary, diary_evaluation), method: :delete, data: { confirm: '評価を削除してよろしいですか?' }
+      - else
+        = link_to 'Good!', diary_evaluations_path(@diary), method: :post, data: { confirm: '評価を登録してよろしいですか?' }
+      \|
+    = link_to 'トップページを開く', root_path
+
+  .col-lg-8
+    - if @diary.diary_comments.present?
+      %h3 コメント一覧
+      - @diary.diary_comments.includes(:user).each do |diary_comment|
+        .well.col-lg-12
+          .col-lg-2.text-center
+            = image_tag(diary_comment.user.img_filename, class: 'img-circle', size: "50x50")
+            %p= diary_comment.user.nickname
+          .col-lg-8= simple_format(diary_comment.content)
+          - if diary_comment.user.id == current_user.id
+            .col-lg-2= link_to '削除', diary_comment_path(@diary, diary_comment), method: :delete, data: { confirm: '削除してよろしいですか?' }
+
+    - if @diary.user_id != current_user.id
+      = simple_form_for(DiaryComment.new, url: diary_comments_path(@diary)) do |f|
+        = f.error_notification
+
+        .form-inputs
+          = f.input :content
+
+        .form-actions
+          = f.button :submit

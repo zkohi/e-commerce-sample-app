@@ -1,0 +1,11 @@
+.panel.panel-info
+  .panel-heading
+    %h2.panel-title クーポン編集
+  .panel-body
+    = render 'form'
+
+%br
+
+= link_to 'クーポン詳細', [:backoffice, @coupon]
+\|
+= link_to 'クーポン一覧', backoffice_coupons_path

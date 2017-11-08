@@ -10,54 +10,49 @@ RSpec.describe "Orders", type: :request do
     Timecop.return
   end
 
-  context "Cart is empty" do
-    describe "GET /carts/edit" do
-      it "redirects to a Cart" do
-        user = FactoryGirl.create(:user)
-        login_as(user, scope: :user)
-
-        order = FactoryGirl.create(:order, :ordered)
-
-        get cart_edit_path
-        expect(response).to redirect_to(cart_path)
-      end
-    end
-  end
-
   describe "DELETE /cart/line_items" do
     it "deletes a LineItem and redirects to the Cart page" do
       user = FactoryGirl.create(:user)
       login_as(user, scope: :user)
 
-      product = FactoryGirl.create(:product)
+      product = FactoryGirl.create(:product_with_product_stocks)
 
       get product_path product
       expect(response).to render_template(:show)
 
-      post cart_path, params: {
+      company_id = product.product_stocks.first.company_id
+      post carts_path, params: {
         order: {
-          line_items_attributes: {
-            "0": {
+          company_id: company_id,
+          line_items_attributes: [
+            {
               product_id: product.id,
               quantity: 3
             }
-          }
+          ]
         }
       }
 
-      expect(response).to redirect_to(cart_path)
+      expect(response).to redirect_to(carts_path)
       follow_redirect!
 
       expect(response).to render_template(:cart)
 
-      order = user.orders.find_or_initialize_by(state: :cart)
+      order = user.orders.find_or_initialize_by(state: :cart, company_id: company_id)
 
-      delete destroy_cart_line_item_path line_item_id: order.line_items.first.id
-      expect(response).to redirect_to(cart_path)
+      delete destroy_cart_line_item_path order, line_item_id: order.line_items.first.id
+      expect(response).to redirect_to(carts_path)
       follow_redirect!
 
       expect(response).to render_template(:cart)
       expect(response.body).to include("商品が削除されました")
+
+      get edit_cart_path order
+
+      expect(response).to redirect_to(carts_path)
+      follow_redirect!
+
+      expect(response).to render_template(:cart)
     end
   end
 
@@ -66,31 +61,54 @@ RSpec.describe "Orders", type: :request do
       user = FactoryGirl.create(:user)
       login_as(user, scope: :user)
 
-      product = FactoryGirl.create(:product)
+      product = FactoryGirl.create(:product_with_product_stocks)
 
       get product_path product
       expect(response).to render_template(:show)
 
-      post cart_path, params: {
+      company_id = product.product_stocks.first.company_id
+      post carts_path, params: {
         order: {
-          line_items_attributes: {
-            "0": {
+          company_id: company_id,
+          line_items_attributes: [
+            {
               product_id: product.id,
               quantity: 3
             }
-          }
+          ]
         }
       }
 
-      expect(response).to redirect_to(cart_path)
+      expect(response).to redirect_to(carts_path)
       follow_redirect!
 
       expect(response).to render_template(:cart)
 
-      get cart_edit_path
+      order = user.orders.find_or_initialize_by(state: :cart, company_id: company_id)
+
+      get edit_cart_path order
       expect(response).to render_template(:edit)
 
-      order = user.orders.find_or_initialize_by(state: :cart)
+      patch confirm_cart_path order, params: {
+        order: {
+          user_name: "My Order User Name",
+          user_zipcode: 1234567,
+          user_address: "My Order User Address",
+          shipping_date: Date.today + 2,
+          shipping_time_range: "twelve_to_fourteen",
+          line_items_attributes: [
+            {
+              id: order.line_items[0].id,
+              product_id: order.line_items[0].product_id,
+              quantity: order.line_items[0].quantity,
+              price: order.line_items[0].product.price,
+            }
+          ]
+        }
+      }
+
+      expect(response).to render_template(:confirm)
+
       patch cart_path, params: {
         order: {
           id: order.id,
@@ -106,14 +124,14 @@ RSpec.describe "Orders", type: :request do
           user_address: "My Order User Address",
           shipping_date: Date.today + 2,
           shipping_time_range: "twelve_to_fourteen",
-          line_items_attributes: {
-            "0": {
+          line_items_attributes: [
+            {
               id: order.line_items[0].id,
               product_id: order.line_items[0].product_id,
               quantity: order.line_items[0].quantity,
               price: order.line_items[0].product.price,
             }
-          }
+          ]
         }
       }
 

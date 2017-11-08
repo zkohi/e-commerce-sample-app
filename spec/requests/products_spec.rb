@@ -2,18 +2,18 @@ require 'rails_helper'
 
 RSpec.describe "Products", type: :request do
 
-  describe "GET /" do
+  describe "GET /products" do
     it "shows Products" do
       user = FactoryGirl.create(:user)
       login_as(user, scope: :user)
 
-      get root_path
+      get products_path
       expect(response).to render_template(:index)
     end
   end
 
   describe "GET /products/:id" do
-    it "updates a Product and redirects to the Product's page" do
+    it "shows Product" do
       user = FactoryGirl.create(:user)
       login_as(user, scope: :user)
 

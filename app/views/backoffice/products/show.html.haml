@@ -1,6 +1,3 @@
--if notice
-  %p.alert.alert-dismissible.alert-success#notice= notice
-
 .panel.panel-info
   .panel-heading
     %h2.panel-title 商品詳細
@@ -8,22 +5,22 @@
     %table.table.table-striped.table-hover
       %tbody
         %tr
-          %td 商品名
+          %td= Product.human_attribute_name(:name)
           %td= @product.name
         %tr
-          %td 画像
+          %td= Product.human_attribute_name(:img_filename)
           %td= image_tag(@product.img_filename, class: 'img-thumbnail', alt: "#{@product.name}", size: "250x250")
         %tr
-          %td 価格
-          %td= @product.price
+          %td= Product.human_attribute_name(:price)
+          %td= number_to_currency(@product.price, locale: :ja)
         %tr
-          %td 説明
-          %td= @product.description
+          %td= Product.human_attribute_name(:description)
+          %td= simple_format(@product.description)
         %tr
-          %td 表示/非表示
+          %td= Product.human_attribute_name(:flg_non_display)
           %td= @product.flg_non_display_i18n
         %tr
-          %td 表示順
+          %td= Product.human_attribute_name(:sort_order)
           %td= @product.sort_order
 
 %br

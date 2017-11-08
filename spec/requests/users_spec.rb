@@ -66,7 +66,8 @@ RSpec.describe "Users", type: :request do
           current_password: "userpassword",
           name: "My User Name",
           zipcode: 1234567,
-          address: "My User Address"
+          address: "My User Address",
+          nickname: "My User Nickname"
         }
       }
 

@@ -1,6 +1,3 @@
--if notice
-  %p.alert.alert-dismissible.alert-success#notice= notice
-
 .panel.panel-info.col-md-12
   .panel-body.col-md-4
     .panel.panel-info
@@ -8,18 +5,52 @@
         %h2.panel-title 登録情報
       .panel-body
         %div
-          %label 名前
+          %label= User.human_attribute_name(:img_filename)
+          %p= image_tag(current_user.img_filename, class: 'img-thumbnail', size: "100x100")
+        %div
+          %label= User.human_attribute_name(:nickname)
+          %p= current_user.nickname
+        %div
+          %label= User.human_attribute_name(:name)
           %p= current_user.name
         %div
-          %label 郵便番号
+          %label= User.human_attribute_name(:zipcode)
           %p= current_user.zipcode
         %div
-          %label 住所
+          %label= User.human_attribute_name(:address)
           %p= current_user.address
-  .panel-body.col-md-4
+        %div
+          %label= "現在の#{UserPoint.human_attribute_name(:point)}"
+          %p= "#{number_with_delimiter(current_user.user_points.total.first&.point || 0)}ポイント"
+
     .panel.panel-info
       .panel-heading
         %h2.panel-title メニュー
       .panel-body
         %p= link_to "登録情報を変更する", edit_user_registration_path
         %p= link_to "注文履歴を見る", orders_path
+        %p= link_to "日記を書く", new_diary_path
+        %p= link_to "クーポン一覧を見る", coupons_path
+        %p= link_to "ポイント履歴を見る", user_points_path
+  .panel-body.col-md-8
+    .panel.panel-info
+      .panel-heading
+        %h2.panel-title 日記
+      .panel-body
+        - if @diaries.blank?
+          %p 日記が登録されていません
+        - else
+          - @diaries.each do |diary|
+            = link_to diary_path(diary) do
+              .well.col-lg-12
+                - if diary.img_filename
+                  .col-lg-4
+                    = image_tag(diary.img_filename, class: 'img-rounded', alt: "#{diary.title}", size: "100x100")
+                  .col-lg-8
+                    = simple_format(diary.content)
+                - else
+                  .col-lg-12
+                    = simple_format(diary.content)
+          %br
+
+          = paginate @diaries

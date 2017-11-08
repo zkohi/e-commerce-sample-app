@@ -1,0 +1,15 @@
+%table.table.table-striped.table-hover
+  %thead
+    %tr
+      %th= Product.human_attribute_name(:name)
+      %th= Product.human_attribute_name(:img_filename)
+      %th= Product.human_attribute_name(:price)
+      %th= LineItem.human_attribute_name(:quantity)
+
+  %tbody
+    - @order.line_items.includes(:product).each do |line_item|
+      %tr
+        %td= line_item.product.name
+        %td= image_tag(line_item.product.img_filename, class: 'img-thumbnail', alt: "#{line_item.product.name}", size: "100x100")
+        %td= number_to_currency(line_item.product.price, locale: :ja)
+        %td= line_item.quantity

@@ -1,13 +1,9 @@
-class ProductsController < ApplicationController
-  before_action :authenticate_user!
-
+class ProductsController < Users::ApplicationController
   def index
-    @products = Product.display.page(params[:page]).order("sort_order DESC")
+    @products = Product.display.page(params[:page]).order(sort_order: :desc)
   end
 
   def show
     @product = Product.display.find(params[:id])
-    @order = Order.new
-    @order.line_items.build
   end
 end

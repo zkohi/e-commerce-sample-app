@@ -96,6 +96,16 @@ RSpec.describe Order, type: :model do
       it { expect(order.errors[:item_total]).to include("は0以上の値にしてください") }
     end
 
+    context "point_total is zero" do
+      let(:order) { build(:order, point_total: 0) }
+      it { expect(order.errors[:point_total]).to include("は1以上の値にしてください") }
+    end
+
+    context "point_total greater than 999999" do
+      let(:order) { build(:order, point_total: 1000000) }
+      it { expect(order.errors[:point_total]).to include("は999999以下の値にしてください") }
+    end
+
     context "state is ordered" do
       before :all do
         Timecop.freeze(Time.local(2017, 9, 4, 10, 5, 0))
@@ -110,14 +120,16 @@ RSpec.describe Order, type: :model do
         it { expect(order.errors[:shipping_date]).to include("の日時を正しく入力してください") }
       end
 
-      context "without a shipping_time_range_string" do
-        let(:order) { build(:order, :ordered, shipping_time_range_string: nil) }
-        it { expect(order.errors[:shipping_time_range_string]).to include("を入力してください") }
-      end
+      context "without a shipping_time_range" do
+        context "without a shipping_time_range_string" do
+          let(:order) { build(:order, :ordered, shipping_time_range: nil, shipping_time_range_string: nil) }
+          it { expect(order.errors[:shipping_time_range_string]).to include("を入力してください") }
+        end
 
-      context "with a invalid shipping_time_range_string" do
-        let(:order) { build(:order, :ordered, shipping_time_range_string: "foo") }
-        it { expect(order.errors[:shipping_time_range_string]).to include("は一覧にありません") }
+        context "with a invalid shipping_time_range_string" do
+          let(:order) { build(:order, :ordered, shipping_time_range: nil, shipping_time_range_string: "foo") }
+          it { expect(order.errors[:shipping_time_range_string]).to include("は一覧にありません") }
+        end
       end
 
       context "without a user_name" do
@@ -271,33 +283,43 @@ RSpec.describe Order, type: :model do
     end
   end
 
-  describe "order" do
-    before :each do
-      allow(order).to receive(:update)
+  describe "point_total" do
+    subject { order.valid? }
+
+    context "if point_total greater than adjustment_total" do
+      let(:order) { build(:order, :ordered, point_total: 2601) }
+
+      it do
+        should
+        expect(order.errors[:point_total]).to include("は1以上2600以下の値にしてください")
+      end
     end
 
-    subject { order.order(params) }
+    context "if point is not exist" do
+      let(:order) { build(:order, :ordered, point_total: 1000) }
 
-    let(:order) { build(:order) }
-    let(:params) {
-      {
-        "shipping_time_range" => "twelve_to_fourteen",
-      }
-    }
-
-    it do
-      should
-      expect(order.state).to eq "ordered"
+      it do
+        should
+        expect(order.errors[:point_total]).to include("がありません")
+      end
     end
 
-    it do
-      should
-      expect(order.shipping_time_range_string).to eq Order.shipping_time_ranges_i18n[params["shipping_time_range"]]
-    end
+    context "if point_total greater than users point total" do
+      before :each do
+        user_point.save
+      end
 
-    it do
-      should
-      expect(order).to have_received(:update).with(params)
+      let(:user_point) { UserPoint.create(user_id: order.user.id, status: :total, point: 999) }
+      let(:order) { build(:order, :ordered, point_total: 1000) }
+
+      it do
+        should
+        expect(order.errors[:point_total]).to include("は999以下の値にしてください")
+      end
+
+      after :each do
+        user_point.destroy
+      end
     end
   end
 
@@ -397,175 +419,45 @@ RSpec.describe Order, type: :model do
     end
   end
 
-  describe "save_for_add_line_item!" do
-    before :each do
-      allow(order).to receive(:save!)
-    end
+  describe "set_point_total" do
+    subject { order.send(:set_point_total) }
 
-    before :all do
-      @product = create(:product, :with_price_1000)
-    end
-
-    after :all do
-      @product.destroy
-    end
-
-    subject { order.save_for_add_line_item!(params) }
-
-    let(:order) { build(:order) }
-    let(:quantity) { 10 }
-    let(:params) {
-      {
-        "line_items_attributes" => {
-          "0" => {
-            "product_id" => @product.id,
-            "quantity" => quantity
-          }
-        }
-      }
-    }
-    let!(:expected_item_count) { order.item_count + quantity }
-    let!(:expected_item_total) { order.item_total + @product.price * quantity }
-    let!(:expected_shipment_total) { 1800 }
-    let!(:expected_payment_total) { 400 }
-    let!(:expected_adjustment_total) { expected_item_total + expected_shipment_total + expected_payment_total }
-    let!(:expected_tax_total) { (expected_adjustment_total * 0.08).floor }
-    let!(:expected_total) { expected_adjustment_total + expected_tax_total }
+    let(:order) { build(:order, :with_point_total) }
 
     it do
       should
-      expect(order.item_count).to eq expected_item_count
-      expect(order.item_total).to eq expected_item_total
-      expect(order.shipment_total).to eq expected_shipment_total
-      expect(order.payment_total).to eq expected_payment_total
-      expect(order.adjustment_total).to eq expected_adjustment_total
-      expect(order.tax_total).to eq expected_tax_total
-      expect(order.total).to eq expected_total
-      expect(order).to have_received(:save!).with(params)
-    end
-  end
-
-  describe "update_for_delete_line_item!" do
-    before :each do
-      allow(order).to receive(:update!)
-    end
-
-    subject { order.update_for_delete_line_item!(delete_line_item.id) }
-
-    let!(:order) { create(:order_with_line_items, line_items_count: 2).reload }
-    let!(:delete_line_item) { order.line_items.first }
-    let!(:remine_line_item) { order.line_items.last }
-
-    let!(:expected_item_count) { remine_line_item.quantity }
-    let!(:expected_item_total) { remine_line_item.product.price * remine_line_item.quantity }
-    let!(:expected_shipment_total) { 1200 }
-    let!(:expected_payment_total) { 400 }
-    let!(:expected_adjustment_total) { expected_item_total + expected_shipment_total + expected_payment_total }
-    let!(:expected_tax_total) { (expected_adjustment_total * 0.08).floor }
-    let!(:expected_total) { expected_adjustment_total + expected_tax_total }
-
-    it do
-      should
-      expect(order.item_count).to eq expected_item_count
-      expect(order.item_total).to eq expected_item_total
-      expect(order.shipment_total).to eq expected_shipment_total
-      expect(order.payment_total).to eq expected_payment_total
-      expect(order.adjustment_total).to eq expected_adjustment_total
-      expect(order.tax_total).to eq expected_tax_total
-      expect(order.total).to eq expected_total
-      expect(order).to have_received(:update!).with({})
+      expect(order.point_total).to eq 1000
     end
   end
 
   describe "set_item_count" do
-    subject { order.send(:set_item_count, line_items_attributes) }
+    subject { order.send(:set_item_count) }
 
-    let(:order) { build(:order, item_count: item_count) }
-    let(:item_count) { 2 }
-    let(:quantity) { 10 }
-    let(:expected) { 12 }
-    let(:line_items_attributes) {
-      {
-        "quantity" => quantity
-      }
-    }
+    let(:order) { create(:order_with_line_items).reload }
 
     it do
       should
-      expect(order.item_count).to eq expected
-    end
-  end
-
-  describe "sum_item_count" do
-    before :each do
-      allow(order.line_items).to receive(:sum).with(:quantity).and_return(expected)
-      allow(expected).to receive(:to_i).and_return(expected)
+      expect(order.item_count).to eq 20
     end
 
-    subject { order.send(:sum_item_count) }
-
-    let(:order) { build(:order) }
-    let(:expected) { double("expected") }
-
-    it do
-      should
-      expect(order.item_count).to eq expected
-    end
-
-    it do
-      should
-      expect(order.line_items).to have_received(:sum).with(:quantity)
+    after :each do
+      order.destroy
     end
   end
 
   describe "set_item_total" do
-    before :each do
-      allow(Product).to receive(:find).with(product_id).and_return(product)
-    end
+    subject { order.send(:set_item_total) }
 
-    subject { order.send(:set_item_total, line_items_attributes) }
-
-    let(:order) { build(:order, item_total: item_total) }
-    let(:item_total) { 1000 }
-    let(:quantity) { 10 }
-    let(:price) { 123 }
-    let(:expected) { 2230 }
-    let(:product) { double("product", price: price) }
-    let(:product_id) { double("product_id") }
-    let(:line_items_attributes) {
-      {
-        "product_id" => product_id,
-        "quantity" => quantity
-      }
-    }
-
-    it do
-      should
-      expect(order.item_total).to eq expected
-    end
-  end
-
-  describe "sum_item_total" do
-    before :each do
-      allow(order.line_items).to receive(:includes).with(:product).and_return(products)
-      allow(products).to receive(:sum).with('products.price * quantity').and_return(expected)
-      allow(expected).to receive(:to_i).and_return(expected)
-    end
-
-    subject { order.send(:sum_item_total) }
-
-    let(:order) { build(:order) }
-    let(:products) { double("products") }
-    let(:expected) { double("expected") }
+    let(:order) { create(:order_with_line_items).reload }
+    let(:expected) { 20000 }
 
     it do
       should
       expect(order.item_total).to eq expected
     end
 
-    it do
-      should
-      expect(products).to have_received(:sum).with('products.price * quantity')
+    after :each do
+      order.destroy
     end
   end
 
@@ -638,65 +530,59 @@ RSpec.describe Order, type: :model do
   describe "set_payment_total" do
     subject { order.send(:set_payment_total) }
 
-    let(:order) { build(:order, item_total: item_total) }
+    let(:order) { build(:order, adjustment_total: adjustment_total) }
 
-    context "if item_total is zero" do
-      let(:item_total) { 0 }
-      let(:expected) { 0 }
+    context "if adjustment_total is zero" do
+      let(:adjustment_total) { 0 }
 
       it do
         should
-        expect(order.payment_total).to eq expected
+        expect(order.payment_total).to eq 0
       end
     end
 
-    context "if item_total is 9999" do
-      let(:item_total) { 9999 }
-      let(:expected) { 300 }
+    context "if adjustment_total is 9999" do
+      let(:adjustment_total) { 9999 }
 
       it do
         should
-        expect(order.payment_total).to eq expected
+        expect(order.payment_total).to eq 300
       end
     end
 
-    context "if item_total is 10000" do
-      let(:item_total) { 10000 }
-      let(:expected) { 400 }
+    context "if adjustment_total is 10000" do
+      let(:adjustment_total) { 10000 }
 
       it do
         should
-        expect(order.payment_total).to eq expected
+        expect(order.payment_total).to eq 400
       end
     end
 
-    context "if item_total is 29999" do
-      let(:item_total) { 29999 }
-      let(:expected) { 400 }
+    context "if adjustment_total is 29999" do
+      let(:adjustment_total) { 29999 }
 
       it do
         should
-        expect(order.payment_total).to eq expected
+        expect(order.payment_total).to eq 400
       end
     end
 
-    context "if item_total is 99999" do
-      let(:item_total) { 99999 }
-      let(:expected) { 600 }
+    context "if adjustment_total is 99999" do
+      let(:adjustment_total) { 99999 }
 
       it do
         should
-        expect(order.payment_total).to eq expected
+        expect(order.payment_total).to eq 600
       end
     end
 
-    context "if item_total is 100000" do
-      let(:item_total) { 100000 }
-      let(:expected) { 1000 }
+    context "if adjustment_total is 100000" do
+      let(:adjustment_total) { 100000 }
 
       it do
         should
-        expect(order.payment_total).to eq expected
+        expect(order.payment_total).to eq 1000
       end
     end
   end
@@ -704,40 +590,51 @@ RSpec.describe Order, type: :model do
   describe "set_adjustment_total" do
     subject { order.send(:set_adjustment_total) }
 
-    let(:order) { build(:order, item_total: item_total, shipment_total: shipment_total, payment_total: payment_total) }
-    let(:shipment_total) { 10 }
-    let(:item_total) { 200 }
-    let(:payment_total) { 3000 }
-    let(:expected) { 3210 }
+    let(:order) { build(:order, item_total: item_total, shipment_total: shipment_total, point_total: point_total) }
+    let(:shipment_total) { 600 }
+    let(:item_total) { 1000 }
 
-    it do
-      should
-      expect(order.adjustment_total).to eq expected
+    context "if point_total is present" do
+      let(:point_total) { 100 }
+
+      it do
+        should
+        expect(order.adjustment_total).to eq 1500
+      end
+    end
+
+    context "if point_total is not present" do
+      let(:point_total) { nil }
+
+      it do
+        should
+        expect(order.adjustment_total).to eq 1600
+      end
     end
   end
 
   describe "set_tax_total" do
     subject { order.send(:set_tax_total) }
 
-    let(:order) { build(:order, adjustment_total: adjustment_total) }
+    let(:order) { build(:order, adjustment_total: adjustment_total, payment_total: payment_total) }
 
     context "小数点が発生する場合" do
-      let(:adjustment_total) { 30 }
-      let(:expected) { 2 }
+      let(:adjustment_total) { 10 }
+      let(:payment_total) { 20 }
 
       it "小数点以下は切り捨てられること" do
         should
-        expect(order.tax_total).to eq expected
+        expect(order.tax_total).to eq 2
       end
     end
 
     context "小数点が発生しない場合" do
-      let(:adjustment_total) { 3000 }
-      let(:expected) { 240 }
+      let(:adjustment_total) { 1000 }
+      let(:payment_total) { 2000 }
 
       it do
         should
-        expect(order.tax_total).to eq expected
+        expect(order.tax_total).to eq 240
       end
     end
   end
@@ -745,14 +642,53 @@ RSpec.describe Order, type: :model do
   describe "set_total" do
     subject { order.send(:set_total) }
 
-    let(:order) { build(:order, adjustment_total: adjustment_total, tax_total: tax_total) }
-    let(:adjustment_total) { 3000 }
+    let(:order) { build(:order, adjustment_total: adjustment_total, payment_total: payment_total, tax_total: tax_total) }
+    let(:adjustment_total) { 2000 }
+    let(:payment_total) { 1000 }
     let(:tax_total) { 240 }
     let(:expected) { 3240 }
 
     it do
       should
       expect(order.total).to eq expected
+    end
+  end
+
+  describe "set_shipping_time_range_string" do
+    subject { order.send(:set_shipping_time_range_string) }
+
+    let(:order) { build(:order) }
+
+    it do
+      should
+      expect(order.shipping_time_range_string).to eq "8時〜12時"
+    end
+  end
+
+  describe "save_user_point" do
+    subject { order.send(:save_user_point) }
+
+    before :each do
+      @user_point_total = create(:user_point, :user_point_total, user: order.user, point: order.point_total + 1)
+    end
+
+    let(:order) { create(:order, :with_point_total) }
+    let(:user_point) { UserPoint.find_by(order_id: order.id, user_id: order.user.id) }
+
+    it do
+      should
+      expect(user_point.point).to eq -order.point_total
+    end
+
+    it do
+      should
+      expect(user_point.status).to eq "used"
+    end
+
+    after :each do
+      order.destroy
+      @user_point_total.destroy
+      user_point.destroy
     end
   end
 

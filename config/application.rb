@@ -18,6 +18,7 @@ module ECommerceSampleApp
       g.test_framework :rspec,
         fixture: true,
         fixture_replacement: :factory_girl,
+        controller_specs: false,
         view_specs: false,
         routing_specs: false,
         helper_specs: false,

@@ -8,6 +8,9 @@
         = t(".currently_waiting_confirmation_for_email", email: resource.unconfirmed_email)
     = f.input :password, autocomplete: "off", hint: t(".leave_blank_if_you_don_t_want_to_change_it"), required: false
     = f.input :password_confirmation, required: false
+    = f.input :img_filename, required: false
+    = image_tag(resource.img_filename, class: 'img-thumbnail', alt: "#{resource.name}", size: "250x250")
+    = f.input :nickname, required: false
     = f.input :name, required: false
     = f.input :zipcode, required: false
     = f.input :address, required: false
