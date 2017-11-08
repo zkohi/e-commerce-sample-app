@@ -469,65 +469,42 @@ RSpec.describe Order, type: :model do
   describe "set_shipment_total" do
     subject { order.send(:set_shipment_total) }
 
-    let(:order) { build(:order, item_count: item_count) }
+    let(:company) { build(:company, quantity_per_box: 5) }
+    let(:order) { build(:order, company: company, item_count: item_count) }
 
-    context "if item_count is zero" do
-      let(:item_count) { 0 }
-      let(:expected) { 0 }
-
-      it do
-        should
-        expect(order.shipment_total).to eq expected
-      end
-    end
-
-    context "if item_count is 1" do
-      let(:item_count) { 1 }
-      let(:expected) { 600 }
-
-      it do
-        should
-        expect(order.shipment_total).to eq expected
-      end
-    end
-
-    context "if item_count is 5" do
+    context "if item_count is equal company.quantity_per_box" do
       let(:item_count) { 5 }
-      let(:expected) { 600 }
 
       it do
         should
-        expect(order.shipment_total).to eq expected
+        expect(order.shipment_total).to eq 600
       end
     end
 
-    context "if item_count is 6" do
+    context "if item_count is greater than company.quantity_per_box" do
       let(:item_count) { 6 }
-      let(:expected) { 1200 }
 
       it do
         should
-        expect(order.shipment_total).to eq expected
+        expect(order.shipment_total).to eq 1200
       end
     end
 
-    context "if item_count is 10" do
+    context "if item_count is equal company.quantity_per_box * 2" do
       let(:item_count) { 10 }
-      let(:expected) { 1200 }
 
       it do
         should
-        expect(order.shipment_total).to eq expected
+        expect(order.shipment_total).to eq 1200
       end
     end
 
-    context "if item_count is 11" do
+    context "if item_count is greater than company.quantity_per_box * 2 + 1" do
       let(:item_count) { 11 }
-      let(:expected) { 1800 }
 
       it do
         should
-        expect(order.shipment_total).to eq expected
+        expect(order.shipment_total).to eq 1800
       end
     end
   end

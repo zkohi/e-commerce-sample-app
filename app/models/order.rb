@@ -112,7 +112,7 @@ class Order < ApplicationRecord
     end
 
     def set_shipment_total
-      self.shipment_total = (self.item_count / 5.0).ceil * 600
+      self.shipment_total = (self.item_count / self.company.quantity_per_box.to_f).ceil * 600
     end
 
     def set_payment_total
