@@ -29,6 +29,7 @@ class Order < ApplicationRecord
     validates :user_name, presence: true, length: { maximum: 30 }
     validates :user_zipcode, presence: true, numericality: { only_integer: true }, length: { is: 7 }
     validates :user_address, presence: true, length: { maximum: 100 }
+    validates :payment_type, presence: true, inclusion: { in: ['cash_on_delivery', 'credit'] }
   end
 
   after_find :set_item_count, :set_item_total, :set_shipment_total, :set_adjustment_total, :set_payment_total, :set_tax_total, :set_total, if: :cart?
@@ -62,6 +63,11 @@ class Order < ApplicationRecord
     sixteen_to_eighteen: 3,
     eighteen_to_twenty: 4,
     twenty_to_twenty_one: 5
+  }
+
+  enum payment_type: {
+    cash_on_delivery: 0,
+    credit: 1
   }
 
   def available_shipping_date_range

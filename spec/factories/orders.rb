@@ -30,6 +30,7 @@ FactoryGirl.define do
       item_total 2000
       shipment_state 0
       payment_state 0
+      payment_type "cash_on_delivery"
       shipment_total 600
       adjustment_total 2600
       payment_total 300

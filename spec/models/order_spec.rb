@@ -161,6 +161,11 @@ RSpec.describe Order, type: :model do
         let(:order) { build(:order, :ordered, user_address: "a" * 101) }
         it { expect(order.errors[:user_address]).to include("は100文字以内で入力してください") }
       end
+
+      context "without a payment_type" do
+        let(:order) { build(:order, :ordered, payment_type: nil) }
+        it { expect(order.errors[:payment_type]).to include("を入力してください") }
+      end
     end
   end
 

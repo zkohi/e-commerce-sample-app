@@ -96,6 +96,7 @@ RSpec.describe "Orders", type: :request do
           user_address: "My Order User Address",
           shipping_date: Date.today + 2,
           shipping_time_range: "twelve_to_fourteen",
+          payment_type: "cash_on_delivery",
           line_items_attributes: [
             {
               id: order.line_items[0].id,
@@ -124,6 +125,7 @@ RSpec.describe "Orders", type: :request do
           user_address: "My Order User Address",
           shipping_date: Date.today + 2,
           shipping_time_range: "twelve_to_fourteen",
+          payment_type: "cash_on_delivery",
           line_items_attributes: [
             {
               id: order.line_items[0].id,
