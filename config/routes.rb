@@ -40,7 +40,13 @@ Rails.application.routes.draw do
 
   devise_for :companies, controllers: {
     sessions: "companies/sessions",
+    registrations: "companies/registrations",
   }
+
+  devise_scope :company do
+    get 'companies/edit', to: 'companies/registrations#edit', as: 'edit_company_registration'
+    patch 'companies', to: 'companies/registrations#update', as: 'company_registration'
+  end
 
   namespace :companies, path: '/companies' do
     resources :products, only: [:index, :show] do

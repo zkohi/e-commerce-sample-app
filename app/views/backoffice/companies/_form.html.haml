@@ -1,4 +1,4 @@
-= simple_form_for(@company, url: backoffice_companies_path, html: {class: 'form-horizontal'}, defaults: { wrapper_html: { class: 'col-lg-12' } }) do |f|
+= simple_form_for([:backoffice, @company], html: {class: 'form-horizontal'}, defaults: { wrapper_html: { class: 'col-lg-12' } }) do |f|
   = f.error_notification
 
   .form-inputs

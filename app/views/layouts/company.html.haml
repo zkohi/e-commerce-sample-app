@@ -18,6 +18,8 @@
             %li
               =link_to '商品在庫一覧', companies_stocks_path
             %li
+              =link_to '登録情報変更', edit_company_registration_path
+            %li
               -if company_signed_in?
                 =link_to 'ログアウト', destroy_company_session_path
               -else
