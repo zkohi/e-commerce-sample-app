@@ -43,7 +43,7 @@ ActiveRecord::Schema.define(version: 20171108050349) do
     t.string "name", null: false
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
-    t.integer "quantity_per_box"
+    t.integer "quantity_per_box", null: false
     t.index ["email"], name: "index_companies_on_email", unique: true
     t.index ["reset_password_token"], name: "index_companies_on_reset_password_token", unique: true
   end

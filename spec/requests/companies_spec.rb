@@ -62,7 +62,8 @@ RSpec.describe "Companies", type: :request do
           email: "test@gmail.com",
           password: "companypassword",
           password_confirmation: "companypassword",
-          name: "My Company"
+          name: "My Company",
+          quantity_per_box: 10
         }
       }
 
@@ -89,7 +90,8 @@ RSpec.describe "Companies", type: :request do
           email: "test-edit@gmail.com",
           password: "companypasswordedit",
           password_confirmation: "companypasswordedit",
-          name: "My Company Edit"
+          name: "My Company Edit",
+          quantity_per_box: 100
         }
       }
 

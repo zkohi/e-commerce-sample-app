@@ -44,6 +44,6 @@ class Backoffice::CompaniesController < Backoffice::ApplicationController
     end
 
     def company_params
-      params.require(:company).permit(:email, :password, :password_confirmation, :name)
+      params.require(:company).permit(:email, :password, :password_confirmation, :name, :quantity_per_box)
     end
 end

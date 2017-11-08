@@ -83,7 +83,8 @@ ja:
         email: メールアドレス
         password: パスワード
         password_confirmation: パスワード確認
-        name:  業者名
+        name: 業者名
+        quantity_per_box: 1箱の数量
       product_stock: &activerecord_attributes_product_stock
         stock: 在庫数
     errors:

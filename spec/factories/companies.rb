@@ -4,5 +4,6 @@ FactoryGirl.define do
     password "userpassword"
     password_confirmation "userpassword"
     name Faker::Name.unique.name
+    quantity_per_box Faker::Number.between(0, 999999)
   end
 end
