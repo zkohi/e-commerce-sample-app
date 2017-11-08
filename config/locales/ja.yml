@@ -45,6 +45,7 @@ ja:
       order: &activerecord_attributes_order
         id: 注文番号
         company_id: 業者
+        state: 状態
         item_total: 商品料金
         item_count: 数量
         shipment_total: 配送料
@@ -146,6 +147,12 @@ ja:
         display: 表示
         non_display: 非表示
     order:
+      state:
+        cart: カート
+        ordered: 注文済み
+        prosessing: 発送処理中
+        done: 処理中発送済
+        canceled: キャンセル
       shipment_state:
         unshipped: 未出荷
         shipped: 出荷済

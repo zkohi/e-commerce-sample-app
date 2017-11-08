@@ -6,6 +6,12 @@
       .panel-heading
         %h2.panel-title= @order.company.present? ? "#{@order.company.name}へのご注文" : "注文した商品"
       .panel-body
+        .panel.panel-success
+          .panel-heading
+            %h3.panel-title= "#{Order.human_attribute_name(:state)} : #{@order.state_i18n}"
+          - if @order.ordered?
+            .panel-body
+              %td= link_to 'キャンセルする', cancel_order_path(@order), method: :patch, data: { confirm: 'キャンセルしてよろしいですか?' }
         %table.table.table-striped.table-hover
           %thead
             %tr

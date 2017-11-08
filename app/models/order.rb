@@ -43,7 +43,10 @@ class Order < ApplicationRecord
 
   enum state: {
     cart: 0,
-    ordered: 1
+    ordered: 1,
+    prosessing: 2,
+    done: 3,
+    canceled: 4
   }
 
   enum shipment_state: {

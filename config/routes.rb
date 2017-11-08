@@ -11,8 +11,10 @@ Rails.application.routes.draw do
   patch 'carts/:id/confirm', to: 'orders#confirm', as: 'confirm_cart'
   delete 'carts/:id/line_items', to: 'orders#destroy_cart_line_item', as: 'destroy_cart_line_item'
 
-  resources :products, only: [:index, :show]
   resources :orders, only: [:index, :show]
+  patch 'orders/:id/cancel', to: 'orders#cancel', as: 'cancel_order'
+
+  resources :products, only: [:index, :show]
   resources :coupons, only: [:index, :show]
   resources :user_points, only: [:index, :create]
 

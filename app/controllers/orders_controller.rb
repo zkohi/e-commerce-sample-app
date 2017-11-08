@@ -4,11 +4,11 @@ class OrdersController < Users::ApplicationController
   before_action :set_order_state_to_ordered, only: [:confirm, :update]
 
   def index
-    @orders = current_user.orders.ordered.includes(:company).includes(:user_point).order(created_at: :desc).page(params[:page])
+    @orders = current_user.orders.where.not(state: :cart).includes(:company).includes(:user_point).order(created_at: :desc).page(params[:page])
   end
 
   def show
-    @order = current_user.orders.ordered.includes(:company).includes(:user_point).find(params[:id])
+    @order = current_user.orders.where.not(state: :cart).includes(:company).includes(:user_point).find(params[:id])
   end
 
   def create
@@ -42,6 +42,16 @@ class OrdersController < Users::ApplicationController
       redirect_to @order, notice: 'ご注文完了しました'
     else
       render :edit
+    end
+  end
+
+  def cancel
+    @order = current_user.orders.ordered.find(params[:id])
+    @order.state = "canceled"
+    if @order.save
+      redirect_to @order, notice: 'ご注文をキャンセルしました'
+    else
+      redirect_to @order, notice: 'ご注文をキャンセルできませんでした'
     end
   end
 
