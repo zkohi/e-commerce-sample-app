@@ -28,7 +28,7 @@
               %tr
                 %td= order.company.present? ? order.company.name : "-"
                 %td= order.id
-                %td= order.item_count
+                %td= number_with_delimiter(order.item_count)
                 %td= number_to_currency(order.item_total, locale: :ja)
                 %td= number_to_currency(order.shipment_total, locale: :ja)
                 %td= number_with_delimiter(order.user_point.present? ? order.user_point.point.abs : 0)

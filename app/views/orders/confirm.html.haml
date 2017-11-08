@@ -10,7 +10,7 @@
 
         .panel.panel-danger
           .panel-heading
-            %h2.panel-title 配送先と配送日時
+            %h2.panel-title 配送先/配送日時/支払い方法
           .panel-body
             %table.table.table-striped.table-hover
               %thead
@@ -20,6 +20,7 @@
                   %th= Order.human_attribute_name(:user_address)
                   %th= Order.human_attribute_name(:shipping_date)
                   %th= Order.human_attribute_name(:shipping_time_range)
+                  %th= Order.human_attribute_name(:payment_type)
 
               %tbody
                 %tr
@@ -28,6 +29,7 @@
                   %td= @order.user_address
                   %td= @order.shipping_date
                   %td= @order.shipping_time_range_i18n
+                  %td= @order.payment_type_i18n
 
             = simple_form_for(@order, url: cart_path, html: {class: 'form-horizontal'}, defaults: { wrapper_html: { class: 'col-lg-12' } }) do |f|
               = f.error_notification
@@ -45,6 +47,7 @@
               = f.hidden_field :user_address, input_html: { value: f.object.user_address || current_user.address }
               = f.hidden_field :shipping_date, as: :string, input_html: {"data-datepicker-options" => @order.available_shipping_date_range.to_json }
               = f.hidden_field :shipping_time_range, as: :select, collection: Order.shipping_time_ranges.map { |k, v| [ApplicationController.helpers.t("enums.order.shipping_time_range.#{k}"), k] }, include_blank: false
+              = f.hidden_field :payment_type, input_html: { value: f.object.payment_type }
               = f.hidden_field :point_total, input_html: { value: f.object.point_total }
 
               .col-lg-12

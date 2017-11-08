@@ -66,8 +66,8 @@ class Order < ApplicationRecord
   }
 
   enum payment_type: {
-    cash_on_delivery: 0,
-    credit: 1
+    credit: 0,
+    cash_on_delivery: 1
   }
 
   def available_shipping_date_range

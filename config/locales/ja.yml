@@ -55,11 +55,14 @@ ja:
         user_name: 名前
         user_zipcode: 郵便番号
         user_address: 住所
+        shipping_count:  配送数
         shipping_date: 配送日
         shipping_time_range: 配送時間帯
         shipping_time_range_string: 配送時間帯
         shipment_state: 配送状況
         payment_state: 支払い状況
+        payment_type: 支払い方法
+        credit_cart_number: クレジットカード番号
         point_total: ポイント利用
       diary: &activerecord_attributes_diary
         title: タイトル
@@ -150,8 +153,8 @@ ja:
         unpayed: 未払い
         payed: 支払済
       payment_type:
-        cash_on_delivery: 代引き
         credit: クレジット
+        cash_on_delivery: 代引き
       shipping_time_range:
         eight_to_twelve: 8時〜12時
         twelve_to_fourteen: 12時〜14時
