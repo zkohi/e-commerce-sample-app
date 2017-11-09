@@ -38,15 +38,22 @@ class Order < ApplicationRecord
 
   with_options if: Proc.new { |order| order.point_total.present? } do
     before_validation :set_point_total, :set_adjustment_total, :set_payment_total, :set_tax_total, :set_total
-    after_update :save_user_point
+    after_update :save_user_point!
   end
+
+  after_update :add_product_stock!, if: :canceled?
+  after_update :cancel_user_point!, if: Proc.new { |order| order.user_point.present? && order.canceled? }
+
+  after_update :sub_product_stock!, if: :reordered?
+  after_update :reorder_user_point!, if: Proc.new { |order| order.user_point.present? && order.reordered? }
 
   enum state: {
     cart: 0,
     ordered: 1,
     prosessing: 2,
     shipped: 3,
-    canceled: 4
+    canceled: 4,
+    reordered: 5,
   }
 
   enum payment_state: {
@@ -174,7 +181,25 @@ class Order < ApplicationRecord
       self.shipping_time_range_string = Order.shipping_time_ranges_i18n[self.shipping_time_range]
     end
 
-    def save_user_point
+    def save_user_point!
       UserPoint.new(user_id: self.user_id, order_id: self.id, point: -self.point_total, status: 'used').save!
+    end
+
+    def cancel_user_point!
+      self.user_point.status = 'canceled'
+      self.user_point.save!
+    end
+
+    def reorder_user_point!
+      self.user_point.status = 'used'
+      self.user_point.save!
+    end
+
+    def sub_product_stock!
+      self.line_items.each { |line_item| line_item.sub_product_stock! }
+    end
+
+    def add_product_stock!
+      self.line_items.each { |line_item| line_item.add_product_stock! }
     end
 end

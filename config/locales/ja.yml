@@ -152,6 +152,7 @@ ja:
         prosessing: 発送処理中
         shipped: 処理中発送済
         canceled: キャンセル
+        reordered: 注文済み
       payment_state:
         unpayed: 未払い
         payed: 支払済
@@ -171,6 +172,7 @@ ja:
         used: ポイント利用
         coupon: クーポン利用
         admin: 管理者登録
+        canceled: 注文キャンセル済み
 
   errors:
     messages:

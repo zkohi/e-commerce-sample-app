@@ -23,6 +23,9 @@ FactoryGirl.define do
     trait :with_point_total do
       point_total "1000"
     end
+    trait :with_user_point do
+      user_point
+    end
     trait :ordered do
       state "ordered"
       item_count 2

@@ -10,10 +10,10 @@
           .panel-heading
             %h3.panel-title= "#{Order.human_attribute_name(:state)} : #{@order.state_i18n}"
           .panel-body
-            - if @order.ordered?
+            - if @order.ordered? || @order.reordered?
               %p= link_to "#{ApplicationController.helpers.t('enums.order.state.canceled')}にする", cancel_order_path(@order), method: :patch, data: { confirm: "#{ApplicationController.helpers.t('enums.order.state.canceled')}にしてよろしいですか?" }
             - elsif @order.canceled?
-              %p= link_to "#{ApplicationController.helpers.t('enums.order.state.ordered')}にする", revert_order_path(@order), method: :patch, data: { confirm: "#{ApplicationController.helpers.t('enums.order.state.ordered')}にしてよろしいですか?" }
+              %p= link_to "#{ApplicationController.helpers.t('enums.order.state.reordered')}にする", reorder_order_path(@order), method: :patch, data: { confirm: "#{ApplicationController.helpers.t('enums.order.state.reordered')}にしてよろしいですか?" }
             - else
               %p キャンセルはできません
         %table.table.table-striped.table-hover

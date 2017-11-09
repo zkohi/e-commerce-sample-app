@@ -1,4 +1,5 @@
 class Companies::OrdersController < Companies::ApplicationController
+  before_action :set_ordered_order, only: [:prosessing, :cancel]
 
   def index
     @orders = current_company.orders.where.not(state: :cart).includes(:user_point).order(created_at: :desc).page(params[:page])
@@ -9,7 +10,6 @@ class Companies::OrdersController < Companies::ApplicationController
   end
 
   def prosessing
-    @order = current_company.orders.ordered.find(params[:id])
     update_state(@order, "prosessing")
   end
 
@@ -19,16 +19,18 @@ class Companies::OrdersController < Companies::ApplicationController
   end
 
   def cancel
-    @order = current_company.orders.ordered.find(params[:id])
     update_state(@order, "canceled")
   end
 
-  def revert
-    @order = current_company.orders.where(state: [:prosessing, :shipped, :canceled]).find(params[:id])
-    update_state(@order, "ordered")
+  def reorder
+    @order = current_company.orders.canceled.find(params[:id])
+    update_state(@order, "reordered")
   end
 
   private
+    def set_ordered_order
+      @order = current_company.orders.where(state: [:ordered, :reordered]).find(params[:id])
+    end
 
     def update_state(order, state)
       order.state = state

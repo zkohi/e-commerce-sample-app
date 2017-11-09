@@ -647,8 +647,8 @@ RSpec.describe Order, type: :model do
     end
   end
 
-  describe "save_user_point" do
-    subject { order.send(:save_user_point) }
+  describe "save_user_point!" do
+    subject { order.send(:save_user_point!) }
 
     before :each do
       @user_point_total = create(:user_point, :user_point_total, user: order.user, point: order.point_total + 1)
@@ -671,6 +671,86 @@ RSpec.describe Order, type: :model do
       order.destroy
       @user_point_total.destroy
       user_point.destroy
+    end
+  end
+
+  describe "cancel_user_point!" do
+    subject { order.send(:cancel_user_point!) }
+
+    before :each do
+      allow(order.user_point).to receive(:save!)
+    end
+
+    let(:order) { build(:order, :with_user_point) }
+
+    it do
+      should
+      expect(order.user_point.status).to eq "canceled"
+    end
+
+    it do
+      should
+      expect(order.user_point).to have_received(:save!)
+    end
+
+  end
+
+  describe "reorder_user_point!" do
+    subject { order.send(:reorder_user_point!) }
+
+    before :each do
+      allow(order.user_point).to receive(:save!)
+    end
+
+    let(:order) { build(:order, :with_user_point) }
+
+    it do
+      should
+      expect(order.user_point.status).to eq "used"
+    end
+
+    it do
+      should
+      expect(order.user_point).to have_received(:save!)
+    end
+
+  end
+
+  describe "sub_product_stock!" do
+    subject { order.send(:sub_product_stock!) }
+
+    before :each do
+      order.line_items { |line_item| allow(line_item).to receive(:sub_product_stock!) }
+    end
+
+    let(:order) { create(:order_with_line_items).reload }
+
+    it do
+      should
+      order.line_items { |line_item| expect(line_item).to receive(:sub_product_stock!) }
+    end
+
+    after :each do
+      order.destroy
+    end
+  end
+
+  describe "add_product_stock!" do
+    subject { order.send(:add_product_stock!) }
+
+    before :each do
+      order.line_items { |line_item| allow(line_item).to receive(:add_product_stock!) }
+    end
+
+    let(:order) { create(:order_with_line_items).reload }
+
+    it do
+      should
+      order.line_items { |line_item| expect(line_item).to receive(:add_product_stock!) }
+    end
+
+    after :each do
+      order.destroy
     end
   end
 

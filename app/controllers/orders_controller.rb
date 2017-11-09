@@ -41,18 +41,19 @@ class OrdersController < Users::ApplicationController
     if @order.update(order_params)
       redirect_to @order, notice: 'ご注文完了しました'
     else
-      render :edit
+      a
+      render :confirm
     end
   end
 
   def cancel
-    @order = current_user.orders.ordered.find(params[:id])
+    @order = current_user.orders.where(state: [:ordered, :reordered]).find(params[:id])
     update_state(@order, "canceled")
   end
 
-  def revert
+  def reorder
     @order = current_user.orders.canceled.find(params[:id])
-    update_state(@order, "ordered")
+    update_state(@order, "reordered")
   end
 
   def destroy_cart_line_item
