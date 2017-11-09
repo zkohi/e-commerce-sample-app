@@ -9,9 +9,13 @@
         .panel.panel-success
           .panel-heading
             %h3.panel-title= "#{Order.human_attribute_name(:state)} : #{@order.state_i18n}"
-          - if @order.ordered?
-            .panel-body
-              %td= link_to 'キャンセルする', cancel_order_path(@order), method: :patch, data: { confirm: 'キャンセルしてよろしいですか?' }
+          .panel-body
+            - if @order.ordered?
+              %p= link_to 'キャンセルする', cancel_order_path(@order), method: :patch, data: { confirm: 'キャンセルしてよろしいですか?' }
+            - elsif @order.canceled?
+              %p= link_to 'キャンセルを取り消す', revert_cancel_order_path(@order), method: :patch, data: { confirm: 'キャンセルを取り消してよろしいですか?' }
+            - else
+              %p キャンセルはできません
         %table.table.table-striped.table-hover
           %thead
             %tr

@@ -13,6 +13,7 @@ Rails.application.routes.draw do
 
   resources :orders, only: [:index, :show]
   patch 'orders/:id/cancel', to: 'orders#cancel', as: 'cancel_order'
+  patch 'orders/:id/revert_cancel', to: 'orders#revert_cancel', as: 'revert_cancel_order'
 
   resources :products, only: [:index, :show]
   resources :coupons, only: [:index, :show]

@@ -55,6 +55,16 @@ class OrdersController < Users::ApplicationController
     end
   end
 
+  def revert_cancel
+    @order = current_user.orders.canceled.find(params[:id])
+    @order.state = "ordered"
+    if @order.save
+      redirect_to @order, notice: 'ご注文をキャンセルを取り消しました'
+    else
+      redirect_to @order, notice: 'ご注文をキャンセルの取り消しができませんでした'
+    end
+  end
+
   def destroy_cart_line_item
     @order.line_items.find(params[:line_item_id]).destroy
     redirect_to carts_path, notice: '商品が削除されました'
