@@ -13,8 +13,6 @@
             - if @order.ordered?
               = link_to "#{ApplicationController.helpers.t('enums.order.state.prosessing')}にする", companies_prosessing_order_path(@order), method: :patch, data: { confirm: "#{ApplicationController.helpers.t('enums.order.state.prosessing')}にしてよろしいですか?" }
               \|
-              = link_to "#{ApplicationController.helpers.t('enums.order.state.shipped')}にする", companies_shipped_order_path(@order), method: :patch, data: { confirm: "#{ApplicationController.helpers.t('enums.order.state.shipped')}にしてよろしいですか?" }
-              \|
               = link_to "#{ApplicationController.helpers.t('enums.order.state.canceled')}にする", companies_cancel_order_path(@order), method: :patch, data: { confirm: "#{ApplicationController.helpers.t('enums.order.state.canceled')}にしてよろしいですか?" }
             - elsif @order.prosessing?
               = link_to "#{ApplicationController.helpers.t('enums.order.state.ordered')}にする", companies_revert_order_path(@order), method: :patch, data: { confirm: "#{ApplicationController.helpers.t('enums.order.state.ordered')}にしてよろしいですか?" }

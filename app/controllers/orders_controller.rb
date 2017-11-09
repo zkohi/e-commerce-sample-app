@@ -47,22 +47,12 @@ class OrdersController < Users::ApplicationController
 
   def cancel
     @order = current_user.orders.ordered.find(params[:id])
-    @order.state = "canceled"
-    if @order.save
-      redirect_to @order, notice: 'ご注文をキャンセルしました'
-    else
-      redirect_to @order, notice: 'ご注文をキャンセルできませんでした'
-    end
+    update_state(@order, "canceled")
   end
 
   def revert
     @order = current_user.orders.canceled.find(params[:id])
-    @order.state = "ordered"
-    if @order.save
-      redirect_to @order, notice: 'ご注文をキャンセルを取り消しました'
-    else
-      redirect_to @order, notice: 'ご注文をキャンセルの取り消しができませんでした'
-    end
+    update_state(@order, "ordered")
   end
 
   def destroy_cart_line_item
@@ -119,5 +109,14 @@ class OrdersController < Users::ApplicationController
           :price
         ]
       )
+    end
+
+    def update_state(order, state)
+      order.state = state
+      if order.save
+        redirect_to @order, notice: "ご注文を#{order.state_i18n}にしました"
+      else
+        redirect_to @order, notice: "ご注文を#{order.state_i18n}にできませんでした"
+      end
     end
 end

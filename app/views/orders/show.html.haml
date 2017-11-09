@@ -11,9 +11,9 @@
             %h3.panel-title= "#{Order.human_attribute_name(:state)} : #{@order.state_i18n}"
           .panel-body
             - if @order.ordered?
-              %p= link_to 'キャンセルする', cancel_order_path(@order), method: :patch, data: { confirm: 'キャンセルしてよろしいですか?' }
+              %p= link_to "#{ApplicationController.helpers.t('enums.order.state.canceled')}にする", cancel_order_path(@order), method: :patch, data: { confirm: "#{ApplicationController.helpers.t('enums.order.state.canceled')}にしてよろしいですか?" }
             - elsif @order.canceled?
-              %p= link_to 'キャンセルを取り消す', revert_order_path(@order), method: :patch, data: { confirm: 'キャンセルを取り消してよろしいですか?' }
+              %p= link_to "#{ApplicationController.helpers.t('enums.order.state.ordered')}にする", revert_order_path(@order), method: :patch, data: { confirm: "#{ApplicationController.helpers.t('enums.order.state.ordered')}にしてよろしいですか?" }
             - else
               %p キャンセルはできません
         %table.table.table-striped.table-hover
