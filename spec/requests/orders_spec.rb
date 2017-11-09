@@ -157,8 +157,8 @@ RSpec.describe "Orders", type: :request do
     end
   end
 
-  describe "GET /orders/:id and PATCH /orders/:id/cancel and PATCH /orders/:id/revert_cancel" do
-    it "shows a Order and canrel order and revert_cancel" do
+  describe "GET /orders/:id and PATCH /orders/:id/cancel and PATCH /orders/:id/revert" do
+    it "shows a Order and cancel order and revert order" do
       user = FactoryGirl.create(:user)
       login_as(user, scope: :user)
 
@@ -174,7 +174,7 @@ RSpec.describe "Orders", type: :request do
 
       expect(response).to render_template(:show)
 
-      patch revert_cancel_order_path order
+      patch revert_order_path order
 
       expect(response).to redirect_to(order_path(order))
       follow_redirect!
@@ -185,8 +185,8 @@ RSpec.describe "Orders", type: :request do
 
   describe "GET /backoffice/orders" do
     it "shows Orders" do
-      user = FactoryGirl.create(:admin)
-      login_as(user, scope: :admin)
+      admin = FactoryGirl.create(:admin)
+      login_as(admin, scope: :admin)
 
       FactoryGirl.create(:order, :ordered)
 
@@ -197,8 +197,8 @@ RSpec.describe "Orders", type: :request do
 
   describe "GET /backoffice/orders/:id" do
     it "shows a Order" do
-      user = FactoryGirl.create(:admin)
-      login_as(user, scope: :admin)
+      admin = FactoryGirl.create(:admin)
+      login_as(admin, scope: :admin)
 
       order = FactoryGirl.create(:order, :ordered)
 
@@ -207,4 +207,57 @@ RSpec.describe "Orders", type: :request do
       expect(response).to render_template(:show)
     end
   end
+
+  describe "GET /companies/orders" do
+    it "shows a Orders" do
+      company = FactoryGirl.create(:company)
+      login_as(company, scope: :company)
+
+      order = FactoryGirl.create(:order, :ordered, company: company)
+
+      get companies_orders_path
+      expect(response).to render_template(:index)
+    end
+  end
+
+  describe "GET /companies/orders/:id and PATCH /companies/orders/:id/prosessing and PATCH /companies/orders/:id/shipped and PATCH /companies/orders/:id/revert and PATCH /companies/orders/:id/cancel" do
+    it "shows a Order and prosessing order and shipped order and revert order and cancel order" do
+      company = FactoryGirl.create(:company)
+      login_as(company, scope: :company)
+
+      order = FactoryGirl.create(:order, :ordered, company: company)
+
+      get companies_order_path order
+      expect(response).to render_template(:show)
+
+      patch companies_prosessing_order_path order
+
+      expect(response).to redirect_to(companies_order_path(order))
+      follow_redirect!
+
+      expect(response).to render_template(:show)
+
+      patch companies_shipped_order_path order
+
+      expect(response).to redirect_to(companies_order_path(order))
+      follow_redirect!
+
+      expect(response).to render_template(:show)
+
+      patch companies_revert_order_path order
+
+      expect(response).to redirect_to(companies_order_path(order))
+      follow_redirect!
+
+      expect(response).to render_template(:show)
+
+      patch companies_cancel_order_path order
+
+      expect(response).to redirect_to(companies_order_path(order))
+      follow_redirect!
+
+      expect(response).to render_template(:show)
+    end
+  end
+
 end

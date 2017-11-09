@@ -13,7 +13,7 @@ Rails.application.routes.draw do
 
   resources :orders, only: [:index, :show]
   patch 'orders/:id/cancel', to: 'orders#cancel', as: 'cancel_order'
-  patch 'orders/:id/revert_cancel', to: 'orders#revert_cancel', as: 'revert_cancel_order'
+  patch 'orders/:id/revert', to: 'orders#revert', as: 'revert_order'
 
   resources :products, only: [:index, :show]
   resources :coupons, only: [:index, :show]
@@ -52,6 +52,12 @@ Rails.application.routes.draw do
   end
 
   namespace :companies, path: '/companies' do
+    resources :orders, only: [:index, :show]
+    patch 'orders/:id/prosessing', to: 'orders#prosessing', as: 'prosessing_order'
+    patch 'orders/:id/shipped', to: 'orders#shipped', as: 'shipped_order'
+    patch 'orders/:id/cancel', to: 'orders#cancel', as: 'cancel_order'
+    patch 'orders/:id/revert', to: 'orders#revert', as: 'revert_order'
+
     resources :products, only: [:index, :show] do
       resources :stocks, only: [:create, :destroy], controller: 'products'
     end

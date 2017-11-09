@@ -9,7 +9,6 @@
         %table.table.table-striped.table-hover
           %thead
             %tr
-              %th= Company.human_attribute_name(:name)
               %th= Order.human_attribute_name(:id)
               %th= Order.human_attribute_name(:item_count)
               %th= Order.human_attribute_name(:item_total)
@@ -25,7 +24,6 @@
           %tbody
             - @orders.each do |order|
               %tr
-                %td= order.company.present? ? order.company.name : "-"
                 %td= order.id
                 %td= number_with_delimiter(order.item_count)
                 %td= number_to_currency(order.item_total, locale: :ja)
@@ -36,5 +34,5 @@
                 %td= number_to_currency(order.tax_total, locale: :ja)
                 %td= number_to_currency(order.total, locale: :ja)
                 %td= order.payment_state_i18n
-                %td= link_to '詳細', [:backoffice, order]
+                %td= link_to '詳細', [:companies, order]
         = paginate @orders

@@ -55,7 +55,7 @@ class OrdersController < Users::ApplicationController
     end
   end
 
-  def revert_cancel
+  def revert
     @order = current_user.orders.canceled.find(params[:id])
     @order.state = "ordered"
     if @order.save
