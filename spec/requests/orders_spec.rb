@@ -150,10 +150,36 @@ RSpec.describe "Orders", type: :request do
       user = FactoryGirl.create(:user)
       login_as(user, scope: :user)
 
-      order = FactoryGirl.create(:order, :ordered)
+      order = FactoryGirl.create(:order, :ordered, user: user)
 
-      get orders_path order
+      get orders_path
       expect(response).to render_template(:index)
+    end
+  end
+
+  describe "GET /orders/:id and PATCH /orders/:id/cancel and PATCH /orders/:id/revert_cancel" do
+    it "shows a Order and canrel order and revert_cancel" do
+      user = FactoryGirl.create(:user)
+      login_as(user, scope: :user)
+
+      order = FactoryGirl.create(:order, :ordered, user: user)
+
+      get order_path order
+      expect(response).to render_template(:show)
+
+      patch cancel_order_path order
+
+      expect(response).to redirect_to(order_path(order))
+      follow_redirect!
+
+      expect(response).to render_template(:show)
+
+      patch revert_cancel_order_path order
+
+      expect(response).to redirect_to(order_path(order))
+      follow_redirect!
+
+      expect(response).to render_template(:show)
     end
   end
 
