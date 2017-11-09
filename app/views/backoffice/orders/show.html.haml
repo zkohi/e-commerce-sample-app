@@ -39,7 +39,6 @@
                   %th= Order.human_attribute_name(:user_address)
                   %th= Order.human_attribute_name(:shipping_date)
                   %th= Order.human_attribute_name(:shipping_time_range)
-                  %th= Order.human_attribute_name(:shipment_state)
 
               %tbody
                 %tr
@@ -48,7 +47,6 @@
                   %td= @order.user_address
                   %td= @order.shipping_date
                   %td= @order.shipping_time_range_string
-                  %td= @order.shipment_state_i18n
 
         .panel.panel-warning
           .panel-heading

@@ -45,13 +45,8 @@ class Order < ApplicationRecord
     cart: 0,
     ordered: 1,
     prosessing: 2,
-    done: 3,
+    shipped: 3,
     canceled: 4
-  }
-
-  enum shipment_state: {
-    unshipped: 0,
-    shipped: 1
   }
 
   enum payment_state: {

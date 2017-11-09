@@ -60,7 +60,6 @@ ja:
         shipping_date: 配送日
         shipping_time_range: 配送時間帯
         shipping_time_range_string: 配送時間帯
-        shipment_state: 配送状況
         payment_state: 支払い状況
         payment_type: 支払い方法
         credit_cart_number: クレジットカード番号
@@ -151,11 +150,8 @@ ja:
         cart: カート
         ordered: 注文済み
         prosessing: 発送処理中
-        done: 処理中発送済
+        shipped: 処理中発送済
         canceled: キャンセル
-      shipment_state:
-        unshipped: 未出荷
-        shipped: 出荷済
       payment_state:
         unpayed: 未払い
         payed: 支払済

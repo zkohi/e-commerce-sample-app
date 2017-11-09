@@ -17,7 +17,6 @@
             %th= Order.human_attribute_name(:tax_total)
             %th= Order.human_attribute_name(:total)
             %th= Order.human_attribute_name(:payment_state)
-            %th= Order.human_attribute_name(:shipment_state)
             %th
 
         %tbody
@@ -34,6 +33,5 @@
               %td= number_to_currency(order.tax_total, locale: :ja)
               %td= number_to_currency(order.total, locale: :ja)
               %td= order.payment_state_i18n
-              %td= order.shipment_state_i18n
               %td= link_to '詳細', [:backoffice, order]
       = paginate @orders

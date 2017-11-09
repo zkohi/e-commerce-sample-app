@@ -5,7 +5,6 @@ FactoryGirl.define do
     state "cart"
     item_count 2
     item_total 2000
-    shipment_state 0
     payment_state 0
     shipment_total 600
     adjustment_total 2600
@@ -28,7 +27,6 @@ FactoryGirl.define do
       state "ordered"
       item_count 2
       item_total 2000
-      shipment_state 0
       payment_state 0
       payment_type "cash_on_delivery"
       shipment_total 600

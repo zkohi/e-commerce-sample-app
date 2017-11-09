@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20171108050349) do
+ActiveRecord::Schema.define(version: 20171109004410) do
 
   create_table "admins", force: :cascade, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8" do |t|
     t.string "email", default: "", null: false
@@ -100,7 +100,6 @@ ActiveRecord::Schema.define(version: 20171108050349) do
   create_table "orders", force: :cascade, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8" do |t|
     t.bigint "user_id"
     t.integer "state", default: 0, null: false
-    t.integer "shipment_state", default: 0, null: false
     t.integer "payment_state", default: 0, null: false
     t.integer "item_count", default: 0, null: false
     t.integer "item_total", default: 0, null: false

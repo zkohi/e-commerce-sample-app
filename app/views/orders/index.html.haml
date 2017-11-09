@@ -18,7 +18,6 @@
               %th= Order.human_attribute_name(:total)
               %th= Order.human_attribute_name(:payment_type)
               %th= Order.human_attribute_name(:payment_state)
-              %th= Order.human_attribute_name(:shipment_state)
               %th= Order.human_attribute_name(:state)
               %th
 
@@ -34,7 +33,6 @@
                 %td= number_to_currency(order.total, locale: :ja)
                 %td= order.payment_type_i18n
                 %td= order.payment_state_i18n
-                %td= order.shipment_state_i18n
                 %td= order.state_i18n
                 %td= link_to '詳細', order
 
