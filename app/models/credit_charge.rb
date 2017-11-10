@@ -1,7 +1,7 @@
 class CreditCharge < ApplicationRecord
   belongs_to :order
 
-  def charge(card, amount)
+  def charge!(card, amount)
     self.request do
       charge = Payjp::Charge.create(
           card: card,
@@ -10,6 +10,18 @@ class CreditCharge < ApplicationRecord
           currency: 'jpy'
       )
       self.charge_id = charge.id
+    end
+  end
+
+  def capture!
+    self.request do
+      Payjp::Charge.retrieve(self.charge_id).capture
+    end
+  end
+
+  def refund!
+    self.request do
+      Payjp::Charge.retrieve(self.charge_id).refund
     end
   end
 

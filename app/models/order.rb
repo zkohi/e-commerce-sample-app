@@ -45,7 +45,11 @@ class Order < ApplicationRecord
     after_update :save_user_point!
   end
 
+  before_update :set_payment_state_to_payed, if: Proc.new { |order| order.cash_on_delivery? && order.ordered? }
+
   after_update :charge_payjp!, if: Proc.new { |order| order.payjp_token.present? && order.ordered? }
+  before_update :capture_payjp!, if: Proc.new { |order| order.credit? && order.prosessing? }
+  after_update :refund_payjp!, if: Proc.new { |order| order.credit? && order.canceled? }
 
   after_update :add_product_stock!, if: :canceled?
   after_update :cancel_user_point!, if: Proc.new { |order| order.user_point.present? && order.canceled? }
@@ -166,6 +170,10 @@ class Order < ApplicationRecord
       self.total = self.adjustment_total + self.payment_total + self.tax_total
     end
 
+    def set_payment_state_to_payed
+      self.payment_state = 'payed'
+    end
+
     def valid_shipping_date?
       date_range = available_shipping_date_range
       today = Date.today
@@ -220,7 +228,16 @@ class Order < ApplicationRecord
 
     def charge_payjp!
       credit_charge = CreditCharge.new(order_id: self.id)
-      credit_charge.charge(self.payjp_token, self.total)
+      credit_charge.charge!(self.payjp_token, self.total)
       credit_charge.save!
+    end
+
+    def capture_payjp!
+      self.credit_charge.capture!
+      self.payment_state = 'payed'
+    end
+
+    def refund_payjp!
+      self.credit_charge.refund!
     end
 end
