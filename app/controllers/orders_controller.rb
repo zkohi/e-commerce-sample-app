@@ -1,6 +1,5 @@
 class OrdersController < Users::ApplicationController
   before_action :set_order, only: [:edit, :confirm, :update, :destroy_cart_line_item]
-  before_action :order_has_line_items?, only: [:edit, :confirm, :update, :destroy_cart_line_item]
   before_action :set_order_state_to_ordered, only: [:confirm, :update]
 
   def index
@@ -22,14 +21,14 @@ class OrdersController < Users::ApplicationController
   end
 
   def cart
-    @orders = current_user.orders.includes(:company).includes(:line_items).where(state: :cart).order(created_at: :desc).all
+    @orders = current_user.orders.cart.includes(:company).includes(:line_items).where(state: :cart).order(created_at: :desc).all
   end
 
   def edit
   end
 
   def confirm
-    @order.attributes = order_params
+    @order.attributes = order_params.merge(payjp_token: params[:"payjp-token"])
     if @order.valid?
       render :confirm
     else
@@ -41,7 +40,6 @@ class OrdersController < Users::ApplicationController
     if @order.update(order_params)
       redirect_to @order, notice: 'ご注文完了しました'
     else
-      a
       render :confirm
     end
   end
@@ -63,17 +61,11 @@ class OrdersController < Users::ApplicationController
 
   private
     def set_order
-      @order = current_user.orders.find_or_initialize_by(id: params[:id], state: :cart)
+      @order = current_user.orders.cart.find(params[:id])
     end
 
     def set_order_state_to_ordered
       @order.state = "ordered"
-    end
-
-    def order_has_line_items?
-      if @order.line_items.empty?
-        redirect_to carts_path
-      end
     end
 
     def order_line_item_params
@@ -103,13 +95,14 @@ class OrdersController < Users::ApplicationController
         :user_address,
         :payment_type,
         :point_total,
+        :payjp_token,
         line_items_attributes: [
           :id,
           :product_id,
           :quantity,
           :price
         ]
-      ).merge(payjp_token: params[:"payjp-token"])
+      )
     end
 
     def update_state(order, state)

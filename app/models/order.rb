@@ -6,6 +6,7 @@ class Order < ApplicationRecord
   belongs_to :user
   belongs_to :company
   has_one :user_point
+  has_one :credit_charge
 
   has_many :line_items, dependent: :destroy, inverse_of: :order
   validates_associated :line_items
@@ -36,9 +37,10 @@ class Order < ApplicationRecord
   after_find :set_item_count, :set_item_total, :set_shipment_total, :set_adjustment_total, :set_payment_total, :set_tax_total, :set_total, if: :cart?
 
   before_validation :set_shipping_time_range_string, if: Proc.new { |order| order.shipping_time_range.present? }
-  before_validation :set_payment_type, if: Proc.new { |order| order.payment_type.blank? }
 
-  with_options if: Proc.new { |order| order.point_total.present? } do
+  before_validation :set_payment_type_to_credit, if: Proc.new { |order| order.payjp_token.present? && order.ordered? }
+
+  with_options if: Proc.new { |order| order.point_total.present? && order.ordered? } do
     before_validation :set_point_total, :set_adjustment_total, :set_payment_total, :set_tax_total, :set_total
     after_update :save_user_point!
   end
@@ -75,8 +77,8 @@ class Order < ApplicationRecord
   }
 
   enum payment_type: {
-    credit: 0,
-    cash_on_delivery: 1
+    cash_on_delivery: 0,
+    credit: 1
   }
 
   def available_shipping_date_range
@@ -107,6 +109,13 @@ class Order < ApplicationRecord
   end
 
   private
+
+    def set_payment_type_to_credit
+      self.payment_type = 'credit'
+      self.payment_total = 0
+      self.tax_total = (self.adjustment_total * 0.08).floor
+      self.total = self.adjustment_total + self.tax_total
+    end
 
     def set_point_total
       self.point_total = self.point_total.to_i
@@ -139,8 +148,6 @@ class Order < ApplicationRecord
           else
             1000
           end
-      else
-        self.payment_total = 0
       end
     end
 
@@ -152,7 +159,7 @@ class Order < ApplicationRecord
     end
 
     def set_tax_total
-      self.tax_total = ((self.adjustment_total + payment_total) * 0.08).floor
+      self.tax_total = ((self.adjustment_total + self.payment_total) * 0.08).floor
     end
 
     def set_total
@@ -189,10 +196,6 @@ class Order < ApplicationRecord
       self.shipping_time_range_string = Order.shipping_time_ranges_i18n[self.shipping_time_range]
     end
 
-    def set_payment_type
-      self.payment_type = self.payjp_token.present? ? 'credit' : 'cash_on_delivery'
-    end
-
     def save_user_point!
       UserPoint.new(user_id: self.user_id, order_id: self.id, point: -self.point_total, status: 'used').save!
     end
@@ -216,11 +219,8 @@ class Order < ApplicationRecord
     end
 
     def charge_payjp!
-      Payjp::Charge.create(
-          card: self.payjp_token,
-          amount: self.total,
-          capture: false,
-          currency: 'jpy'
-      )
+      credit_charge = CreditCharge.new(order_id: self.id)
+      credit_charge.charge(self.payjp_token, self.total)
+      credit_charge.save!
     end
 end

@@ -157,8 +157,8 @@ ja:
         unpayed: 未払い
         payed: 支払済
       payment_type:
-        credit: クレジット
         cash_on_delivery: 代引き
+        credit: クレジット
       shipping_time_range:
         eight_to_twelve: 8時〜12時
         twelve_to_fourteen: 12時〜14時
