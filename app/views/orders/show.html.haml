@@ -13,7 +13,10 @@
             - if @order.ordered? || @order.reordered?
               %p= link_to "#{ApplicationController.helpers.t('enums.order.state.canceled')}にする", cancel_order_path(@order), method: :patch, data: { confirm: "#{ApplicationController.helpers.t('enums.order.state.canceled')}にしてよろしいですか?" }
             - elsif @order.canceled?
-              %p= link_to "#{ApplicationController.helpers.t('enums.order.state.reordered')}にする", reorder_order_path(@order), method: :patch, data: { confirm: "#{ApplicationController.helpers.t('enums.order.state.reordered')}にしてよろしいですか?" }
+              - if @order.cash_on_delivery?
+                %p= link_to "#{ApplicationController.helpers.t('enums.order.state.reordered')}にする", reorder_order_path(@order), method: :patch, data: { confirm: "#{ApplicationController.helpers.t('enums.order.state.reordered')}にしてよろしいですか?" }
+              - else
+                %p クレジットカード決済のため、再注文できません
             - else
               %p キャンセルはできません
         %table.table.table-striped.table-hover

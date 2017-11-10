@@ -49,6 +49,8 @@ class Order < ApplicationRecord
 
   after_update :charge_payjp!, if: Proc.new { |order| order.payjp_token.present? && order.ordered? }
   before_update :capture_payjp!, if: Proc.new { |order| order.credit? && order.prosessing? }
+  # 現仕様としては、注文キャンセル時に与信を解放し、業者管理画面からの再注文不可とする
+  # 注文キャンセル時に与信を解放しなければ、業者の管理画面から再注文可能
   after_update :refund_payjp!, if: Proc.new { |order| order.credit? && order.canceled? }
 
   after_update :add_product_stock!, if: :canceled?

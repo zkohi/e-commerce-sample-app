@@ -19,7 +19,10 @@
               \|
               キャンセルはできません
             - elsif @order.canceled?
-              = link_to "#{ApplicationController.helpers.t('enums.order.state.ordered')}にする", companies_reorder_order_path(@order), method: :patch, data: { confirm: "#{ApplicationController.helpers.t('enums.order.state.ordered')}にしてよろしいですか?" }
+              - if @order.cash_on_delivery?
+                = link_to "#{ApplicationController.helpers.t('enums.order.state.ordered')}にする", companies_reorder_order_path(@order), method: :patch, data: { confirm: "#{ApplicationController.helpers.t('enums.order.state.ordered')}にしてよろしいですか?" }
+              - else
+                クレジットカード決済のため、再注文できません
             - else
               キャンセルはできません
 
@@ -56,6 +59,7 @@
                   %th= Order.human_attribute_name(:user_address)
                   %th= Order.human_attribute_name(:shipping_date)
                   %th= Order.human_attribute_name(:shipping_time_range)
+                  %th= Order.human_attribute_name(:payment_type)
 
               %tbody
                 %tr
@@ -64,6 +68,7 @@
                   %td= @order.user_address
                   %td= @order.shipping_date
                   %td= @order.shipping_time_range_string
+                  %td= @order.payment_type_i18n
 
         .panel.panel-warning
           .panel-heading
