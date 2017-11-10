@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20171109004410) do
+ActiveRecord::Schema.define(version: 20171110045209) do
 
   create_table "admins", force: :cascade, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8" do |t|
     t.string "email", default: "", null: false
@@ -55,6 +55,14 @@ ActiveRecord::Schema.define(version: 20171109004410) do
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.index ["code"], name: "index_coupons_on_code", unique: true
+  end
+
+  create_table "credit_charges", force: :cascade, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8" do |t|
+    t.bigint "order_id"
+    t.string "charge_id"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["order_id"], name: "index_credit_charges_on_order_id"
   end
 
   create_table "diaries", force: :cascade, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8" do |t|
@@ -177,6 +185,7 @@ ActiveRecord::Schema.define(version: 20171109004410) do
     t.index ["reset_password_token"], name: "index_users_on_reset_password_token", unique: true
   end
 
+  add_foreign_key "credit_charges", "orders"
   add_foreign_key "diaries", "users"
   add_foreign_key "diary_comments", "diaries"
   add_foreign_key "diary_comments", "users"
