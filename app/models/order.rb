@@ -1,6 +1,7 @@
 class Order < ApplicationRecord
   attr_accessor :shipping_time_range
   attr_accessor :point_total
+  attr_accessor :payjp_token
 
   belongs_to :user
   belongs_to :company
@@ -35,11 +36,14 @@ class Order < ApplicationRecord
   after_find :set_item_count, :set_item_total, :set_shipment_total, :set_adjustment_total, :set_payment_total, :set_tax_total, :set_total, if: :cart?
 
   before_validation :set_shipping_time_range_string, if: Proc.new { |order| order.shipping_time_range.present? }
+  before_validation :set_payment_type, if: Proc.new { |order| order.payment_type.blank? }
 
   with_options if: Proc.new { |order| order.point_total.present? } do
     before_validation :set_point_total, :set_adjustment_total, :set_payment_total, :set_tax_total, :set_total
     after_update :save_user_point!
   end
+
+  after_update :charge_payjp!, if: Proc.new { |order| order.payjp_token.present? && order.ordered? }
 
   after_update :add_product_stock!, if: :canceled?
   after_update :cancel_user_point!, if: Proc.new { |order| order.user_point.present? && order.canceled? }
@@ -121,19 +125,23 @@ class Order < ApplicationRecord
     end
 
     def set_payment_total
-      self.payment_total =
-        case self.adjustment_total
-        when 0
-          0
-        when 1 ... 10000
-          300
-        when 10000 ... 30000
-          400
-        when 30000 ... 100000
-          600
-        else
-          1000
-        end
+      if self.cash_on_delivery?
+        self.payment_total =
+          case self.adjustment_total
+          when 0
+            0
+          when 1 ... 10000
+            300
+          when 10000 ... 30000
+            400
+          when 30000 ... 100000
+            600
+          else
+            1000
+          end
+      else
+        self.payment_total = 0
+      end
     end
 
     def set_adjustment_total
@@ -181,6 +189,10 @@ class Order < ApplicationRecord
       self.shipping_time_range_string = Order.shipping_time_ranges_i18n[self.shipping_time_range]
     end
 
+    def set_payment_type
+      self.payment_type = self.payjp_token.present? ? 'credit' : 'cash_on_delivery'
+    end
+
     def save_user_point!
       UserPoint.new(user_id: self.user_id, order_id: self.id, point: -self.point_total, status: 'used').save!
     end
@@ -201,5 +213,14 @@ class Order < ApplicationRecord
 
     def add_product_stock!
       self.line_items.each { |line_item| line_item.add_product_stock! }
+    end
+
+    def charge_payjp!
+      Payjp::Charge.create(
+          card: self.payjp_token,
+          amount: self.total,
+          capture: false,
+          currency: 'jpy'
+      )
     end
 end

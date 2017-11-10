@@ -109,7 +109,7 @@ class OrdersController < Users::ApplicationController
           :quantity,
           :price
         ]
-      )
+      ).merge(payjp_token: params[:"payjp-token"])
     end
 
     def update_state(order, state)

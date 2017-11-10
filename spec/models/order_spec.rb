@@ -161,11 +161,6 @@ RSpec.describe Order, type: :model do
         let(:order) { build(:order, :ordered, user_address: "a" * 101) }
         it { expect(order.errors[:user_address]).to include("は100文字以内で入力してください") }
       end
-
-      context "without a payment_type" do
-        let(:order) { build(:order, :ordered, payment_type: nil) }
-        it { expect(order.errors[:payment_type]).to include("を入力してください") }
-      end
     end
   end
 
@@ -512,62 +507,108 @@ RSpec.describe Order, type: :model do
   describe "set_payment_total" do
     subject { order.send(:set_payment_total) }
 
-    let(:order) { build(:order, adjustment_total: adjustment_total) }
+    let(:order) { build(:order, :ordered, adjustment_total: adjustment_total, payment_type: payment_type) }
 
-    context "if adjustment_total is zero" do
-      let(:adjustment_total) { 0 }
+    context "if payment_type is cash_on_delivery" do
 
-      it do
-        should
-        expect(order.payment_total).to eq 0
+      let(:payment_type) { "cash_on_delivery" }
+
+      context "if adjustment_total is zero" do
+        let(:adjustment_total) { 0 }
+
+        it do
+          should
+          expect(order.payment_total).to eq 0
+        end
+      end
+
+      context "if adjustment_total is 9999" do
+        let(:adjustment_total) { 9999 }
+
+        it do
+          should
+          expect(order.payment_total).to eq 300
+        end
+      end
+
+      context "if adjustment_total is 10000" do
+        let(:adjustment_total) { 10000 }
+
+        it do
+          should
+          expect(order.payment_total).to eq 400
+        end
+      end
+
+      context "if adjustment_total is 29999" do
+        let(:adjustment_total) { 29999 }
+
+        it do
+          should
+          expect(order.payment_total).to eq 400
+        end
+      end
+
+      context "if adjustment_total is 99999" do
+        let(:adjustment_total) { 99999 }
+
+        it do
+          should
+          expect(order.payment_total).to eq 600
+        end
+      end
+
+      context "if adjustment_total is 100000" do
+        let(:adjustment_total) { 100000 }
+
+        it do
+          should
+          expect(order.payment_total).to eq 1000
+        end
       end
     end
 
-    context "if adjustment_total is 9999" do
-      let(:adjustment_total) { 9999 }
+    context "if payment_type is credit" do
 
-      it do
-        should
-        expect(order.payment_total).to eq 300
-      end
-    end
+      let(:payment_type) { "credit" }
 
-    context "if adjustment_total is 10000" do
-      let(:adjustment_total) { 10000 }
+      context "if adjustment_total is 100000" do
+        let(:adjustment_total) { 100000 }
 
-      it do
-        should
-        expect(order.payment_total).to eq 400
-      end
-    end
-
-    context "if adjustment_total is 29999" do
-      let(:adjustment_total) { 29999 }
-
-      it do
-        should
-        expect(order.payment_total).to eq 400
-      end
-    end
-
-    context "if adjustment_total is 99999" do
-      let(:adjustment_total) { 99999 }
-
-      it do
-        should
-        expect(order.payment_total).to eq 600
-      end
-    end
-
-    context "if adjustment_total is 100000" do
-      let(:adjustment_total) { 100000 }
-
-      it do
-        should
-        expect(order.payment_total).to eq 1000
+        it do
+          should
+          expect(order.payment_total).to eq 0
+        end
       end
     end
   end
+
+  describe "set_payment_type" do
+    subject { order.send(:set_payment_type) }
+
+    let(:order) { build(:order, :ordered, payjp_token: payjp_token) }
+
+    context "if payjp_token is blank" do
+
+      let(:payjp_token) { "" }
+
+      it do
+        should
+        expect(order.payment_type).to eq "cash_on_delivery"
+      end
+    end
+
+    context "if payjp_token is present" do
+
+      let(:payjp_token) { "1234567890" }
+
+      it do
+        should
+        expect(order.payment_type).to eq "credit"
+      end
+    end
+  end
+
 
   describe "set_adjustment_total" do
     subject { order.send(:set_adjustment_total) }
