@@ -120,10 +120,10 @@ RSpec.describe CreditCharge, type: :model do
           }
         }
       }
-      let(:type) { 'Error Type' } 
-      let(:param) { 'Error Param' } 
-      let(:code) { 'Error Code' } 
-      let(:message) { 'Error Message' } 
+      let(:type) { 'Error Type' }
+      let(:param) { 'Error Param' }
+      let(:code) { 'Error Code' }
+      let(:message) { 'Error Message' }
 
       context "if raise Payjp::CardError" do
         let(:e) { Payjp::CardError.new(message, param, code) }
