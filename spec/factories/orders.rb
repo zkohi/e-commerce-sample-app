@@ -26,6 +26,9 @@ FactoryGirl.define do
     trait :with_user_point do
       user_point
     end
+    trait :with_credit_charge do
+      credit_charge
+    end
     trait :ordered do
       state "ordered"
       item_count 2

@@ -6,10 +6,10 @@ class CreditCharge < ApplicationRecord
   def charge!(card, amount)
     self.request do
       charge = Payjp::Charge.create(
-          card: card,
-          amount: amount,
-          capture: false,
-          currency: 'jpy'
+        card: card,
+        amount: amount,
+        capture: false,
+        currency: 'jpy'
       )
       self.charge_id = charge.id
     end
@@ -61,5 +61,4 @@ class CreditCharge < ApplicationRecord
       raise e
     end
   end
-
 end
