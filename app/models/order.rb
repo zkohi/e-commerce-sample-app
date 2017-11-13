@@ -154,6 +154,8 @@ class Order < ApplicationRecord
           else
             1000
           end
+      else
+        self.payment_total = 0
       end
     end
 
@@ -207,7 +209,7 @@ class Order < ApplicationRecord
     end
 
     def save_user_point!
-      UserPoint.new(user_id: self.user_id, order_id: self.id, point: -self.point_total, status: 'used').save!
+      UserPoint.new(user_id: self.user_id, order_id: self.id, point: -self.point_total.to_i, status: 'used').save!
     end
 
     def cancel_user_point!

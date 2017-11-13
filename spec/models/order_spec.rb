@@ -583,32 +583,6 @@ RSpec.describe Order, type: :model do
     end
   end
 
-  describe "set_payment_type" do
-    subject { order.send(:set_payment_type) }
-
-    let(:order) { build(:order, :ordered, payjp_token: payjp_token) }
-
-    context "if payjp_token is blank" do
-
-      let(:payjp_token) { "" }
-
-      it do
-        should
-        expect(order.payment_type).to eq "cash_on_delivery"
-      end
-    end
-
-    context "if payjp_token is present" do
-
-      let(:payjp_token) { "1234567890" }
-
-      it do
-        should
-        expect(order.payment_type).to eq "credit"
-      end
-    end
-  end
-
 
   describe "set_adjustment_total" do
     subject { order.send(:set_adjustment_total) }
@@ -688,11 +662,22 @@ RSpec.describe Order, type: :model do
     end
   end
 
+  describe "set_payment_state_to_payed" do
+    subject { order.send(:set_payment_state_to_payed) }
+
+    let(:order) { build(:order) }
+
+    it do
+      should
+      expect(order.payment_state).to eq "payed"
+    end
+  end
+
   describe "save_user_point!" do
     subject { order.send(:save_user_point!) }
 
     before :each do
-      @user_point_total = create(:user_point, :user_point_total, user: order.user, point: order.point_total + 1)
+      @user_point_total = create(:user_point, :user_point_total, user: order.user, point: order.point_total.to_i + 1)
     end
 
     let(:order) { create(:order, :with_point_total) }
@@ -700,7 +685,7 @@ RSpec.describe Order, type: :model do
 
     it do
       should
-      expect(user_point.point).to eq -order.point_total
+      expect(user_point.point).to eq -order.point_total.to_i
     end
 
     it do
@@ -791,6 +776,74 @@ RSpec.describe Order, type: :model do
     end
 
     after :each do
+      order.destroy
+    end
+  end
+
+  describe "charge_payjp!" do
+    subject { order.send(:charge_payjp!) }
+
+    let(:order) { create(:order, :ordered) }
+
+    before :each do
+      allow(Payjp::Charge).to receive(:create).and_return(charge)
+    end
+
+    let(:charge) { double('charge', id: charge_id) }
+    let(:charge_id) { 'charge_id' }
+
+    it do
+      should
+      expect(order.credit_charge.present?).to be_truthy
+    end
+
+    after :each do
+      order.credit_charge.destroy
+      order.destroy
+    end
+  end
+
+  describe "capture_payjp!" do
+    subject { order.send(:capture_payjp!) }
+
+    let(:order) { create(:order, :ordered, :with_credit_charge) }
+
+    before :each do
+      allow(order.credit_charge).to receive(:capture!)
+    end
+
+    it do
+      should
+      expect(order.credit_charge).to have_received(:capture!)
+    end
+
+    it do
+      should
+      expect(order.payment_state).to eq 'payed'
+    end
+
+    after :each do
+      order.credit_charge.destroy
+      order.destroy
+    end
+  end
+
+  describe "refund_payjp!" do
+    subject { order.send(:refund_payjp!) }
+
+    let(:order) { create(:order, :ordered, :with_credit_charge) }
+
+    before :each do
+      allow(order.credit_charge).to receive(:refund!)
+    end
+
+    it do
+      should
+      expect(order.credit_charge).to have_received(:refund!)
+    end
+
+    after :each do
+      order.credit_charge.destroy
       order.destroy
     end
   end
