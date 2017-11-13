@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20171110063545) do
+ActiveRecord::Schema.define(version: 20171113012921) do
 
   create_table "admins", force: :cascade, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8" do |t|
     t.string "email", default: "", null: false
@@ -59,7 +59,7 @@ ActiveRecord::Schema.define(version: 20171110063545) do
 
   create_table "credit_charges", force: :cascade, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8" do |t|
     t.bigint "order_id"
-    t.string "charge_id"
+    t.string "charge_id", null: false
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.index ["order_id"], name: "index_credit_charges_on_order_id"
