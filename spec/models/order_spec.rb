@@ -419,6 +419,20 @@ RSpec.describe Order, type: :model do
     end
   end
 
+  describe "set_payment_type_to_credit" do
+    subject { order.send(:set_payment_type_to_credit) }
+
+    let(:order) { build(:order, :ordered, adjustment_total: 1000) }
+
+    it do
+      should
+      expect(order.payment_type).to eq "credit"
+      expect(order.payment_total).to eq 0
+      expect(order.tax_total).to eq 80
+      expect(order.total).to eq 1080
+    end
+  end
+
   describe "set_point_total" do
     subject { order.send(:set_point_total) }
 
