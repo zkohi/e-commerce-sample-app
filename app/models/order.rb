@@ -45,13 +45,13 @@ class Order < ApplicationRecord
     after_update :save_user_point!
   end
 
-  before_update :set_payment_state_to_payed, if: Proc.new { |order| order.cash_on_delivery? && order.ordered? }
+  before_update :set_payment_state_to_payed, if: Proc.new { |order| order.credit? && order.ordered? }
 
   after_update :charge_payjp!, if: Proc.new { |order| order.payjp_token.present? && order.ordered? }
   before_update :capture_payjp!, if: Proc.new { |order| order.credit? && order.prosessing? }
   # 現仕様としては、注文キャンセル時に与信を解放し、業者管理画面からの再注文不可とする
   # 注文キャンセル時に与信を解放しなければ、業者の管理画面から再注文可能
-  after_update :refund_payjp!, if: Proc.new { |order| order.credit? && order.canceled? }
+  before_update :refund_payjp!, if: Proc.new { |order| order.credit? && order.canceled? }
 
   after_update :add_product_stock!, if: :canceled?
   after_update :cancel_user_point!, if: Proc.new { |order| order.user_point.present? && order.canceled? }
@@ -70,7 +70,8 @@ class Order < ApplicationRecord
 
   enum payment_state: {
     unpayed: 0,
-    payed: 1
+    payed: 1,
+    refunded: 2
   }
 
   enum shipping_time_range: {
@@ -243,5 +244,6 @@ class Order < ApplicationRecord
 
     def refund_payjp!
       self.credit_charge.refund!
+      self.payment_state = 'refunded'
     end
 end

@@ -856,6 +856,11 @@ RSpec.describe Order, type: :model do
       expect(order.credit_charge).to have_received(:refund!)
     end
 
+    it do
+      should
+      expect(order.payment_state).to eq 'refunded'
+    end
+
     after :each do
       order.credit_charge.destroy
       order.destroy

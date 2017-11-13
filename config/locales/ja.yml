@@ -156,6 +156,7 @@ ja:
       payment_state:
         unpayed: 未払い
         payed: 支払済
+        refunded: 返金済
       payment_type:
         cash_on_delivery: 代引き
         credit: クレジット
