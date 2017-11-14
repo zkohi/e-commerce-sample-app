@@ -16,6 +16,82 @@ RSpec.describe CreditCharge, type: :model do
     end
   end
 
+  shared_examples "raise error" do
+    before :each do
+      allow(Rails.logger).to receive(:fatal)
+      e.instance_variable_set(:@json_body, json_body)
+    end
+
+    let(:json_body) {
+      {
+        error: {
+          type: type,
+          param: param,
+          code: code,
+          message: message
+        }
+      }
+    }
+    let(:type) { 'Error Type' }
+    let(:param) { 'Error Param' }
+    let(:code) { 'Error Code' }
+    let(:message) { 'Error Message' }
+
+    context "if raise Payjp::CardError" do
+      let(:e) { Payjp::CardError.new(message, param, code) }
+
+      it do
+        expect { subject }.to raise_error(e)
+        expect(Rails.logger).to have_received(:fatal)
+      end
+    end
+
+    context "if raise Payjp::InvalidRequestError" do
+      let(:e) { Payjp::InvalidRequestError.new(message, param, code) }
+
+      it do
+        expect { subject }.to raise_error(e)
+        expect(Rails.logger).to have_received(:fatal)
+      end
+    end
+
+    context "if raise Payjp::AuthenticationError" do
+      let(:e) { Payjp::AuthenticationError.new(message, param, code) }
+
+      it do
+        expect { subject }.to raise_error(e)
+        expect(Rails.logger).to have_received(:fatal)
+      end
+    end
+
+    context "if raise Payjp::APIConnectionError" do
+      let(:e) { Payjp::APIConnectionError.new(message, param, code) }
+
+      it do
+        expect { subject }.to raise_error(e)
+        expect(Rails.logger).to have_received(:fatal)
+      end
+    end
+
+    context "if raise Payjp::PayjpError" do
+      let(:e) { Payjp::PayjpError.new(message, param, code) }
+
+      it do
+        expect { subject }.to raise_error(e)
+        expect(Rails.logger).to have_received(:fatal)
+      end
+    end
+
+    context "if raise error" do
+      let(:e) { StandardError.new(message) }
+
+      it do
+        expect { subject }.to raise_error(e)
+        expect(Rails.logger).to have_received(:fatal)
+      end
+    end
+  end
+
   describe "charge!" do
     subject { order.credit_charge.charge!(card, amount) }
 
@@ -46,6 +122,14 @@ RSpec.describe CreditCharge, type: :model do
       should
       expect(Payjp::Charge).to have_received(:create).with(params)
     end
+
+    context "if raise error" do
+      before :each do
+        allow(Payjp::Charge).to receive(:create).and_raise(e)
+      end
+
+      it_should_behave_like "raise error"
+    end
   end
 
   describe "capture!" do
@@ -64,6 +148,14 @@ RSpec.describe CreditCharge, type: :model do
       should
       expect(Payjp::Charge).to have_received(:retrieve).with(charge_id)
       expect(charge).to have_received(:capture)
+    end
+
+    context "if raise error" do
+      before :each do
+        allow(Payjp::Charge).to receive(:retrieve).and_raise(e)
+      end
+
+      it_should_behave_like "raise error"
     end
   end
 
@@ -84,6 +176,14 @@ RSpec.describe CreditCharge, type: :model do
       expect(Payjp::Charge).to have_received(:retrieve).with(charge_id)
       expect(charge).to have_received(:refund)
     end
+
+    context "if raise error" do
+      before :each do
+        allow(Payjp::Charge).to receive(:retrieve).and_raise(e)
+      end
+
+      it_should_behave_like "raise error"
+    end
   end
 
   describe "request!" do
@@ -92,7 +192,7 @@ RSpec.describe CreditCharge, type: :model do
     let(:block) { Proc.new { p 'foo' } }
     let(:order) { build(:order, :ordered, :with_credit_charge) }
 
-    context "if don't raise Error" do
+    context "if don't raise error" do
       before :each do
         allow(block).to receive(:call)
       end
@@ -103,85 +203,16 @@ RSpec.describe CreditCharge, type: :model do
       end
     end
 
-    context "if raise Error" do
+    context "if raise error" do
       before :each do
-        allow(Rails.logger).to receive(:fatal)
         allow(block).to receive(:call).and_raise(e)
-        e.instance_variable_set(:@json_body, json_body)
       end
 
-      let(:json_body) {
-        {
-          error: {
-            type: type,
-            param: param,
-            code: code,
-            message: message
-          }
-        }
-      }
-      let(:type) { 'Error Type' }
-      let(:param) { 'Error Param' }
-      let(:code) { 'Error Code' }
-      let(:message) { 'Error Message' }
-
-      context "if raise Payjp::CardError" do
-        let(:e) { Payjp::CardError.new(message, param, code) }
-
-        it do
-          expect { subject }.to raise_error(e)
-          expect(Rails.logger).to have_received(:fatal)
-        end
-      end
-
-      context "if raise Payjp::InvalidRequestError" do
-        let(:e) { Payjp::InvalidRequestError.new(message, param, code) }
-
-        it do
-          expect { subject }.to raise_error(e)
-          expect(Rails.logger).to have_received(:fatal)
-        end
-      end
-
-      context "if raise Payjp::AuthenticationError" do
-        let(:e) { Payjp::AuthenticationError.new(message, param, code) }
-
-        it do
-          expect { subject }.to raise_error(e)
-          expect(Rails.logger).to have_received(:fatal)
-        end
-      end
-
-      context "if raise Payjp::APIConnectionError" do
-        let(:e) { Payjp::APIConnectionError.new(message, param, code) }
-
-        it do
-          expect { subject }.to raise_error(e)
-          expect(Rails.logger).to have_received(:fatal)
-        end
-      end
-
-      context "if raise Payjp::PayjpError" do
-        let(:e) { Payjp::PayjpError.new(message, param, code) }
-
-        it do
-          expect { subject }.to raise_error(e)
-          expect(Rails.logger).to have_received(:fatal)
-        end
-      end
-
-      context "if raise Error" do
-        let(:e) { StandardError.new(message) }
-
-        it do
-          expect { subject }.to raise_error(e)
-          expect(Rails.logger).to have_received(:fatal)
-        end
-      end
+      it_should_behave_like "raise error"
     end
   end
 
-  describe "request!" do
+  describe "payjp_error_message" do
     subject { order.credit_charge.payjp_error_message(e) }
 
     before :each do
