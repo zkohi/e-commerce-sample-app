@@ -180,4 +180,35 @@ RSpec.describe CreditCharge, type: :model do
       end
     end
   end
+
+  describe "request!" do
+    subject { order.credit_charge.payjp_error_message(e) }
+
+    before :each do
+      e.instance_variable_set(:@json_body, json_body)
+    end
+
+    let(:json_body) {
+      {
+        error: {
+          type: type,
+          param: param,
+          code: code,
+          message: message
+        }
+      }
+    }
+    let(:type) { 'Error Type' }
+    let(:param) { 'Error Param' }
+    let(:code) { 'Error Code' }
+    let(:message) { 'Error Message' }
+    let(:http_status) { 400 }
+
+    let(:order) { build(:order, :ordered, :with_credit_charge) }
+    let(:e) { Payjp::CardError.new(message, param, code, http_status) }
+
+    it do
+      is_expected.to eq "Status is: 400. Type is: Error Type. Code is: Error Code. Param is: Error Param. Message is: Error Message"
+    end
+  end
 end

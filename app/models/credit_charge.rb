@@ -31,34 +31,29 @@ class CreditCharge < ApplicationRecord
     begin
       block.call
     rescue Payjp::CardError => e
-      # Since it's a decline, Payjp::CardError will be caught
-      body = e.json_body
-      err = body[:error]
-      logger.fatal("[PayJp CardError] Status is: #{e.http_status}. Type is: #{err[:type]}. Code is: #{err[:code]}. Param is: #{err[:param]}. Message is: #{err[:message]}")
+      logger.fatal("[PayJp CardError] #{self.payjp_error_message(e)}")
       raise e
     rescue Payjp::InvalidRequestError => e
-      body = e.json_body
-      err = body[:error]
-      logger.fatal("[PayJp InvalidRequestError] Invalid parameters were supplied to Payjp's API. Status is: #{e.http_status}. Type is: #{err[:type]}. Code is: #{err[:code]}. Param is: #{err[:param]}. Message is: #{err[:message]}")
+      logger.fatal("[PayJp InvalidRequestError] Invalid parameters were supplied to Payjp's API. #{self.payjp_error_message(e)}")
       raise e
     rescue Payjp::AuthenticationError => e
-      body = e.json_body
-      err = body[:error]
-      logger.fatal("[PayJp AuthenticationError] Authentication with Payjp's API failed. Status is: #{e.http_status}. Type is: #{err[:type]}. Code is: #{err[:code]}. Param is: #{err[:param]}. Message is: #{err[:message]}")
+      logger.fatal("[PayJp AuthenticationError] Authentication with Payjp's API failed. #{self.payjp_error_message(e)}")
       raise e
     rescue Payjp::APIConnectionError => e
-      body = e.json_body
-      err = body[:error]
-      logger.fatal("[PayJp APIConnectionError] Network communication with Payjp failed. Status is: #{e.http_status}. Type is: #{err[:type]}. Code is: #{err[:code]}. Param is: #{err[:param]}. Message is: #{err[:message]}")
+      logger.fatal("[PayJp APIConnectionError] Network communication with Payjp failed. #{self.payjp_error_message(e)}")
       raise e
     rescue Payjp::PayjpError => e
-      body = e.json_body
-      err = body[:error]
-      logger.fatal("[PayJp PayjpError] Display a very generic error to the user, and maybe send yourself an email. Status is: #{e.http_status}. Type is: #{err[:type]}. Code is: #{err[:code]}. Param is: #{err[:param]}. Message is: #{err[:message]}")
+      logger.fatal("[PayJp PayjpError] Display a very generic error to the user, and maybe send yourself an email. #{self.payjp_error_message(e)}")
       raise e
     rescue => e
       logger.fatal("[PayJp Error] Something else happened, completely unrelated to Payjp. #{e.message}")
       raise e
     end
+  end
+
+  def payjp_error_message(e)
+    body = e.json_body
+    err = body[:error]
+    "Status is: #{e.http_status}. Type is: #{err[:type]}. Code is: #{err[:code]}. Param is: #{err[:param]}. Message is: #{err[:message]}"
   end
 end
