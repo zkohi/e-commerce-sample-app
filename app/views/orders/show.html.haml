@@ -53,6 +53,7 @@
                   %th= Order.human_attribute_name(:shipping_date)
                   %th= Order.human_attribute_name(:shipping_time_range)
                   %th= Order.human_attribute_name(:payment_type)
+                  %th= Order.human_attribute_name(:payment_state)
 
               %tbody
                 %tr
@@ -62,6 +63,7 @@
                   %td= @order.shipping_date
                   %td= @order.shipping_time_range_string
                   %td= @order.payment_type_i18n
+                  %td= @order.payment_state_i18n
 
         .panel.panel-warning
           .panel-heading
@@ -79,7 +81,6 @@
                   %th= Order.human_attribute_name(:payment_total)
                   %th= Order.human_attribute_name(:tax_total)
                   %th= Order.human_attribute_name(:total)
-                  %th= Order.human_attribute_name(:payment_state)
 
               %tbody
                 %tr
@@ -92,6 +93,5 @@
                   %td= number_to_currency(@order.payment_total, locale: :ja)
                   %td= number_to_currency(@order.tax_total, locale: :ja)
                   %td= number_to_currency(@order.total, locale: :ja)
-                  %td= @order.payment_state_i18n
 
 = link_to '注文履歴一覧画面を見る', orders_path
