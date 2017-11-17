@@ -28,7 +28,7 @@
                       %td= image_tag(line_item.product.img_filename, class: 'img-thumbnail', alt: "#{line_item.product.name}", size: "100x100")
                       %td= line_item.product.price
                       %td= line_item.quantity
-                      %td= link_to '削除する', destroy_cart_line_item_path(id: order.id, line_item_id: line_item.id), method: :delete, data: { confirm: '削除してよろしいですか?' }
+                      %td= link_to '削除する', line_items_cart_path(id: order.id, line_item_id: line_item.id), method: :delete, data: { confirm: '削除してよろしいですか?' }
 
               .panel.panel-warning
                 .panel-heading

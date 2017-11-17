@@ -6,14 +6,20 @@ Rails.application.routes.draw do
     resources :evaluations, only: [:create, :destroy], controller: 'diary_evaluations'
   end
 
-  resources :carts, only: [:create, :update, :edit], controller: 'orders'
+  resources :carts, only: [:create, :update, :edit], controller: 'orders' do
+    member do
+      patch :confirm
+      delete :line_items, to: 'orders#destroy_cart_line_item'
+    end
+  end
   get 'carts', to: 'orders#cart'
-  patch 'carts/:id/confirm', to: 'orders#confirm', as: 'confirm_cart'
-  delete 'carts/:id/line_items', to: 'orders#destroy_cart_line_item', as: 'destroy_cart_line_item'
 
-  resources :orders, only: [:index, :show]
-  patch 'orders/:id/cancel', to: 'orders#cancel', as: 'cancel_order'
-  patch 'orders/:id/reorder', to: 'orders#reorder', as: 'reorder_order'
+  resources :orders, only: [:index, :show] do
+    member do
+      patch :cancel
+      patch :reorder
+    end
+  end
 
   resources :products, only: [:index, :show]
   resources :coupons, only: [:index, :show]
@@ -52,11 +58,14 @@ Rails.application.routes.draw do
   end
 
   namespace :companies, path: '/companies' do
-    resources :orders, only: [:index, :show]
-    patch 'orders/:id/prosessing', to: 'orders#prosessing', as: 'prosessing_order'
-    patch 'orders/:id/shipped', to: 'orders#shipped', as: 'shipped_order'
-    patch 'orders/:id/cancel', to: 'orders#cancel', as: 'cancel_order'
-    patch 'orders/:id/reorder', to: 'orders#reorder', as: 'reorder_order'
+    resources :orders, only: [:index, :show] do
+      member do
+        patch 'prosessing'
+        patch 'shipped'
+        patch 'cancel'
+        patch 'reorder'
+      end
+    end
 
     resources :products, only: [:index, :show] do
       resources :stocks, only: [:create, :destroy], controller: 'products'

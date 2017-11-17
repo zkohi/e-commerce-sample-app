@@ -11,16 +11,16 @@
             %h3.panel-title= "#{Order.human_attribute_name(:state)} : #{@order.state_i18n}"
           .panel-body
             - if @order.ordered? || @order.reordered?
-              = link_to "#{ApplicationController.helpers.t('enums.order.state.prosessing')}にする", companies_prosessing_order_path(@order), method: :patch, data: { confirm: "#{ApplicationController.helpers.t('enums.order.state.prosessing')}にしてよろしいですか?" }
+              = link_to "#{ApplicationController.helpers.t('enums.order.state.prosessing')}にする", prosessing_companies_order_path(@order), method: :patch, data: { confirm: "#{ApplicationController.helpers.t('enums.order.state.prosessing')}にしてよろしいですか?" }
               \|
-              = link_to "#{ApplicationController.helpers.t('enums.order.state.canceled')}にする", companies_cancel_order_path(@order), method: :patch, data: { confirm: "#{ApplicationController.helpers.t('enums.order.state.canceled')}にしてよろしいですか?" }
+              = link_to "#{ApplicationController.helpers.t('enums.order.state.canceled')}にする", cancel_companies_order_path(@order), method: :patch, data: { confirm: "#{ApplicationController.helpers.t('enums.order.state.canceled')}にしてよろしいですか?" }
             - elsif @order.prosessing?
-              = link_to "#{ApplicationController.helpers.t('enums.order.state.shipped')}にする", companies_shipped_order_path(@order), method: :patch, data: { confirm: "#{ApplicationController.helpers.t('enums.order.state.shipped')}にしてよろしいですか?" }
+              = link_to "#{ApplicationController.helpers.t('enums.order.state.shipped')}にする", shipped_companies_order_path(@order), method: :patch, data: { confirm: "#{ApplicationController.helpers.t('enums.order.state.shipped')}にしてよろしいですか?" }
               \|
               キャンセルはできません
             - elsif @order.canceled?
               - if @order.cash_on_delivery?
-                = link_to "#{ApplicationController.helpers.t('enums.order.state.ordered')}にする", companies_reorder_order_path(@order), method: :patch, data: { confirm: "#{ApplicationController.helpers.t('enums.order.state.ordered')}にしてよろしいですか?" }
+                = link_to "#{ApplicationController.helpers.t('enums.order.state.ordered')}にする", reorder_companies_order_path(@order), method: :patch, data: { confirm: "#{ApplicationController.helpers.t('enums.order.state.ordered')}にしてよろしいですか?" }
               - else
                 クレジットカード決済のため、再注文できません
             - else

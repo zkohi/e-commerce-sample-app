@@ -795,6 +795,14 @@ RSpec.describe Order, type: :model do
   end
 
   describe "charge_payjp!" do
+    before :all do
+      Timecop.freeze(Time.local(2017, 9, 4, 10, 5, 0))
+    end
+
+    after :all do
+      Timecop.return
+    end
+
     subject { order.send(:charge_payjp!) }
 
     let(:order) { create(:order, :ordered) }
@@ -818,6 +826,14 @@ RSpec.describe Order, type: :model do
   end
 
   describe "capture_payjp!" do
+    before :all do
+      Timecop.freeze(Time.local(2017, 9, 4, 10, 5, 0))
+    end
+
+    after :all do
+      Timecop.return
+    end
+
     subject { order.send(:capture_payjp!) }
 
     let(:order) { create(:order, :ordered, :with_credit_charge) }
@@ -843,6 +859,14 @@ RSpec.describe Order, type: :model do
   end
 
   describe "refund_payjp!" do
+    before :all do
+      Timecop.freeze(Time.local(2017, 9, 4, 10, 5, 0))
+    end
+
+    after :all do
+      Timecop.return
+    end
+
     subject { order.send(:refund_payjp!) }
 
     let(:order) { create(:order, :ordered, :with_credit_charge) }

@@ -40,7 +40,8 @@ RSpec.describe "Orders", type: :request do
 
       order = user.orders.find_or_initialize_by(state: :cart, company_id: company_id)
 
-      delete destroy_cart_line_item_path order, line_item_id: order.line_items.first.id
+      delete line_items_cart_path order, line_item_id: order.line_items.first.id
+
       expect(response).to redirect_to(carts_path)
       follow_redirect!
 
@@ -223,28 +224,28 @@ RSpec.describe "Orders", type: :request do
       get companies_order_path order
       expect(response).to render_template(:show)
 
-      patch companies_cancel_order_path order
+      patch cancel_companies_order_path order
 
       expect(response).to redirect_to(companies_order_path(order))
       follow_redirect!
 
       expect(response).to render_template(:show)
 
-      patch companies_reorder_order_path order
+      patch reorder_companies_order_path order
 
       expect(response).to redirect_to(companies_order_path(order))
       follow_redirect!
 
       expect(response).to render_template(:show)
 
-      patch companies_prosessing_order_path order
+      patch prosessing_companies_order_path order
 
       expect(response).to redirect_to(companies_order_path(order))
       follow_redirect!
 
       expect(response).to render_template(:show)
 
-      patch companies_shipped_order_path order
+      patch shipped_companies_order_path order
 
       expect(response).to redirect_to(companies_order_path(order))
       follow_redirect!
