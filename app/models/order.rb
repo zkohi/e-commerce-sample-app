@@ -36,28 +36,28 @@ class Order < ApplicationRecord
 
   after_find :set_item_count, :set_item_total, :set_shipment_total, :set_adjustment_total, :set_payment_total, :set_tax_total, :set_total, if: :cart?
 
-  before_validation :set_shipping_time_range_string, if: Proc.new { |order| order.shipping_time_range.present? }
+  before_validation :set_shipping_time_range_string, if: ->(order) { order.shipping_time_range.present? }
 
-  before_validation :set_payment_type_to_credit, if: Proc.new { |order| order.payjp_token.present? && order.ordered? }
+  before_validation :set_payment_type_to_credit, if: ->(order) { order.payjp_token.present? && order.ordered? }
 
-  with_options if: Proc.new { |order| order.point_total.present? && order.ordered? } do
+  with_options if: ->(order) { order.point_total.present? && order.ordered? } do
     before_validation :set_point_total, :set_adjustment_total, :set_payment_total, :set_tax_total, :set_total
     after_update :save_user_point!
   end
 
-  before_update :set_payment_state_to_payed, if: Proc.new { |order| order.credit? && order.ordered? }
+  before_update :set_payment_state_to_payed, if: ->(order) { order.credit? && order.ordered? }
 
-  after_update :charge_payjp!, if: Proc.new { |order| order.payjp_token.present? && order.ordered? }
-  before_update :capture_payjp!, if: Proc.new { |order| order.credit? && order.prosessing? }
+  after_update :charge_payjp!, if: ->(order) { order.payjp_token.present? && order.ordered? }
+  before_update :capture_payjp!, if: ->(order) { order.credit? && order.prosessing? }
   # 現仕様としては、注文キャンセル時に与信を解放し、業者管理画面からの再注文不可とする
   # 注文キャンセル時に与信を解放しなければ、業者の管理画面から再注文可能
-  before_update :refund_payjp!, if: Proc.new { |order| order.credit? && order.canceled? }
+  before_update :refund_payjp!, if: ->(order) { order.credit? && order.canceled? }
 
   after_update :add_product_stock!, if: :canceled?
-  after_update :cancel_user_point!, if: Proc.new { |order| order.user_point.present? && order.canceled? }
+  after_update :cancel_user_point!, if: ->(order) { order.user_point.present? && order.canceled? }
 
   after_update :sub_product_stock!, if: :reordered?
-  after_update :reorder_user_point!, if: Proc.new { |order| order.user_point.present? && order.reordered? }
+  after_update :reorder_user_point!, if: ->(order) { order.user_point.present? && order.reordered? }
 
   enum state: {
     cart: 0,
