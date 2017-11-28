@@ -1,0 +1,8 @@
+= simple_form_for(@user_point, url: backoffice_user_points_path(@user), html: {class: 'form-horizontal'}, defaults: { wrapper_html: { class: 'col-lg-12' } }) do |f|
+  = f.error_notification
+
+  .form-inputs
+    = f.input :point
+
+  .form-actions
+    = f.button :submit

@@ -1,0 +1,17 @@
+.row
+  .col-lg-12
+    .well.bs-component
+      = simple_form_for([:backoffice, @product], html: {class: 'form-horizontal'}, defaults: { wrapper_html: { class: 'col-lg-12' } }) do |f|
+        = f.error_notification
+
+        .form-inputs
+          = f.input :name
+          = f.input :img_filename
+          = image_tag(@product.img_filename, class: 'img-thumbnail', alt: "#{@product.name}", size: "250x250")
+          = f.input :price, input_html: {min: 1, max: 10000000}
+          = f.input :description
+          = f.input :flg_non_display, include_blank: false
+          = f.input :sort_order, input_html: {min: 1, max: 10000}
+
+        .form-actions
+          = f.button :submit

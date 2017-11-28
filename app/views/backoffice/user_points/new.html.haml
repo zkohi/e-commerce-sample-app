@@ -1,0 +1,29 @@
+.panel.panel-danger
+  .panel-heading
+    %h2.panel-title ポイント登録
+  .panel-body
+    %div
+      %table.table.table-striped.table-hover
+        %thead
+          %tr
+            %th= User.human_attribute_name(:img_filename)
+            %th= User.human_attribute_name(:id)
+            %th= User.human_attribute_name(:email)
+            %th= User.human_attribute_name(:nickname)
+            %th= User.human_attribute_name(:name)
+            %th= "現在の#{UserPoint.human_attribute_name(:point)}"
+
+        %tbody
+          %tr
+            %td= image_tag(@user.img_filename, class: 'img-thumbnail', size: "100x100")
+            %td= @user.id
+            %td= @user.email
+            %td= @user.nickname
+            %td= @user.name
+            %td= number_with_delimiter(@user.user_points.total.present? ? @user.user_points.total.first.point : 0)
+
+    = render 'form'
+
+%br
+
+= link_to 'ユーザー一覧', backoffice_users_path

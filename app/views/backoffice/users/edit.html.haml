@@ -1,0 +1,21 @@
+.panel.panel-danger
+  .panel-heading
+    %h2.panel-title ユーザー編集
+  .panel-body
+    = simple_form_for([:backoffice, @user], html: {class: 'form-horizontal'}, defaults: { wrapper_html: { class: 'col-lg-12' } }) do |f|
+      = f.error_notification
+
+      .form-inputs
+        = f.input :email
+        = f.input :name
+        = f.input :zipcode
+        = f.input :address
+
+      .form-actions
+        = f.button :submit
+
+%br
+
+= link_to '詳細情報', [:backoffice, @user]
+\|
+= link_to 'ユーザー一覧', backoffice_users_path

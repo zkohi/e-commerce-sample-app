@@ -1,0 +1,8 @@
+= simple_form_for([:companies, @product_stock], html: {class: 'form-horizontal'}, defaults: { wrapper_html: { class: 'col-lg-12' } }) do |f|
+  = f.error_notification
+
+  .form-inputs
+    = f.input :stock
+
+  .form-actions
+    = f.button :submit

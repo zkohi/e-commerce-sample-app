@@ -1,0 +1,34 @@
+!!!
+%html
+  %head
+    %meta{:content => "text/html; charset=UTF-8", "http-equiv" => "Content-Type"}/
+    %title ECommerceSampleAppAdmin
+    = csrf_meta_tags
+    = stylesheet_link_tag    'application', media: 'all', 'data-turbolinks-track': 'reload'
+    = javascript_include_tag 'application', 'data-turbolinks-track': 'reload'
+  %body
+    .navbar.navbar-default.navbar-fixed-top
+      .container
+        .navbar-header
+          =link_to 'さくらマーケット 業者管理画面', companies_products_path, class: 'navbar-brand'
+        .navbar-collapse.collapse
+          %ul.nav.navbar-nav.navbar-right
+            %li
+              =link_to '商品マスタ一覧', companies_products_path
+            %li
+              =link_to '商品在庫一覧', companies_stocks_path
+            %li
+              =link_to '注文一覧', companies_orders_path
+            %li
+              =link_to '登録情報変更', edit_company_registration_path
+            %li
+              -if company_signed_in?
+                =link_to 'ログアウト', destroy_company_session_path
+              -else
+                =link_to 'ログイン', new_company_session_path
+
+    .container
+      -if notice
+        %p.alert.alert-dismissible.alert-success#notice= notice
+
+      = yield

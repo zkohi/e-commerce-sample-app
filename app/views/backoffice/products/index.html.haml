@@ -1,0 +1,30 @@
+.panel.panel-info
+  .panel-heading
+    %h2.panel-title 商品一覧
+  .panel-body
+    %div
+      %table.table.table-striped.table-hover
+        %thead
+          %tr
+            %th= Product.human_attribute_name(:name)
+            %th= Product.human_attribute_name(:img_filename)
+            %th= Product.human_attribute_name(:price)
+            %th
+            %th
+            %th
+
+        %tbody
+          - @products.each do |product|
+            %tr
+              %td= product.name
+              %td= image_tag(product.img_filename, class: 'img-thumbnail', alt: "#{product.name}", size: "100x100")
+              %td= number_to_currency(product.price, locale: :ja)
+              %td= link_to '詳細', [:backoffice, product]
+              %td= link_to '編集', edit_backoffice_product_path(product)
+              %td= link_to '削除', [:backoffice, product], method: :delete, data: { confirm: '削除してよろしいですか?' }
+
+      = paginate @products
+
+%br
+
+= link_to '新規作成', new_backoffice_product_path

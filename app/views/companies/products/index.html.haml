@@ -1,0 +1,15 @@
+.content.col-lg-12
+  - if @products.blank?
+    %div 商品は登録されていません
+  -else 
+    - @products.each do |product| 
+      .col-md-4.col-sm-4.col-xs-6.product-list-item
+        .panel.panel-default
+          = link_to companies_product_path(product) do
+            .panel-body.text-center.product-body
+              = image_tag(product.img_filename, class: 'img-thumbnail', alt: "#{product.name}", size: "250x250")
+              %p= product.name
+
+%br
+
+= paginate @products

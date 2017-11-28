@@ -1,0 +1,30 @@
+.panel.panel-info
+  .panel-heading
+    %h2.panel-title 商品詳細
+  .panel-body
+    %table.table.table-striped.table-hover
+      %tbody
+        %tr
+          %td= Product.human_attribute_name(:name)
+          %td= @product.name
+        %tr
+          %td= Product.human_attribute_name(:img_filename)
+          %td= image_tag(@product.img_filename, class: 'img-thumbnail', alt: "#{@product.name}", size: "250x250")
+        %tr
+          %td= Product.human_attribute_name(:price)
+          %td= number_to_currency(@product.price, locale: :ja)
+        %tr
+          %td= Product.human_attribute_name(:description)
+          %td= simple_format(@product.description)
+        %tr
+          %td= Product.human_attribute_name(:flg_non_display)
+          %td= @product.flg_non_display_i18n
+        %tr
+          %td= Product.human_attribute_name(:sort_order)
+          %td= @product.sort_order
+
+%br
+
+= link_to '編集', edit_backoffice_product_path(@product)
+\|
+= link_to '商品一覧', backoffice_products_path

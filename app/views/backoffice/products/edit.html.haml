@@ -1,0 +1,11 @@
+.panel.panel-info
+  .panel-heading
+    %h2.panel-title 商品編集
+  .panel-body
+    = render 'form'
+
+%br
+
+= link_to '商品詳細', [:backoffice, @product]
+\|
+= link_to '商品一覧', backoffice_products_path

@@ -1,0 +1,11 @@
+= simple_form_for(@diary) do |f|
+  = f.error_notification
+
+  .form-inputs
+    = f.input :title
+    = f.input :content
+    = f.input :img_filename
+    = image_tag(@diary.img_filename, class: 'img-thumbnail')
+
+  .form-actions
+    = f.button :submit

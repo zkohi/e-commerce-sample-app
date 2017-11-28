@@ -1,0 +1,39 @@
+.panel.panel-warning
+  .panel-heading
+    %h2.panel-title 注文一覧
+  .panel-body
+    - if @orders.blank?
+      %p 注文情報がありません
+    - else
+      %div
+        %table.table.table-striped.table-hover
+          %thead
+            %tr
+              %th= Company.human_attribute_name(:name)
+              %th= Order.human_attribute_name(:id)
+              %th= Order.human_attribute_name(:item_total)
+              %th= Order.human_attribute_name(:shipment_total)
+              %th= Order.human_attribute_name(:point_total)
+              %th= Order.human_attribute_name(:tax_total)
+              %th= Order.human_attribute_name(:total)
+              %th= Order.human_attribute_name(:payment_type)
+              %th= Order.human_attribute_name(:payment_state)
+              %th= Order.human_attribute_name(:state)
+              %th
+
+          %tbody
+            - @orders.each do |order|
+              %tr
+                %td= order.company.present? ? order.company.name : "-"
+                %td= order.id
+                %td= number_to_currency(order.item_total, locale: :ja)
+                %td= number_to_currency(order.shipment_total, locale: :ja)
+                %td= number_with_delimiter(order.user_point.present? ? order.user_point.point.abs : 0)
+                %td= number_to_currency(order.tax_total, locale: :ja)
+                %td= number_to_currency(order.total, locale: :ja)
+                %td= order.payment_type_i18n
+                %td= order.payment_state_i18n
+                %td= order.state_i18n
+                %td= link_to '詳細', order
+
+        = paginate @orders

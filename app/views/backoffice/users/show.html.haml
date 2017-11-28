@@ -1,0 +1,53 @@
+.panel.panel-danger
+  .panel-heading
+    %h2.panel-title ユーザー詳細
+  .panel-body
+    %table.table.table-striped.table-hover
+      %tbody
+        %tr
+          %th= User.human_attribute_name(:img_filename)
+          %th= User.human_attribute_name(:id)
+          %th= User.human_attribute_name(:email)
+          %th= User.human_attribute_name(:nickname)
+          %th= User.human_attribute_name(:name)
+          %th= User.human_attribute_name(:zipcode)
+          %th= User.human_attribute_name(:address)
+          %th= "現在の#{UserPoint.human_attribute_name(:point)}"
+        %tr
+          %td= image_tag(@user.img_filename, class: 'img-thumbnail', size: "100x100")
+          %td= @user.id
+          %td= @user.email
+          %td= @user.nickname
+          %td= @user.name
+          %td= @user.zipcode
+          %td= @user.address
+          %td= number_with_delimiter(@user.user_points.total.present? ? @user.user_points.total.first.point : 0)
+
+.panel.panel-danger
+  .panel-heading
+    %h2.panel-title ポイント履歴
+  .panel-body
+    - if @user_points.blank?
+      %h4 ポイント履歴はありません
+    - else
+      %table.table.table-striped.table-hover
+        %tbody
+          %tr
+            %th= UserPoint.human_attribute_name(:status)
+            %th= UserPoint.human_attribute_name(:point)
+            %th= UserPoint.human_attribute_name(:created_at)
+          - @user_points.each do |user_point|
+            %tr
+              %td= user_point.status_i18n
+              %td= number_with_delimiter(user_point.point)
+              %td= user_point.created_at
+
+        = paginate @user_points
+
+%br
+
+= link_to '登録情報編集', edit_backoffice_user_path(@user)
+\|
+= link_to 'ポイント登録', new_backoffice_user_point_path(@user)
+\|
+= link_to 'ユーザー覧', backoffice_users_path

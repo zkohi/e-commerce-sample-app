@@ -1,0 +1,11 @@
+.panel.panel-info
+  .panel-heading
+    %h2.panel-title  日記を編集する
+  .panel-body
+    = render 'form'
+
+%br
+
+= link_to '日記を見る', @diary
+\|
+= link_to 'トップページを開く', root_path

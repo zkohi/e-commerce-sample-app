@@ -1,0 +1,27 @@
+.panel.panel-info
+  .panel-heading
+    %h2.panel-title クーポンを使用する
+  .panel-body
+    %table.table.table-striped.table-hover
+      %thead
+        %tr
+          %th= Coupon.human_attribute_name(:id)
+          %th= Coupon.human_attribute_name(:title)
+          %th= Coupon.human_attribute_name(:code)
+          %th= Coupon.human_attribute_name(:point)
+
+      %tbody
+        %tr
+          %td= @coupon.id
+          %td= @coupon.title
+          %td= @coupon.code
+          %td= number_with_delimiter(@coupon.point)
+
+    - if current_user.user_points.where(coupon_id: @coupon.id).exists?
+      使用済みです
+    - else
+      = render 'form'
+
+%br
+
+= link_to 'クーポン一覧', coupons_path

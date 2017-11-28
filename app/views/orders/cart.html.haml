@@ -1,0 +1,63 @@
+.panel.panel-info
+  .panel-heading
+    %h2.panel-title カート
+  .panel-body
+    - if @orders.blank?
+      %p 商品は登録されていません
+      = link_to '商品一覧を見る', products_path, {class: "bs-component"}
+    - else
+      - @orders.each do |order|
+        - if order.line_items.present?
+          .panel.panel-success
+            .panel-heading
+              %h2.panel-title= "#{order.company.name}の商品（数量#{number_with_delimiter(order.company.quantity_per_box)}個毎に送料を追加）"
+            .panel-body
+              %table.table.table-striped.table-hover
+                %thead
+                  %tr
+                    %th= Product.human_attribute_name(:name)
+                    %th= Product.human_attribute_name(:img_filename)
+                    %th= Product.human_attribute_name(:price)
+                    %th= LineItem.human_attribute_name(:quantity)
+                    %th
+
+                %tbody
+                  - order.line_items.includes(:product).each do |line_item|
+                    %tr
+                      %td= line_item.product.name
+                      %td= image_tag(line_item.product.img_filename, class: 'img-thumbnail', alt: "#{line_item.product.name}", size: "100x100")
+                      %td= line_item.product.price
+                      %td= line_item.quantity
+                      %td= link_to '削除する', line_items_cart_path(id: order.id, line_item_id: line_item.id), method: :delete, data: { confirm: '削除してよろしいですか?' }
+
+              .panel.panel-warning
+                .panel-heading
+                  %h2.panel-title 料金明細（※代引き手数料はクレジット決済の場合は追加されません）
+                .panel-body
+                  %table.table.table-striped.table-hover
+                    %thead
+                      %tr
+                        %th= Order.human_attribute_name(:item_total)
+                        %th= Order.human_attribute_name(:item_count)
+                        %th= Order.human_attribute_name(:shipping_count)
+                        %th= Order.human_attribute_name(:shipment_total) 
+                        %th= Order.human_attribute_name(:payment_total)
+                        %th= Order.human_attribute_name(:adjustment_total)
+                        %th= Order.human_attribute_name(:tax_total)
+                        %th= Order.human_attribute_name(:total)
+                        %th
+
+                    %tbody
+                      %tr
+                        %td= number_to_currency(order.item_total, locale: :ja)
+                        %td= number_with_delimiter(order.item_count)
+                        %td= number_with_delimiter((order.item_count/order.company.quantity_per_box.to_f).ceil)
+                        %td= number_to_currency(order.shipment_total, locale: :ja)
+                        %td= number_to_currency(order.payment_total, locale: :ja)
+                        %td= number_to_currency(order.adjustment_total, locale: :ja)
+                        %td= number_to_currency(order.tax_total, locale: :ja)
+                        %td= number_to_currency(order.total, locale: :ja)
+
+              %p= link_to "#{order.company.name}の注文画面に進む", edit_cart_path(order), {class: "btn bs-component"}
+
+      %p= link_to '商品一覧を見る', products_path, {class: "btn bs-component"}

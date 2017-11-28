@@ -1,0 +1,26 @@
+.panel.panel-warning
+  .panel-heading
+    %h2.panel-title 業者詳細
+  .panel-body
+    %div
+      %table.table.table-striped.table-hover
+        %thead
+          %tr
+            %th= Company.human_attribute_name(:id)
+            %th= Company.human_attribute_name(:name)
+            %th= Company.human_attribute_name(:email)
+            %th= Company.human_attribute_name(:quantity_per_box)
+
+        %tbody
+          %tr
+            %td= @company.id
+            %td= @company.name
+            %td= @company.email
+            %td= number_with_delimiter(@company.quantity_per_box)
+
+%br
+
+= link_to '編集', edit_backoffice_company_path(@company)
+\|
+= link_to '業者一覧', backoffice_companies_path
+
