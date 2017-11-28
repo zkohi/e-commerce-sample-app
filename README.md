@@ -12,6 +12,7 @@ Things you may want to cover:
 * System dependencies
 
   * imagemagick
+  * https://pay.jp/
 
 * Configuration
 
@@ -19,6 +20,8 @@ Things you may want to cover:
 
 ```
 export MYSQL_DATABASE_PASSWORD=xxx
+export PAYJP_PUBLIC_KEY=xxx
+export PAYJP_SECRET_KEY=xxx
 ```
 
 * Database creation

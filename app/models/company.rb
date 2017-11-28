@@ -8,4 +8,5 @@ class Company < ApplicationRecord
          :recoverable, :rememberable, :trackable, :validatable
 
   validates :name, presence: true, length: { maximum: 50 }
+  validates :quantity_per_box, presence: true, numericality: { only_integer: true, greater_than_or_equal_to: 1, less_than_or_equal_to: 999999 }
 end

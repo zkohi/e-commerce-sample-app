@@ -1,10 +1,12 @@
 class Order < ApplicationRecord
   attr_accessor :shipping_time_range
   attr_accessor :point_total
+  attr_accessor :payjp_token
 
   belongs_to :user
   belongs_to :company
   has_one :user_point
+  has_one :credit_charge
 
   has_many :line_items, dependent: :destroy, inverse_of: :order
   validates_associated :line_items
@@ -29,30 +31,47 @@ class Order < ApplicationRecord
     validates :user_name, presence: true, length: { maximum: 30 }
     validates :user_zipcode, presence: true, numericality: { only_integer: true }, length: { is: 7 }
     validates :user_address, presence: true, length: { maximum: 100 }
+    validates :payment_type, presence: true, inclusion: { in: ['cash_on_delivery', 'credit'] }
   end
 
   after_find :set_item_count, :set_item_total, :set_shipment_total, :set_adjustment_total, :set_payment_total, :set_tax_total, :set_total, if: :cart?
 
-  before_validation :set_shipping_time_range_string, if: Proc.new { |order| order.shipping_time_range.present? }
+  before_validation :set_shipping_time_range_string, if: ->(order) { order.shipping_time_range.present? }
 
-  with_options if: Proc.new { |order| order.point_total.present? } do
+  before_validation :set_payment_type_to_credit, if: ->(order) { order.payjp_token.present? && order.ordered? }
+
+  with_options if: ->(order) { order.point_total.present? && order.ordered? } do
     before_validation :set_point_total, :set_adjustment_total, :set_payment_total, :set_tax_total, :set_total
-    after_update :save_user_point
+    after_update :save_user_point!
   end
+
+  before_update :set_payment_state_to_payed, if: ->(order) { order.credit? && order.ordered? }
+
+  after_update :charge_payjp!, if: ->(order) { order.payjp_token.present? && order.ordered? }
+  before_update :capture_payjp!, if: ->(order) { order.credit? && order.prosessing? }
+  # 現仕様としては、注文キャンセル時に与信を解放し、業者管理画面からの再注文不可とする
+  # 注文キャンセル時に与信を解放しなければ、業者の管理画面から再注文可能
+  before_update :refund_payjp!, if: ->(order) { order.credit? && order.canceled? }
+
+  after_update :add_product_stock!, if: :canceled?
+  after_update :cancel_user_point!, if: ->(order) { order.user_point.present? && order.canceled? }
+
+  after_update :sub_product_stock!, if: :reordered?
+  after_update :reorder_user_point!, if: ->(order) { order.user_point.present? && order.reordered? }
 
   enum state: {
     cart: 0,
-    ordered: 1
-  }
-
-  enum shipment_state: {
-    unshipped: 0,
-    shipped: 1
+    ordered: 1,
+    prosessing: 2,
+    shipped: 3,
+    canceled: 4,
+    reordered: 5,
   }
 
   enum payment_state: {
     unpayed: 0,
-    payed: 1
+    payed: 1,
+    refunded: 2
   }
 
   enum shipping_time_range: {
@@ -62,6 +81,11 @@ class Order < ApplicationRecord
     sixteen_to_eighteen: 3,
     eighteen_to_twenty: 4,
     twenty_to_twenty_one: 5
+  }
+
+  enum payment_type: {
+    cash_on_delivery: 0,
+    credit: 1
   }
 
   def available_shipping_date_range
@@ -93,6 +117,13 @@ class Order < ApplicationRecord
 
   private
 
+    def set_payment_type_to_credit
+      self.payment_type = 'credit'
+      self.payment_total = 0
+      self.tax_total = (self.adjustment_total * 0.08).floor
+      self.total = self.adjustment_total + self.tax_total
+    end
+
     def set_point_total
       self.point_total = self.point_total.to_i
     end
@@ -106,23 +137,27 @@ class Order < ApplicationRecord
     end
 
     def set_shipment_total
-      self.shipment_total = (self.item_count / 5.0).ceil * 600
+      self.shipment_total = (self.item_count / self.company.quantity_per_box.to_f).ceil * 600
     end
 
     def set_payment_total
-      self.payment_total =
-        case self.adjustment_total
-        when 0
-          0
-        when 1 ... 10000
-          300
-        when 10000 ... 30000
-          400
-        when 30000 ... 100000
-          600
-        else
-          1000
-        end
+      if self.cash_on_delivery?
+        self.payment_total =
+          case self.adjustment_total
+          when 0
+            0
+          when 1 ... 10000
+            300
+          when 10000 ... 30000
+            400
+          when 30000 ... 100000
+            600
+          else
+            1000
+          end
+      else
+        self.payment_total = 0
+      end
     end
 
     def set_adjustment_total
@@ -133,11 +168,15 @@ class Order < ApplicationRecord
     end
 
     def set_tax_total
-      self.tax_total = ((self.adjustment_total + payment_total) * 0.08).floor
+      self.tax_total = ((self.adjustment_total + self.payment_total) * 0.08).floor
     end
 
     def set_total
       self.total = self.adjustment_total + self.payment_total + self.tax_total
+    end
+
+    def set_payment_state_to_payed
+      self.payment_state = 'payed'
     end
 
     def valid_shipping_date?
@@ -170,7 +209,41 @@ class Order < ApplicationRecord
       self.shipping_time_range_string = Order.shipping_time_ranges_i18n[self.shipping_time_range]
     end
 
-    def save_user_point
-      UserPoint.new(user_id: self.user_id, order_id: self.id, point: -self.point_total, status: 'used').save!
+    def save_user_point!
+      UserPoint.new(user_id: self.user_id, order_id: self.id, point: -self.point_total.to_i, status: 'used').save!
+    end
+
+    def cancel_user_point!
+      self.user_point.status = 'canceled'
+      self.user_point.save!
+    end
+
+    def reorder_user_point!
+      self.user_point.status = 'used'
+      self.user_point.save!
+    end
+
+    def sub_product_stock!
+      self.line_items.each { |line_item| line_item.sub_product_stock! }
+    end
+
+    def add_product_stock!
+      self.line_items.each { |line_item| line_item.add_product_stock! }
+    end
+
+    def charge_payjp!
+      credit_charge = CreditCharge.new(order_id: self.id)
+      credit_charge.charge!(self.payjp_token, self.total)
+      credit_charge.save!
+    end
+
+    def capture_payjp!
+      self.credit_charge.capture!
+      self.payment_state = 'payed'
+    end
+
+    def refund_payjp!
+      self.credit_charge.refund!
+      self.payment_state = 'refunded'
     end
 end

@@ -88,44 +88,34 @@ RSpec.describe LineItem, type: :model do
 
   end
 
-  describe "sub_product_stock" do
-    subject { line_item.send(:sub_product_stock) }
+  describe "sub_product_stock!" do
+    subject { line_item.sub_product_stock! }
 
     before :each do
-      allow(line_item.product_stock).to receive(:save!)
+      allow(line_item.product_stock).to receive(:update_stock!)
     end
 
     let(:line_item) { build(:line_item_with_product_stocks, product_stocks_stock: 100, quantity: 10) }
 
     it do
       should
-      expect(line_item.product_stock.stock).to eq 90
-    end
-
-    it do
-      should
-      expect(line_item.product_stock).to have_received(:save!)
+      expect(line_item.product_stock).to have_received(:update_stock!).with(-10)
     end
 
   end
 
-  describe "add_product_stock" do
-    subject { line_item.send(:add_product_stock) }
+  describe "add_product_stock!" do
+    subject { line_item.add_product_stock! }
 
     before :each do
-      allow(line_item.product_stock).to receive(:save!)
+      allow(line_item.product_stock).to receive(:update_stock!)
     end
 
     let(:line_item) { build(:line_item_with_product_stocks, product_stocks_stock: 100, quantity: 10) }
 
     it do
       should
-      expect(line_item.product_stock.stock).to eq 110
-    end
-
-    it do
-      should
-      expect(line_item.product_stock).to have_received(:save!)
+      expect(line_item.product_stock).to have_received(:update_stock!).with(10)
     end
 
   end

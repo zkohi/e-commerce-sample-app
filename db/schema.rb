@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20171023074305) do
+ActiveRecord::Schema.define(version: 20171113012921) do
 
   create_table "admins", force: :cascade, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8" do |t|
     t.string "email", default: "", null: false
@@ -43,6 +43,7 @@ ActiveRecord::Schema.define(version: 20171023074305) do
     t.string "name", null: false
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.integer "quantity_per_box", null: false
     t.index ["email"], name: "index_companies_on_email", unique: true
     t.index ["reset_password_token"], name: "index_companies_on_reset_password_token", unique: true
   end
@@ -54,6 +55,14 @@ ActiveRecord::Schema.define(version: 20171023074305) do
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.index ["code"], name: "index_coupons_on_code", unique: true
+  end
+
+  create_table "credit_charges", force: :cascade, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8" do |t|
+    t.bigint "order_id"
+    t.string "charge_id", null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["order_id"], name: "index_credit_charges_on_order_id"
   end
 
   create_table "diaries", force: :cascade, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8" do |t|
@@ -99,7 +108,6 @@ ActiveRecord::Schema.define(version: 20171023074305) do
   create_table "orders", force: :cascade, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8" do |t|
     t.bigint "user_id"
     t.integer "state", default: 0, null: false
-    t.integer "shipment_state", default: 0, null: false
     t.integer "payment_state", default: 0, null: false
     t.integer "item_count", default: 0, null: false
     t.integer "item_total", default: 0, null: false
@@ -116,6 +124,7 @@ ActiveRecord::Schema.define(version: 20171023074305) do
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.bigint "company_id"
+    t.integer "payment_type", default: 0
     t.index ["company_id"], name: "index_orders_on_company_id"
     t.index ["user_id"], name: "index_orders_on_user_id"
   end
@@ -176,6 +185,7 @@ ActiveRecord::Schema.define(version: 20171023074305) do
     t.index ["reset_password_token"], name: "index_users_on_reset_password_token", unique: true
   end
 
+  add_foreign_key "credit_charges", "orders"
   add_foreign_key "diaries", "users"
   add_foreign_key "diary_comments", "diaries"
   add_foreign_key "diary_comments", "users"

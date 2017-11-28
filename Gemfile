@@ -53,6 +53,7 @@ gem 'haml-rails'
 gem 'enum_help'
 gem 'validates_timeliness', '~> 4.0'
 gem 'seed-fu'
+gem 'payjp'
 
 group :development, :test do
   # Call 'byebug' anywhere in the code to stop execution and get a debugger console

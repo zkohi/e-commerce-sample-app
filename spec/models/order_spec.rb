@@ -419,6 +419,20 @@ RSpec.describe Order, type: :model do
     end
   end
 
+  describe "set_payment_type_to_credit" do
+    subject { order.send(:set_payment_type_to_credit) }
+
+    let(:order) { build(:order, :ordered, adjustment_total: 1000) }
+
+    it do
+      should
+      expect(order.payment_type).to eq "credit"
+      expect(order.payment_total).to eq 0
+      expect(order.tax_total).to eq 80
+      expect(order.total).to eq 1080
+    end
+  end
+
   describe "set_point_total" do
     subject { order.send(:set_point_total) }
 
@@ -464,65 +478,42 @@ RSpec.describe Order, type: :model do
   describe "set_shipment_total" do
     subject { order.send(:set_shipment_total) }
 
-    let(:order) { build(:order, item_count: item_count) }
+    let(:company) { build(:company, quantity_per_box: 5) }
+    let(:order) { build(:order, company: company, item_count: item_count) }
 
-    context "if item_count is zero" do
-      let(:item_count) { 0 }
-      let(:expected) { 0 }
-
-      it do
-        should
-        expect(order.shipment_total).to eq expected
-      end
-    end
-
-    context "if item_count is 1" do
-      let(:item_count) { 1 }
-      let(:expected) { 600 }
-
-      it do
-        should
-        expect(order.shipment_total).to eq expected
-      end
-    end
-
-    context "if item_count is 5" do
+    context "if item_count is equal company.quantity_per_box" do
       let(:item_count) { 5 }
-      let(:expected) { 600 }
 
       it do
         should
-        expect(order.shipment_total).to eq expected
+        expect(order.shipment_total).to eq 600
       end
     end
 
-    context "if item_count is 6" do
+    context "if item_count is greater than company.quantity_per_box" do
       let(:item_count) { 6 }
-      let(:expected) { 1200 }
 
       it do
         should
-        expect(order.shipment_total).to eq expected
+        expect(order.shipment_total).to eq 1200
       end
     end
 
-    context "if item_count is 10" do
+    context "if item_count is equal company.quantity_per_box * 2" do
       let(:item_count) { 10 }
-      let(:expected) { 1200 }
 
       it do
         should
-        expect(order.shipment_total).to eq expected
+        expect(order.shipment_total).to eq 1200
       end
     end
 
-    context "if item_count is 11" do
+    context "if item_count is greater than company.quantity_per_box * 2 + 1" do
       let(:item_count) { 11 }
-      let(:expected) { 1800 }
 
       it do
         should
-        expect(order.shipment_total).to eq expected
+        expect(order.shipment_total).to eq 1800
       end
     end
   end
@@ -530,62 +521,82 @@ RSpec.describe Order, type: :model do
   describe "set_payment_total" do
     subject { order.send(:set_payment_total) }
 
-    let(:order) { build(:order, adjustment_total: adjustment_total) }
+    let(:order) { build(:order, :ordered, adjustment_total: adjustment_total, payment_type: payment_type) }
 
-    context "if adjustment_total is zero" do
-      let(:adjustment_total) { 0 }
+    context "if payment_type is cash_on_delivery" do
 
-      it do
-        should
-        expect(order.payment_total).to eq 0
+      let(:payment_type) { "cash_on_delivery" }
+
+      context "if adjustment_total is zero" do
+        let(:adjustment_total) { 0 }
+
+        it do
+          should
+          expect(order.payment_total).to eq 0
+        end
+      end
+
+      context "if adjustment_total is 9999" do
+        let(:adjustment_total) { 9999 }
+
+        it do
+          should
+          expect(order.payment_total).to eq 300
+        end
+      end
+
+      context "if adjustment_total is 10000" do
+        let(:adjustment_total) { 10000 }
+
+        it do
+          should
+          expect(order.payment_total).to eq 400
+        end
+      end
+
+      context "if adjustment_total is 29999" do
+        let(:adjustment_total) { 29999 }
+
+        it do
+          should
+          expect(order.payment_total).to eq 400
+        end
+      end
+
+      context "if adjustment_total is 99999" do
+        let(:adjustment_total) { 99999 }
+
+        it do
+          should
+          expect(order.payment_total).to eq 600
+        end
+      end
+
+      context "if adjustment_total is 100000" do
+        let(:adjustment_total) { 100000 }
+
+        it do
+          should
+          expect(order.payment_total).to eq 1000
+        end
       end
     end
 
-    context "if adjustment_total is 9999" do
-      let(:adjustment_total) { 9999 }
+    context "if payment_type is credit" do
 
-      it do
-        should
-        expect(order.payment_total).to eq 300
-      end
-    end
+      let(:payment_type) { "credit" }
 
-    context "if adjustment_total is 10000" do
-      let(:adjustment_total) { 10000 }
+      context "if adjustment_total is 100000" do
+        let(:adjustment_total) { 100000 }
 
-      it do
-        should
-        expect(order.payment_total).to eq 400
-      end
-    end
-
-    context "if adjustment_total is 29999" do
-      let(:adjustment_total) { 29999 }
-
-      it do
-        should
-        expect(order.payment_total).to eq 400
-      end
-    end
-
-    context "if adjustment_total is 99999" do
-      let(:adjustment_total) { 99999 }
-
-      it do
-        should
-        expect(order.payment_total).to eq 600
-      end
-    end
-
-    context "if adjustment_total is 100000" do
-      let(:adjustment_total) { 100000 }
-
-      it do
-        should
-        expect(order.payment_total).to eq 1000
+        it do
+          should
+          expect(order.payment_total).to eq 0
+        end
       end
     end
   end
+
 
   describe "set_adjustment_total" do
     subject { order.send(:set_adjustment_total) }
@@ -665,11 +676,22 @@ RSpec.describe Order, type: :model do
     end
   end
 
-  describe "save_user_point" do
-    subject { order.send(:save_user_point) }
+  describe "set_payment_state_to_payed" do
+    subject { order.send(:set_payment_state_to_payed) }
+
+    let(:order) { build(:order) }
+
+    it do
+      should
+      expect(order.payment_state).to eq "payed"
+    end
+  end
+
+  describe "save_user_point!" do
+    subject { order.send(:save_user_point!) }
 
     before :each do
-      @user_point_total = create(:user_point, :user_point_total, user: order.user, point: order.point_total + 1)
+      @user_point_total = create(:user_point, :user_point_total, user: order.user, point: order.point_total.to_i + 1)
     end
 
     let(:order) { create(:order, :with_point_total) }
@@ -677,7 +699,7 @@ RSpec.describe Order, type: :model do
 
     it do
       should
-      expect(user_point.point).to eq -order.point_total
+      expect(user_point.point).to eq -order.point_total.to_i
     end
 
     it do
@@ -689,6 +711,183 @@ RSpec.describe Order, type: :model do
       order.destroy
       @user_point_total.destroy
       user_point.destroy
+    end
+  end
+
+  describe "cancel_user_point!" do
+    subject { order.send(:cancel_user_point!) }
+
+    before :each do
+      allow(order.user_point).to receive(:save!)
+    end
+
+    let(:order) { build(:order, :with_user_point) }
+
+    it do
+      should
+      expect(order.user_point.status).to eq "canceled"
+    end
+
+    it do
+      should
+      expect(order.user_point).to have_received(:save!)
+    end
+
+  end
+
+  describe "reorder_user_point!" do
+    subject { order.send(:reorder_user_point!) }
+
+    before :each do
+      allow(order.user_point).to receive(:save!)
+    end
+
+    let(:order) { build(:order, :with_user_point) }
+
+    it do
+      should
+      expect(order.user_point.status).to eq "used"
+    end
+
+    it do
+      should
+      expect(order.user_point).to have_received(:save!)
+    end
+
+  end
+
+  describe "sub_product_stock!" do
+    subject { order.send(:sub_product_stock!) }
+
+    before :each do
+      order.line_items { |line_item| allow(line_item).to receive(:sub_product_stock!) }
+    end
+
+    let(:order) { create(:order_with_line_items).reload }
+
+    it do
+      should
+      order.line_items { |line_item| expect(line_item).to receive(:sub_product_stock!) }
+    end
+
+    after :each do
+      order.destroy
+    end
+  end
+
+  describe "add_product_stock!" do
+    subject { order.send(:add_product_stock!) }
+
+    before :each do
+      order.line_items { |line_item| allow(line_item).to receive(:add_product_stock!) }
+    end
+
+    let(:order) { create(:order_with_line_items).reload }
+
+    it do
+      should
+      order.line_items { |line_item| expect(line_item).to receive(:add_product_stock!) }
+    end
+
+    after :each do
+      order.destroy
+    end
+  end
+
+  describe "charge_payjp!" do
+    before :all do
+      Timecop.freeze(Time.local(2017, 9, 4, 10, 5, 0))
+    end
+
+    after :all do
+      Timecop.return
+    end
+
+    subject { order.send(:charge_payjp!) }
+
+    let(:order) { create(:order, :ordered) }
+
+    before :each do
+      allow(Payjp::Charge).to receive(:create).and_return(charge)
+    end
+
+    let(:charge) { double('charge', id: charge_id) }
+    let(:charge_id) { 'charge_id' }
+
+    it do
+      should
+      expect(order.credit_charge.present?).to be_truthy
+    end
+
+    after :each do
+      order.credit_charge.destroy
+      order.destroy
+    end
+  end
+
+  describe "capture_payjp!" do
+    before :all do
+      Timecop.freeze(Time.local(2017, 9, 4, 10, 5, 0))
+    end
+
+    after :all do
+      Timecop.return
+    end
+
+    subject { order.send(:capture_payjp!) }
+
+    let(:order) { create(:order, :ordered, :with_credit_charge) }
+
+    before :each do
+      allow(order.credit_charge).to receive(:capture!)
+    end
+
+    it do
+      should
+      expect(order.credit_charge).to have_received(:capture!)
+    end
+
+    it do
+      should
+      expect(order.payment_state).to eq 'payed'
+    end
+
+    after :each do
+      order.credit_charge.destroy
+      order.destroy
+    end
+  end
+
+  describe "refund_payjp!" do
+    before :all do
+      Timecop.freeze(Time.local(2017, 9, 4, 10, 5, 0))
+    end
+
+    after :all do
+      Timecop.return
+    end
+
+    subject { order.send(:refund_payjp!) }
+
+    let(:order) { create(:order, :ordered, :with_credit_charge) }
+
+    before :each do
+      allow(order.credit_charge).to receive(:refund!)
+    end
+
+    it do
+      should
+      expect(order.credit_charge).to have_received(:refund!)
+    end
+
+    it do
+      should
+      expect(order.payment_state).to eq 'refunded'
+    end
+
+    after :each do
+      order.credit_charge.destroy
+      order.destroy
     end
   end
 

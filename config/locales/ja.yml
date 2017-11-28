@@ -45,6 +45,7 @@ ja:
       order: &activerecord_attributes_order
         id: 注文番号
         company_id: 業者
+        state: 状態
         item_total: 商品料金
         item_count: 数量
         shipment_total: 配送料
@@ -55,11 +56,13 @@ ja:
         user_name: 名前
         user_zipcode: 郵便番号
         user_address: 住所
+        shipping_count:  配送数
         shipping_date: 配送日
         shipping_time_range: 配送時間帯
         shipping_time_range_string: 配送時間帯
-        shipment_state: 配送状況
         payment_state: 支払い状況
+        payment_type: 支払い方法
+        credit_cart_number: クレジットカード番号
         point_total: ポイント利用
       diary: &activerecord_attributes_diary
         title: タイトル
@@ -83,7 +86,8 @@ ja:
         email: メールアドレス
         password: パスワード
         password_confirmation: パスワード確認
-        name:  業者名
+        name: 業者名
+        quantity_per_box: 1箱の数量
       product_stock: &activerecord_attributes_product_stock
         stock: 在庫数
     errors:
@@ -142,12 +146,20 @@ ja:
         display: 表示
         non_display: 非表示
     order:
-      shipment_state:
-        unshipped: 未出荷
-        shipped: 出荷済
+      state:
+        cart: カート
+        ordered: 注文済み
+        prosessing: 発送処理中
+        shipped: 処理中発送済
+        canceled: キャンセル
+        reordered: 注文済み
       payment_state:
         unpayed: 未払い
         payed: 支払済
+        refunded: 返金済
+      payment_type:
+        cash_on_delivery: 代引き
+        credit: クレジット
       shipping_time_range:
         eight_to_twelve: 8時〜12時
         twelve_to_fourteen: 12時〜14時
@@ -161,6 +173,7 @@ ja:
         used: ポイント利用
         coupon: クーポン利用
         admin: 管理者登録
+        canceled: 注文キャンセル済み
 
   errors:
     messages:

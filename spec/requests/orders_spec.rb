@@ -40,19 +40,13 @@ RSpec.describe "Orders", type: :request do
 
       order = user.orders.find_or_initialize_by(state: :cart, company_id: company_id)
 
-      delete destroy_cart_line_item_path order, line_item_id: order.line_items.first.id
+      delete line_items_cart_path order, line_item_id: order.line_items.first.id
+
       expect(response).to redirect_to(carts_path)
       follow_redirect!
 
       expect(response).to render_template(:cart)
       expect(response.body).to include("商品が削除されました")
-
-      get edit_cart_path order
-
-      expect(response).to redirect_to(carts_path)
-      follow_redirect!
-
-      expect(response).to render_template(:cart)
     end
   end
 
@@ -96,6 +90,7 @@ RSpec.describe "Orders", type: :request do
           user_address: "My Order User Address",
           shipping_date: Date.today + 2,
           shipping_time_range: "twelve_to_fourteen",
+          payment_type: "cash_on_delivery",
           line_items_attributes: [
             {
               id: order.line_items[0].id,
@@ -124,6 +119,7 @@ RSpec.describe "Orders", type: :request do
           user_address: "My Order User Address",
           shipping_date: Date.today + 2,
           shipping_time_range: "twelve_to_fourteen",
+          payment_type: "cash_on_delivery",
           line_items_attributes: [
             {
               id: order.line_items[0].id,
@@ -148,17 +144,43 @@ RSpec.describe "Orders", type: :request do
       user = FactoryGirl.create(:user)
       login_as(user, scope: :user)
 
-      order = FactoryGirl.create(:order, :ordered)
+      order = FactoryGirl.create(:order, :ordered, user: user)
 
-      get orders_path order
+      get orders_path
       expect(response).to render_template(:index)
+    end
+  end
+
+  describe "GET /orders/:id and PATCH /orders/:id/cancel and PATCH /orders/:id/reorder" do
+    it "shows a Order and cancel order and reorder order" do
+      user = FactoryGirl.create(:user)
+      login_as(user, scope: :user)
+
+      order = FactoryGirl.create(:order, :ordered, user: user)
+
+      get order_path order
+      expect(response).to render_template(:show)
+
+      patch cancel_order_path order
+
+      expect(response).to redirect_to(order_path(order))
+      follow_redirect!
+
+      expect(response).to render_template(:show)
+
+      patch reorder_order_path order
+
+      expect(response).to redirect_to(order_path(order))
+      follow_redirect!
+
+      expect(response).to render_template(:show)
     end
   end
 
   describe "GET /backoffice/orders" do
     it "shows Orders" do
-      user = FactoryGirl.create(:admin)
-      login_as(user, scope: :admin)
+      admin = FactoryGirl.create(:admin)
+      login_as(admin, scope: :admin)
 
       FactoryGirl.create(:order, :ordered)
 
@@ -169,8 +191,8 @@ RSpec.describe "Orders", type: :request do
 
   describe "GET /backoffice/orders/:id" do
     it "shows a Order" do
-      user = FactoryGirl.create(:admin)
-      login_as(user, scope: :admin)
+      admin = FactoryGirl.create(:admin)
+      login_as(admin, scope: :admin)
 
       order = FactoryGirl.create(:order, :ordered)
 
@@ -179,4 +201,57 @@ RSpec.describe "Orders", type: :request do
       expect(response).to render_template(:show)
     end
   end
+
+  describe "GET /companies/orders" do
+    it "shows a Orders" do
+      company = FactoryGirl.create(:company)
+      login_as(company, scope: :company)
+
+      order = FactoryGirl.create(:order, :ordered, company: company)
+
+      get companies_orders_path
+      expect(response).to render_template(:index)
+    end
+  end
+
+  describe "GET /companies/orders/:id and PATCH PATCH /companies/orders/:id/cancel and PATCH /companies/orders/:id/reorder and /companies/orders/:id/prosessing and PATCH /companies/orders/:id/shipped" do
+    it "shows a Order and cancel order and reorder and prosessing order and shipped order" do
+      company = FactoryGirl.create(:company)
+      login_as(company, scope: :company)
+
+      order = FactoryGirl.create(:order, :ordered, company: company)
+
+      get companies_order_path order
+      expect(response).to render_template(:show)
+
+      patch cancel_companies_order_path order
+
+      expect(response).to redirect_to(companies_order_path(order))
+      follow_redirect!
+
+      expect(response).to render_template(:show)
+
+      patch reorder_companies_order_path order
+
+      expect(response).to redirect_to(companies_order_path(order))
+      follow_redirect!
+
+      expect(response).to render_template(:show)
+
+      patch prosessing_companies_order_path order
+
+      expect(response).to redirect_to(companies_order_path(order))
+      follow_redirect!
+
+      expect(response).to render_template(:show)
+
+      patch shipped_companies_order_path order
+
+      expect(response).to redirect_to(companies_order_path(order))
+      follow_redirect!
+
+      expect(response).to render_template(:show)
+    end
+  end
+
 end

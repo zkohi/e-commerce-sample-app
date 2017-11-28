@@ -18,7 +18,7 @@
 
         = f.error_notification
 
-        = f.input :company_id, collection: product_stocks.map { |product_stock| ["#{product_stock.company.name}(在庫:#{number_with_delimiter(product_stock.stock)}個)", product_stock.company.id] }, as: :radio_buttons
+        = f.input :company_id, collection: product_stocks.map { |product_stock| ["#{product_stock.company.name}(在庫:#{number_with_delimiter(product_stock.stock)}個※数量#{number_with_delimiter(product_stock.company.quantity_per_box)}個毎に送料を追加)", product_stock.company.id] }, as: :radio_buttons
 
         = f.fields_for :line_items do |line_item|
 

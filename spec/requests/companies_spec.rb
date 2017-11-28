@@ -18,6 +18,22 @@ RSpec.describe "Companies", type: :request do
 
       expect(response).to render_template(:stocks)
 
+      get edit_company_registration_path
+
+      expect(response).to render_template(:edit)
+
+      patch company_registration_path, params: {
+        company: {
+          current_password: company.password,
+          quantity_per_box: 10
+        }
+      }
+
+      expect(response).to redirect_to(companies_stocks_path)
+      follow_redirect!
+
+      expect(response).to render_template(:stocks)
+
       get destroy_company_session_path
 
       expect(response).to redirect_to(new_company_session_path)
@@ -62,7 +78,8 @@ RSpec.describe "Companies", type: :request do
           email: "test@gmail.com",
           password: "companypassword",
           password_confirmation: "companypassword",
-          name: "My Company"
+          name: "My Company",
+          quantity_per_box: 10
         }
       }
 
@@ -89,7 +106,8 @@ RSpec.describe "Companies", type: :request do
           email: "test-edit@gmail.com",
           password: "companypasswordedit",
           password_confirmation: "companypasswordedit",
-          name: "My Company Edit"
+          name: "My Company Edit",
+          quantity_per_box: 100
         }
       }
 

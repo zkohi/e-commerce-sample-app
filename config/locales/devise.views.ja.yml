@@ -1,7 +1,7 @@
 ja:
   activerecord:
     attributes:
-      user:
+      user: &default
         confirmation_sent_at: 
         confirmation_token: 
         confirmed_at: 
@@ -25,8 +25,12 @@ ja:
         unconfirmed_email: 
         unlock_token: "ロック解除用のトークン"
         updated_at: 
+      admin: *default
+      company: *default
     models:
-      user: "ユーザ"
+      user: "ユーザー"
+      admin: "管理者"
+      company: "業者"
   devise:
     confirmations:
       confirmed: "アカウントを登録しました。"

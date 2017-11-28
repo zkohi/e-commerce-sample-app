@@ -1,6 +1,11 @@
 FactoryGirl.define do
   factory :user_point do
     user
+    coupon nil
+    status "admin"
+    point 0
+    order nil
+
     trait :user_point_total do
       coupon nil
       status "total"
@@ -25,6 +30,13 @@ FactoryGirl.define do
     trait :user_point_admin do
       coupon nil
       status "admin"
+      point Faker::Number.between(1, 999999)
+      order nil
+    end
+
+    trait :user_point_canceled do
+      coupon nil
+      status "canceled"
       point Faker::Number.between(1, 999999)
       order nil
     end

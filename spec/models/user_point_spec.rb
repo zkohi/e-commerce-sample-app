@@ -49,7 +49,7 @@ RSpec.describe UserPoint, type: :model do
   describe "update_total" do
     subject { user_point.send(:update_total) }
 
-    let(:user_point) { build(:user_point, :user_point_used, point: 100) }
+    let(:user_point) { build(:user_point, :user_point_coupon, point: 100) }
 
     context "if exists status is total" do
       before :each do
@@ -81,6 +81,27 @@ RSpec.describe UserPoint, type: :model do
         should
         expect(user_point_total.status).to eq 'total'
       end
+    end
+
+    after :each do
+      user_point_total.destroy
+    end
+  end
+
+  describe "cancel_point" do
+    subject { user_point.send(:cancel_point) }
+
+    let(:user_point) { build(:user_point, :user_point_used, point: -100) }
+
+    before :each do
+      user_point_total.save
+    end
+
+    let(:user_point_total) { create(:user_point, :user_point_total, user: user_point.user, point: 1000) }
+
+    it do
+      should
+      expect(user_point_total.reload.point).to eq 1100
     end
 
     after :each do

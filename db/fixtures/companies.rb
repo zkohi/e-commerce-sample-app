@@ -3,7 +3,8 @@
     {
       email: "test#{i}@example.com",
       password: "testtest",
-      name: "Company ##{i}"
+      name: "Company ##{i}",
+      quantity_per_box: i
     }
   )
 end

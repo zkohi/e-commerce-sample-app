@@ -8,6 +8,7 @@
           %tr
             %th= Company.human_attribute_name(:id)
             %th= Company.human_attribute_name(:name)
+            %th= Company.human_attribute_name(:quantity_per_box)
             %th
             %th
             %th
@@ -17,6 +18,7 @@
             %tr
               %td= company.id
               %td= company.name
+              %td= number_with_delimiter(company.quantity_per_box)
               %td= link_to '詳細', backoffice_company_path(company)
               %td= link_to '編集', edit_backoffice_company_path(company)
               %td= link_to '削除', backoffice_company_path(company), method: :delete, data: { confirm: '削除してよろしいですか?' }

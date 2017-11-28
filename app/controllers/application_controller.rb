@@ -8,8 +8,12 @@ class ApplicationController < ActionController::Base
   protected
 
     def configure_permitted_parameters
-      if devise_controller? && resource_name != :company
-        devise_parameter_sanitizer.permit(:account_update, keys: [:name, :zipcode, :address, :nickname, :img_filename])
+      if devise_controller?
+        if resource_name == :company
+          devise_parameter_sanitizer.permit(:account_update, keys: [:name, :quantity_per_box])
+        elsif resource_name == :user
+          devise_parameter_sanitizer.permit(:account_update, keys: [:name, :zipcode, :address, :nickname, :img_filename])
+        end
       end
     end
 

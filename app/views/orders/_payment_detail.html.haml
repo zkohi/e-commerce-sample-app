@@ -1,12 +1,13 @@
 .panel.panel-warning
   .panel-heading
-    %h2.panel-title 料金明細
+    %h2.panel-title 料金明細（※代引き手数料はクレジット決済の場合は追加されません）
   .panel-body
     %table.table.table-striped.table-hover
       %thead
         %tr
           %th= Order.human_attribute_name(:item_total)
           %th= Order.human_attribute_name(:item_count)
+          %th= Order.human_attribute_name(:shipping_count)
           %th= Order.human_attribute_name(:shipment_total) 
           %th= Order.human_attribute_name(:point_total)
           %th= Order.human_attribute_name(:adjustment_total)
@@ -17,7 +18,8 @@
       %tbody
         %tr
           %td= number_to_currency(@order.item_total, locale: :ja)
-          %td= @order.item_count
+          %td= number_with_delimiter(@order.item_count)
+          %td= number_with_delimiter((@order.item_count/@order.company.quantity_per_box.to_f).ceil)
           %td= number_to_currency(@order.shipment_total, locale: :ja)
           %td= @order.point_total.present? ? number_with_delimiter(@order.point_total) : 0
           %td= number_to_currency(@order.adjustment_total, locale: :ja)

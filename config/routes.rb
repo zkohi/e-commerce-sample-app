@@ -6,13 +6,22 @@ Rails.application.routes.draw do
     resources :evaluations, only: [:create, :destroy], controller: 'diary_evaluations'
   end
 
-  resources :carts, only: [:create, :update, :edit], controller: 'orders'
+  resources :carts, only: [:create, :update, :edit], controller: 'orders' do
+    member do
+      patch :confirm
+      delete :line_items, to: 'orders#destroy_cart_line_item'
+    end
+  end
   get 'carts', to: 'orders#cart'
-  patch 'carts/:id/confirm', to: 'orders#confirm', as: 'confirm_cart'
-  delete 'carts/:id/line_items', to: 'orders#destroy_cart_line_item', as: 'destroy_cart_line_item'
+
+  resources :orders, only: [:index, :show] do
+    member do
+      patch :cancel
+      patch :reorder
+    end
+  end
 
   resources :products, only: [:index, :show]
-  resources :orders, only: [:index, :show]
   resources :coupons, only: [:index, :show]
   resources :user_points, only: [:index, :create]
 
@@ -40,9 +49,24 @@ Rails.application.routes.draw do
 
   devise_for :companies, controllers: {
     sessions: "companies/sessions",
+    registrations: "companies/registrations",
   }
 
+  devise_scope :company do
+    get 'companies/edit', to: 'companies/registrations#edit', as: 'edit_company_registration'
+    patch 'companies', to: 'companies/registrations#update', as: 'company_registration'
+  end
+
   namespace :companies, path: '/companies' do
+    resources :orders, only: [:index, :show] do
+      member do
+        patch 'prosessing'
+        patch 'shipped'
+        patch 'cancel'
+        patch 'reorder'
+      end
+    end
+
     resources :products, only: [:index, :show] do
       resources :stocks, only: [:create, :destroy], controller: 'products'
     end
